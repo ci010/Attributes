@@ -1,0 +1,16 @@
+[
+{
+  "modid": "attributes",
+  "name": "Attributes",
+  "description": "RPG Attributes.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["CI010"],
+  "credits": "The Forge and FML guys, for making this example",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
