@@ -8,6 +8,8 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class Player
 {
+	//I'm considering cancel this class.
+	//Just store these data in nbt or other existed classes
 	public final static int POWER = 0, AGILITY = 1, ENDURANCE = 2;
 	
 	public EntityPlayer player;
