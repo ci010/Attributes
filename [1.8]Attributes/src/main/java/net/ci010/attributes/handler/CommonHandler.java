@@ -1,6 +1,7 @@
 package net.ci010.attributes.handler;
 
 import net.ci010.attributes.properties.dynamic.Sleepness;
+import net.ci010.attributes.properties.dynamic.Strength;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -12,7 +13,6 @@ public class CommonHandler
 	{
 		if (event.entity instanceof EntityPlayer && Sleepness.get((EntityPlayer) event.entity) == null)
 			Sleepness.register((EntityPlayer)event.entity);
-			
+			Strength.register((EntityPlayer)event.entity);
 	}
-
 }
