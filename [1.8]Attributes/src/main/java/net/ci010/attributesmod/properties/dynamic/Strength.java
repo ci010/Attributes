@@ -20,8 +20,8 @@ public class Strength extends Status implements IExtendedEntityProperties
 		player.registerExtendedProperties(NAME, new Strength(player));
 	}
 
-	public static final Sleepness get(EntityPlayer player)
+	public static final Strength get(EntityPlayer player)
 	{
-		return (Sleepness) player.getExtendedProperties(NAME);
+		return (Strength) player.getExtendedProperties(NAME);
 	}
 }
