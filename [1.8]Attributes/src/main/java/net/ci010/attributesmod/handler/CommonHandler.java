@@ -3,9 +3,13 @@ package net.ci010.attributesmod.handler;
 import net.ci010.attributesmod.properties.Status;
 import net.ci010.attributesmod.properties.dynamic.Sleepness;
 import net.ci010.attributesmod.properties.dynamic.Strength;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
@@ -15,12 +19,23 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class CommonHandler
 {
+	//all accomplishment works are done in Handler
+	
 	@SubscribeEvent
 	public void onEntityConstructing(EntityConstructing event)
 	{
 		if (event.entity instanceof EntityPlayer && Sleepness.get((EntityPlayer) event.entity) == null)
+		{
 			Sleepness.register((EntityPlayer)event.entity);
 			Strength.register((EntityPlayer)event.entity);
+			
+			//not sure what happening if player switch the world
+			//this register method is from some Tutorials which told me if I use IExtendedEntityProperties,
+			//I need to register in this way
+			
+			//An alternation could be PlayerLoggedInEvent
+			//for that way.... we need to have our own watcher to watch the data
+		}
 	}
 	
 	@SubscribeEvent
@@ -33,9 +48,12 @@ public class CommonHandler
 			
 			playerSl.consume(true);
 			playerSt.consume(false);
+			
+			//that is just a sample... the value of consume method need to be adjust
 		}
 	}
 	
+	//this event must be the longest......
 	@SubscribeEvent
 	public void LivingUpdate(LivingUpdateEvent event)
 	{
@@ -85,6 +103,42 @@ public class CommonHandler
 		}
 	}
 	
+	@SubscribeEvent
+	public void entityHurt(LivingHurtEvent event)
+	{
+		DamageSource source = event.source;
+		
+		Entity victim = event.entity;
+		
+		if (victim instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer) victim;
+			//do something to reduce the dmg 
+			//and add up the level of endurance here
+			//by do something with event.ammount
+		}
+		
+		Entity inflictor = source.getEntity();
+		
+		if(inflictor instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer) inflictor;
+			ItemStack heldItem = player.getHeldItem();
+			
+			if (heldItem != null)
+			{
+				
+			}
+			
+			//add up the level of power here
+		}
+		
+		
+	}
+	
+	//I believe if we fill above out, it must be messy.... so maybe we need a way to manage these codes.
+	
+	//events below are done....(should be)
 	@SubscribeEvent
 	public void wakeEvent(PlayerWakeUpEvent event)
 	{
