@@ -1,8 +1,8 @@
 package net.ci010.attributes.proxy;
 
 import net.ci010.attributes.Resource;
-import net.ci010.attributes.Handler.CommonHandler;
 import net.ci010.attributes.gui.SleepnessBar;
+import net.ci010.attributes.handler.CommonHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
