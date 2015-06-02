@@ -8,6 +8,8 @@ import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
+import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -43,15 +45,18 @@ public class CommonHandler
 		}
 		if(event.entityLiving instanceof EntityPlayer)
 		{
-			Sleepness playerSl = Sleepness.get((EntityPlayer)event.entityLiving);
-			Strength playerSt = Strength.get((EntityPlayer)event.entityLiving);
-			
 			Status.timer++;
 			if(Status.timer>20)
 			{
+				Sleepness playerSl = Sleepness.get((EntityPlayer)event.entityLiving);
+				Strength playerSt = Strength.get((EntityPlayer)event.entityLiving);
+				
 				Status.timer = 0;
-				playerSl.consume(false);
-				playerSt.consume(false);
+				if(playerSl.isSleeping)
+				{
+					playerSl.consume(false);
+					playerSt.consume(false);
+				}
 			}
 		}
 	}
@@ -78,5 +83,21 @@ public class CommonHandler
 		{
 			
 		}
+	}
+	
+	@SubscribeEvent
+	public void wakeEvent(PlayerWakeUpEvent event)
+	{
+		Sleepness playerSl = Sleepness.get((EntityPlayer)event.entityLiving);
+		
+		playerSl.isSleeping = false;
+	}
+	
+	@SubscribeEvent
+	public void sleepEvent(PlayerSleepInBedEvent event)
+	{
+		Sleepness playerSl = Sleepness.get((EntityPlayer) event.entityLiving);
+
+		playerSl.isSleeping = true;
 	}
 }
