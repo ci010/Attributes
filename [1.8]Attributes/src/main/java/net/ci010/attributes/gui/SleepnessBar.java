@@ -3,7 +3,7 @@ package net.ci010.attributes.gui;
 import org.lwjgl.opengl.GL11;
 
 import net.ci010.attributes.Resource;
-import net.ci010.attributes.properties.advance.Sleepness;
+import net.ci010.attributes.properties.dynamic.Sleepness;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;

@@ -30,4 +30,10 @@ public class Resource
 		return 0;
 	}
 
+	public static int getInitalValue()
+	{
+		// TODO 自动生成的方法存根
+		return 0;
+	}
+
 }

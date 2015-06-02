@@ -1,17 +1,18 @@
 package net.ci010.attributes.handler;
 
-import net.ci010.attributes.properties.advance.Sleepness;
+import net.ci010.attributes.properties.dynamic.Sleepness;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 public class CommonHandler
 {
 	@SubscribeEvent
-	public void onEntityJoinWorld(PlayerLoggedInEvent event)
+	public void onEntityConstructing(EntityConstructing event)
 	{
-		if (Sleepness.get((EntityPlayer) event.player) == null)
-			Sleepness.register((EntityPlayer)event.player);
+		if (event.entity instanceof EntityPlayer && Sleepness.get((EntityPlayer) event.entity) == null)
+			Sleepness.register((EntityPlayer)event.entity);
+			
 	}
 
 }
