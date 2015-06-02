@@ -17,6 +17,8 @@ public class Status implements IExtendedEntityProperties
 	protected int current, max;
 
 	public int commonFactor, highFactor;
+	
+	public static int timer;
 
 	public Status(EntityPlayer player)
 	{
@@ -82,7 +84,7 @@ public class Status implements IExtendedEntityProperties
 
 	public boolean consume(boolean b)
 	{
-		return b ? consumeLow() : consumeHigh();
+		return b ? consumeHigh() : consumeLow();
 	}
 
 	private boolean consumeLow()
