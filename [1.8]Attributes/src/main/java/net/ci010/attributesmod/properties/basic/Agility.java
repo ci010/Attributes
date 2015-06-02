@@ -7,6 +7,6 @@ public class Agility extends Attributes
 	public Agility(int value)
 	{
 		super(value);
-		id = "agility";
+		id = "AGILITY";
 	}
 }

@@ -8,6 +8,6 @@ public class Endurance extends Attributes
 	public Endurance(int value)
 	{
 		super(value);
-		this.id = "endurance";
+		this.id = "ENDURANCE";
 	}
 }

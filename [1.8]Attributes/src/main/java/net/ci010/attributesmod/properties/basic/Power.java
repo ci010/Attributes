@@ -7,6 +7,6 @@ public class Power extends Attributes
 	Power(int value)
 	{
 		super(value);
-		this.id = "power";
+		this.id = "POWER";
 	}
 }
