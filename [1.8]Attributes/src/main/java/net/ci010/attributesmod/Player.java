@@ -1,9 +1,9 @@
-package net.ci010.attributes;
+package net.ci010.attributesmod;
 
 import java.util.Random;
 
-import net.ci010.attributes.properties.basic.Agility;
-import net.ci010.attributes.properties.basic.Power;
+import net.ci010.attributesmod.properties.basic.Agility;
+import net.ci010.attributesmod.properties.basic.Power;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class Player

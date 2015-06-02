@@ -1,6 +1,6 @@
-package net.ci010.attributes.properties;
+package net.ci010.attributesmod.properties;
 
-import net.ci010.attributes.Resource;
+import net.ci010.attributesmod.Resource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;

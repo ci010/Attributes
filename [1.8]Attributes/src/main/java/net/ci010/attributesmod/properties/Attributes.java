@@ -1,4 +1,4 @@
-package net.ci010.attributes.properties;
+package net.ci010.attributesmod.properties;
 
 import net.minecraft.nbt.NBTTagCompound;
 

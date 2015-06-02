@@ -1,6 +1,6 @@
-package net.ci010.attributes.properties.advance;
+package net.ci010.attributesmod.properties.skills;
 
-import net.ci010.attributes.properties.Attributes;
+import net.ci010.attributesmod.properties.Attributes;
 
 public class Swimming extends Attributes
 {

@@ -1,6 +1,6 @@
-package net.ci010.attributes;
+package net.ci010.attributesmod;
 
-import net.ci010.attributes.proxy.CommonProxy;
+import net.ci010.attributesmod.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.Mod.EventHandler;

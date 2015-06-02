@@ -1,6 +1,6 @@
-package net.ci010.attributes.properties.dynamic;
+package net.ci010.attributesmod.properties.dynamic;
 
-import net.ci010.attributes.properties.Status;
+import net.ci010.attributesmod.properties.Status;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.IExtendedEntityProperties;
 

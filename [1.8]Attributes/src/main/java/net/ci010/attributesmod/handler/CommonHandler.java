@@ -1,7 +1,7 @@
-package net.ci010.attributes.handler;
+package net.ci010.attributesmod.handler;
 
-import net.ci010.attributes.properties.dynamic.Sleepness;
-import net.ci010.attributes.properties.dynamic.Strength;
+import net.ci010.attributesmod.properties.dynamic.Sleepness;
+import net.ci010.attributesmod.properties.dynamic.Strength;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

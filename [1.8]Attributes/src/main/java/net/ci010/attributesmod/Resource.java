@@ -1,4 +1,4 @@
-package net.ci010.attributes;
+package net.ci010.attributesmod;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;

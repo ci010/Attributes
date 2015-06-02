@@ -1,6 +1,6 @@
-package net.ci010.attributes.properties.basic;
+package net.ci010.attributesmod.properties.basic;
 
-import net.ci010.attributes.properties.Attributes;
+import net.ci010.attributesmod.properties.Attributes;
 
 public class Agility extends Attributes
 {
