@@ -8,6 +8,8 @@ public class Sleepness extends Status implements IExtendedEntityProperties
 {
 	// NAME is used to register extended property
 	public static final String NAME = "Sleepness";
+	
+	public boolean isSleeping;
 
 	public Sleepness(EntityPlayer player)
 	{
