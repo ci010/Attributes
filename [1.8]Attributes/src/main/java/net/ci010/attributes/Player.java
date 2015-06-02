@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class Player
 {
-	public final static int POWER = 0, AGILITY = 1;
+	public final static int POWER = 0, AGILITY = 1, ENDURANCE = 2;
 	
 	public EntityPlayer player;
 	
@@ -32,8 +32,9 @@ public class Player
 
 		int i = r.nextInt(5);
 		int j = r.nextInt(5);
+		int k = r.nextInt(5);
 		
-		return new int[]{i,j};
+		return new int[]{i,j,k};
 	}
 	
 	public int getTalent(int i)
@@ -45,6 +46,10 @@ public class Player
 		if(i==AGILITY)
 		{
 			return this.upgradeTalent[AGILITY];
+		}
+		if(i==ENDURANCE)
+		{
+			return this.upgradeTalent[ENDURANCE];
 		}
 		else
 			return -1;
