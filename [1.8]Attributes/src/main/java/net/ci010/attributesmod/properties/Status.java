@@ -11,10 +11,12 @@ public class Status implements IExtendedEntityProperties
 {
 	// id is used to identify the nbt compound
 	public String id;
+	
+	protected int dataId;
 
 	protected final EntityPlayer player;
 
-	protected int current, max;
+	protected int max;
 
 	public int commonFactor, highFactor;
 	
@@ -24,21 +26,28 @@ public class Status implements IExtendedEntityProperties
 	{
 		this.player = player;
 
-		this.current = this.max = Resource.getInitalValue();
+		this.max = Resource.getInitalValue();
 
 		this.commonFactor = Resource.getCommonFactor();
 
 		this.highFactor = Resource.getHighFactor();
+		
+		this.player.getDataWatcher().addObject(this.dataId, this.max);
 	}
 
 	public int getCurrent()
 	{
-		return this.current;
+		return this.player.getDataWatcher().getWatchableObjectInt(this.dataId);
 	}
 
 	public int getMax()
 	{
 		return this.max;
+	}
+	
+	protected void setCurrent(int value)
+	{
+		this.player.getDataWatcher().updateObject(this.dataId, value);
 	}
 
 	@Override
@@ -46,7 +55,7 @@ public class Status implements IExtendedEntityProperties
 	{
 		NBTTagCompound properties = new NBTTagCompound();
 
-		properties.setInteger("current", current);
+		properties.setInteger("current", getCurrent());
 		properties.setInteger("max", max);
 
 		compound.setTag(id, properties);
@@ -57,7 +66,8 @@ public class Status implements IExtendedEntityProperties
 	{
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(this.id);
 
-		this.current = properties.getInteger("current");
+		this.setCurrent(properties.getInteger("current"));
+
 		this.max = properties.getInteger("max");
 	}
 
@@ -70,16 +80,20 @@ public class Status implements IExtendedEntityProperties
 
 	public boolean consume(int amount)
 	{
-		boolean sufficient = amount <= this.current;
+		int current = getCurrent();
+		
+		boolean sufficient = amount <= current;
 
-		this.current -= (amount < this.current ? amount : this.current);
+		current -= (amount < current ? amount : current);
+		
+		setCurrent(current);
 
 		return sufficient;
 	}
 
 	public void replenish()
 	{
-		this.current = this.max;
+		setCurrent(this.max);
 	}
 
 	public boolean consume(boolean b)
