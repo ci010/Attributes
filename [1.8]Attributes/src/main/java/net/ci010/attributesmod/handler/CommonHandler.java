@@ -6,7 +6,6 @@ import net.ci010.attributesmod.properties.dynamic.Strength;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -39,15 +38,13 @@ public class CommonHandler
 		}
 	}
 	
-	@SubscribeEvent()
+	@SubscribeEvent
 	public void jumpEvent(LivingJumpEvent event)
 	{
 		if(event.entityLiving instanceof EntityPlayer)
 		{
-			EntityPlayer player = (EntityPlayer)event.entityLiving;
-			
-			Sleepness playerSl = Sleepness.get(player);
-			Strength playerSt = Strength.get(player);
+			Sleepness playerSl = Sleepness.get((EntityPlayer)event.entityLiving);
+			Strength playerSt = Strength.get((EntityPlayer)event.entityLiving);
 			
 			playerSl.consume(true);
 			playerSt.consume(false);

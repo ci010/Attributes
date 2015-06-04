@@ -24,4 +24,6 @@ public class CommonProxy
 		Resource.config = new Configuration(event.getSuggestedConfigurationFile());
 		Resource.config.load();
 	}
+	
+
 }
