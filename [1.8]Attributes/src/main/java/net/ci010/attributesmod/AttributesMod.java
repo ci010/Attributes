@@ -11,8 +11,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 @Mod(modid = AttributesMod.modid, version = AttributesMod.version)
 public class AttributesMod
 {
-	final static String modid = "attributes";
-	final static String version = "0.1";
+	public final static String modid = "attributes";
+	public final static String version = "0.1";
 	
 	@SidedProxy(clientSide = "net.ci010.attributes.proxy.ClientProxy", serverSide = "net.ci010.attributes.proxy.CommonProxy")
 	public static CommonProxy proxy;
