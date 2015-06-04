@@ -1,6 +1,3 @@
-/bin/
-*.log
-/.gradle/
-/.settings/
-/eclipse/
-/gradle/
+/*
+!.gitignore
+!/src/
