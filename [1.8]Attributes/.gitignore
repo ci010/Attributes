@@ -1,1 +1,6 @@
 /bin/
+*.log
+/.gradle/
+/.settings/
+/eclipse/
+/gradle/
