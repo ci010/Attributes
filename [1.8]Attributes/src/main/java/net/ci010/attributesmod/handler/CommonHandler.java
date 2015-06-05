@@ -43,9 +43,11 @@ public class CommonHandler
 	{
 		if(event.entityLiving instanceof EntityPlayer)
 		{
-			Strength playerSt = Strength.get((EntityPlayer)event.entityLiving);
+			EntityPlayer player = (EntityPlayer)event.entityLiving;
+			Strength playerSt = Strength.get(player);
 			
-			playerSt.consume(false);
+			playerSt.consume(5);
+			
 			
 			//that is just a sample... the value of consume method need to be adjust
 		}
@@ -85,7 +87,7 @@ public class CommonHandler
 				if(playerSl.isSleeping)
 				{
 					playerSl.consume(false);
-					playerSt.consume(false);
+					playerSt.consume(0);
 				}
 			}
 		}
