@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class CommonProxy
 {
-
+	//test
 	public void iniHandler()
 	{
 		MinecraftForge.EVENT_BUS.register(new SleepnessBar(Minecraft.getMinecraft()));
