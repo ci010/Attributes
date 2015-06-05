@@ -95,6 +95,19 @@ public class Status implements IExtendedEntityProperties
 	{
 		setCurrent(this.max);
 	}
+	
+	public void recover(int value)
+	{
+		int total = this.getCurrent() + value;
+		if (total > this.max)
+		{
+			this.setCurrent(this.max);
+		}
+		else
+		{
+			this.setCurrent(total);
+		}
+	}
 
 	public boolean consume(boolean b)
 	{
@@ -112,4 +125,6 @@ public class Status implements IExtendedEntityProperties
 		this.consume(highFactor);
 		return true;
 	}
+	
+
 }
