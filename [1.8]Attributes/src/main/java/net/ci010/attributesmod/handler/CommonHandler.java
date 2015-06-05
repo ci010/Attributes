@@ -43,14 +43,26 @@ public class CommonHandler
 	{
 		if(event.entityLiving instanceof EntityPlayer)
 		{
-			Sleepness playerSl = Sleepness.get((EntityPlayer)event.entityLiving);
 			Strength playerSt = Strength.get((EntityPlayer)event.entityLiving);
 			
-			playerSl.consume(true);
 			playerSt.consume(false);
 			
 			//that is just a sample... the value of consume method need to be adjust
 		}
+	}
+	
+	@SubscribeEvent
+	public void breakEvent(BreakSpeed event)
+	{
+		Strength playerSt = Strength.get(event.entityPlayer);
+		Sleepness playerSl = Sleepness.get(event.entityPlayer);
+		
+		if(playerSt.getCurrent()<0||playerSl.getCurrent()<0)
+		{
+			event.newSpeed = event.originalSpeed/2;
+		}
+		
+		//
 	}
 	
 	//this event must be the longest......
@@ -79,17 +91,7 @@ public class CommonHandler
 		}
 	}
 	
-	@SubscribeEvent
-	public void breakEvent(BreakSpeed event)
-	{
-		Strength playerSt = Strength.get(event.entityPlayer);
-		Sleepness playerSl = Sleepness.get(event.entityPlayer);
-		
-		if(playerSt.getCurrent()<0||playerSl.getCurrent()<0)
-		{
-			event.newSpeed = event.originalSpeed/2;
-		}
-	}
+
 	
 	@SubscribeEvent
 	public void attackEvent(LivingAttackEvent event)
