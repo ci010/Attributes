@@ -13,7 +13,7 @@ public class Resource
 	
 	Resource()
 	{
-		
+		//test	
 	}
 	
 	public static int getCommonFactor()
@@ -32,7 +32,7 @@ public class Resource
 
 	public static int getInitalValue()
 	{
-		// TODO 自动生成的方法存根
+		// TODO 脳脭露炉脡煤鲁脡碌脛路陆路篓麓忙赂霉
 		return 0;
 	}
 
