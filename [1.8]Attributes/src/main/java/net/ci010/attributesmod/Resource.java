@@ -6,6 +6,7 @@ import net.minecraftforge.common.config.Configuration;
 public class Resource
 {
 	//test
+	//test
 	public static Configuration config;
 	
 	public static final ResourceLocation sleepTexturepath = new ResourceLocation("attributes", "textures/gui/sleep_bar.png");
