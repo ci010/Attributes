@@ -5,8 +5,6 @@ import net.minecraftforge.common.config.Configuration;
 
 public class Resource
 {
-	//test
-	//test
 	public static Configuration config;
 	
 	public static final ResourceLocation sleepTexturepath = new ResourceLocation("attributes", "textures/gui/sleep_bar.png");
@@ -15,7 +13,7 @@ public class Resource
 	
 	Resource()
 	{
-		//test	
+		
 	}
 	
 	public static int getCommonFactor()
@@ -34,7 +32,7 @@ public class Resource
 
 	public static int getInitalValue()
 	{
-		// TODO ×Ô¶¯Éú³ÉµÄ·½·¨´æ¸ù
+		// TODO 
 		return 0;
 	}
 

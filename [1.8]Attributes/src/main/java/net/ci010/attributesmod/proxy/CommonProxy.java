@@ -12,10 +12,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class CommonProxy
 {
-	//test
+	//Common proxy will register the handlers(anything...) working for both server and client side.
 	public void iniHandler()
 	{
-		MinecraftForge.EVENT_BUS.register(new SleepnessBar(Minecraft.getMinecraft()));
 		MinecraftForge.EVENT_BUS.register(new CommonHandler());
 		FMLCommonHandler.instance().bus().register(new TalentHandler());
 	}

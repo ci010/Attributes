@@ -48,7 +48,6 @@ public class CommonHandler
 			
 			playerSt.consume(5);
 			
-			
 			//that is just a sample... the value of consume method need to be adjust
 		}
 	}
@@ -63,8 +62,40 @@ public class CommonHandler
 		{
 			event.newSpeed = event.originalSpeed/2;
 		}
+	}
+	
+
+	@SubscribeEvent
+	public void entityHurt(LivingHurtEvent event)
+	{
+		DamageSource source = event.source;
 		
-		//
+		Entity victim = event.entity;
+		
+		if (victim instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer) victim;
+			//do something to reduce the dmg 
+			//and add up the level of endurance here
+			//by do something with event.ammount
+		}
+		
+		Entity inflictor = source.getEntity();
+		
+		if(inflictor instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer) inflictor;
+			ItemStack heldItem = player.getHeldItem();
+			
+			if (heldItem != null)
+			{
+				
+			}
+			
+			//add up the level of power here
+		}
+		
+		
 	}
 	
 	//this event must be the longest......
@@ -107,38 +138,6 @@ public class CommonHandler
 		}
 	}
 	
-	@SubscribeEvent
-	public void entityHurt(LivingHurtEvent event)
-	{
-		DamageSource source = event.source;
-		
-		Entity victim = event.entity;
-		
-		if (victim instanceof EntityPlayer)
-		{
-			EntityPlayer player = (EntityPlayer) victim;
-			//do something to reduce the dmg 
-			//and add up the level of endurance here
-			//by do something with event.ammount
-		}
-		
-		Entity inflictor = source.getEntity();
-		
-		if(inflictor instanceof EntityPlayer)
-		{
-			EntityPlayer player = (EntityPlayer) inflictor;
-			ItemStack heldItem = player.getHeldItem();
-			
-			if (heldItem != null)
-			{
-				
-			}
-			
-			//add up the level of power here
-		}
-		
-		
-	}
 	
 	//I believe if we fill above out, it must be messy.... so maybe we need a way to manage these codes.
 	
