@@ -21,13 +21,13 @@ public class AttributesMod
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) 
 	{
-		
+		proxy.iniConfig(event);
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		
+		proxy.iniHandler();
 	}
 	
 	@EventHandler
