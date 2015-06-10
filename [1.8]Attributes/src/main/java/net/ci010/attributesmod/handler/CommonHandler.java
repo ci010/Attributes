@@ -6,6 +6,8 @@ import net.ci010.attributesmod.properties.dynamic.Strength;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -47,6 +49,10 @@ public class CommonHandler
 			Strength playerSt = Strength.get(player);
 			
 			playerSt.consume(5);
+			
+			NBTTagCompound nbt = player.getEntityData();
+			NBTTagList list = nbt.getTagList("PlayerScores", 10);
+			System.out.println(list.toString());
 			
 			//that is just a sample... the value of consume method need to be adjust
 		}
