@@ -1,13 +1,15 @@
 package net.ci010.attributesmod.handler;
 
+import net.ci010.attributesmod.properties.Attributes;
 import net.ci010.attributesmod.properties.Status;
 import net.ci010.attributesmod.properties.dynamic.Sleepness;
 import net.ci010.attributesmod.properties.dynamic.Strength;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.stats.StatBase;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -50,9 +52,15 @@ public class CommonHandler
 			
 			playerSt.consume(5);
 			
-			NBTTagCompound nbt = player.getEntityData();
-			NBTTagList list = nbt.getTagList("PlayerScores", 10);
-			System.out.println(list.toString());
+			StatBase distance = StatList.distanceSprintedStat;
+			
+			int i=-1;
+			if(player instanceof EntityPlayerMP)
+			{
+				i = ((EntityPlayerMP)event.entityLiving).getStatFile().readStat(distance);
+				System.out.println("server player: "+i);
+			}
+
 			
 			//that is just a sample... the value of consume method need to be adjust
 		}
@@ -68,6 +76,8 @@ public class CommonHandler
 		{
 			event.newSpeed = event.originalSpeed/2;
 		}
+		
+	
 	}
 	
 
@@ -93,11 +103,19 @@ public class CommonHandler
 			EntityPlayer player = (EntityPlayer) inflictor;
 			ItemStack heldItem = player.getHeldItem();
 			
+			float multiply = Attributes.powerInstance.getMultiplier(player);
+			
 			if (heldItem != null)
 			{
-				
+				//if(Helper.ifItemSupported(heldItem));
+				event.ammount *= multiply;
+				//else
+				//
 			}
-			
+			else
+			{
+				event.ammount *= multiply;
+			}
 			//add up the level of power here
 		}
 		
