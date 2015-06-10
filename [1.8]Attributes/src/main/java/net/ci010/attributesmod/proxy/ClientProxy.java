@@ -8,6 +8,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 
+
 public class ClientProxy extends CommonProxy
 {
 	//client proxy will do some extra things only working on client side.
@@ -18,4 +19,12 @@ public class ClientProxy extends CommonProxy
 		FMLCommonHandler.instance().bus().register(new TalentHandler());
 		MinecraftForge.EVENT_BUS.register(new SleepnessBar(Minecraft.getMinecraft()));
 	}
+	
+
+//	@Override
+//	@SideOnly(value = Side.CLIENT)
+//	public int getStatValue(LivingJumpEvent event, StatBase stat)
+//	{
+//		return ((EntityPlayerSP)event.entityLiving).getStatFileWriter().readStat(stat);
+//	}
 }

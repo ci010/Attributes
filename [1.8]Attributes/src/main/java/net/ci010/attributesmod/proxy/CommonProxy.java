@@ -10,17 +10,25 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class CommonProxy
 {
-	//Common proxy will register the handlers(anything...) working for both server and client side.
+	// Common proxy will register the handlers(anything...) working for both
+	// server and client side.
 	public void iniHandler()
 	{
 		MinecraftForge.EVENT_BUS.register(new CommonHandler());
 		FMLCommonHandler.instance().bus().register(new TalentHandler());
 	}
+
 	public void iniConfig(FMLPreInitializationEvent event)
 	{
 		Resource.config = new Configuration(event.getSuggestedConfigurationFile());
 		Resource.config.load();
 	}
-	
+
+	// dont know why this fucking shit doesnt work.
+	// @SideOnly(value = Side.SERVER)
+	// public int getStatValue(LivingJumpEvent event, StatBase stat)
+	// {
+	// return ((EntityPlayerMP)event.entityLiving).getStatFile().readStat(stat);
+	// }
 
 }
