@@ -15,8 +15,8 @@ public class AttributesMod
 	public static final String NAME = "Attributes";
 	public static final String VERSION = "1.0";
 
-	@SidedProxy(clientSide = "net.ci010.attributesmod.proxy.ClientProxy", serverSide = "net.ci010.attributesmod.proxy.CommonProxy")
-	CommonProxy proxy;
+	@SidedProxy(serverSide = "net.ci010.attributesmod.proxy.CommonProxy", clientSide = "net.ci010.attributesmod.proxy.ClientProxy")
+	public static CommonProxy proxy;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) 
