@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 public class ClientProxy extends CommonProxy
 {
 	//client proxy will do some extra things only working on client side.
+	@Override
 	public void iniHandler()
 	{
 		MinecraftForge.EVENT_BUS.register(new CommonHandler());
