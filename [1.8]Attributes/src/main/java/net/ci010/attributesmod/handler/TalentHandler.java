@@ -4,12 +4,13 @@ import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 public class TalentHandler
 {
-	@SubscribeEvent
+	@SubscribeEvent(priority=EventPriority.HIGH)
 	public void onPlayerLogin(PlayerLoggedInEvent event)
 	{
 		//NBTTagCompound talent = event.player.getEntityData().getCompoundTag("Talent");
@@ -35,6 +36,15 @@ public class TalentHandler
 			limit.setInteger("ENDURANCE", (r.nextInt(5) + 1));
 
 			talent.setTag("LIMIT", limit);
+			
+			NBTTagCompound init = new NBTTagCompound();
+			
+			init.setInteger("AGILITY", (r.nextInt(5) + 1));
+			init.setInteger("POWER", (r.nextInt(5) + 1));
+			init.setInteger("ENDURANCE", (r.nextInt(5) + 1));
+			
+			talent.setTag("INIT", init);
+			
 			event.player.getEntityData().setTag("Talent", talent);
 		}
 	}
