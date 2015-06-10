@@ -2,6 +2,7 @@ package net.ci010.attributesmod.handler;
 
 import java.util.Random;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -36,5 +37,15 @@ public class TalentHandler
 			talent.setTag("LIMIT", limit);
 			event.player.getEntityData().setTag("Talent", talent);
 		}
+	}
+	
+	public static NBTTagCompound getUpgradeTalent(EntityPlayer player)
+	{
+		return player.getEntityData().getCompoundTag("Talent").getCompoundTag("UPGRADE");
+	}
+	
+	public static NBTTagCompound getLimitTalent(EntityPlayer player)
+	{
+		return player.getEntityData().getCompoundTag("Talent").getCompoundTag("LIMIT");
 	}
 }
