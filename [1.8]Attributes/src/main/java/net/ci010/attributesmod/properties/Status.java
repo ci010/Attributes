@@ -31,8 +31,6 @@ public class Status implements IExtendedEntityProperties
 		this.commonFactor = Resource.getCommonFactor();
 
 		this.highFactor = Resource.getHighFactor();
-		
-		this.player.getDataWatcher().addObject(this.dataId, this.max);
 	}
 
 	public int getCurrent()
@@ -65,6 +63,7 @@ public class Status implements IExtendedEntityProperties
 	public void loadNBTData(NBTTagCompound compound)
 	{
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(this.id);
+		//TODO check this
 
 		this.setCurrent(properties.getInteger("current"));
 

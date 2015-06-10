@@ -13,6 +13,8 @@ public class Strength extends Status implements IExtendedEntityProperties
 	{
 		super(player);
 		this.id = "Strength";
+		this.dataId = 21;
+		this.player.getDataWatcher().addObject(dataId, this.max);
 	}
 
 	public static final void register(EntityPlayer player)

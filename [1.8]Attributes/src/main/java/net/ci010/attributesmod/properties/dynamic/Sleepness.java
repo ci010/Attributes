@@ -15,6 +15,8 @@ public class Sleepness extends Status implements IExtendedEntityProperties
 	{
 		super(player);
 		this.id = "Sleepness";
+		this.dataId = 20;
+		this.player.getDataWatcher().addObject(dataId, this.max);
 	}
 
 	public static final void register(EntityPlayer player)
