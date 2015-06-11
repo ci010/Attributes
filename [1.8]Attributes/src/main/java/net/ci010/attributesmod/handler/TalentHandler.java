@@ -13,9 +13,9 @@ public class TalentHandler
 	@SubscribeEvent(priority=EventPriority.HIGH)
 	public void onPlayerLogin(PlayerLoggedInEvent event)
 	{
-		//NBTTagCompound talent = event.player.getEntityData().getCompoundTag("Talent");
+		NBTTagCompound playerData = event.player.getEntityData();
 		
-		if(!event.player.getEntityData().hasKey("Talent"))
+		if(!playerData.hasKey("Talent"))
 		{
 			NBTTagCompound talent = new NBTTagCompound();
 
@@ -45,17 +45,22 @@ public class TalentHandler
 			
 			talent.setTag("INIT", init);
 			
-			event.player.getEntityData().setTag("Talent", talent);
+			playerData.setTag("Talent", talent);
 		}
 	}
 	
-	public static NBTTagCompound getUpgradeTalent(EntityPlayer player)
+	public static NBTTagCompound getUpgradeTalent(NBTTagCompound playerData)
 	{
-		return player.getEntityData().getCompoundTag("Talent").getCompoundTag("UPGRADE");
+		return playerData.getCompoundTag("Talent").getCompoundTag("UPGRADE");
 	}
 	
-	public static NBTTagCompound getLimitTalent(EntityPlayer player)
+	public static NBTTagCompound getLimitTalent(NBTTagCompound playerData)
 	{
-		return player.getEntityData().getCompoundTag("Talent").getCompoundTag("LIMIT");
+		return playerData.getCompoundTag("Talent").getCompoundTag("LIMIT");
+	}
+	
+	public static NBTTagCompound getInitTalent(NBTTagCompound playerData)
+	{
+		return playerData.getCompoundTag("Talent").getCompoundTag("INIT");
 	}
 }
