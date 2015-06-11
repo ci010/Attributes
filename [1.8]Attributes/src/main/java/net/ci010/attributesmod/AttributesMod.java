@@ -17,22 +17,22 @@ public class AttributesMod
 
 	@SidedProxy(serverSide = "net.ci010.attributesmod.proxy.CommonProxy", clientSide = "net.ci010.attributesmod.proxy.ClientProxy")
 	public static CommonProxy proxy;
-	
+
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) 
+	public void preInit(FMLPreInitializationEvent event)
 	{
 		proxy.iniConfig(event);
 	}
-	
+
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
 		proxy.iniHandler();
 	}
-	
+
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		
+
 	}
 }
