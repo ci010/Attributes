@@ -15,30 +15,36 @@ public abstract class Attributes
 
 	protected String id = "dummy", description;
 
-	//protected int value = -1;
+	// protected int value = -1;
 
 	public Attributes(int value)
 	{
-		//this.value = value;
+		// this.value = value;
 	}
 
 	public void upgradeTo(EntityPlayer player, int statistic)
 	{
-		int upgradeTalent = TalentHandler.getUpgradeTalent(player).getInteger(this.id);
+		NBTTagCompound playerData = player.getEntityData();
+		
+		int upgradeTalent = TalentHandler.getUpgradeTalent(playerData).getInteger(this.id);
 
-		int limitTalent = TalentHandler.getLimitTalent(player).getInteger(this.id);
+		int limitTalent = TalentHandler.getLimitTalent(playerData).getInteger(this.id);
 
-		player.getEntityData().setInteger(this.id, affectByTalent(upgradeTalent, limitTalent, statistic));
+		playerData.setInteger(	this.id,
+								affectByTalent(	upgradeTalent,
+												limitTalent,
+												statistic));
 	}
 
 	public int affectByTalent(int upgradeTalent, int limitTalent, int i)
 	{
+		int newValue = i * upgradeTalent;
 		// TODO transform the statistic value i into the attribute value, by the
 		// upgrade talent and limit talent
 		return i;
 	}
 
-	//transform the multiply value to the actual performance multiplier
+	// transform the multiply value to the actual performance multiplier
 	protected float getMultiplier(EntityPlayer player)
 	{
 		return 0;
@@ -64,5 +70,12 @@ public abstract class Attributes
 			powerInstance.upgradeTo(player, power);
 			// agilityInstance.setValue();
 		}
+	}
+	
+	public static final int getInitValueByTalent(int initTalent)
+	{
+		//TODO need to come up a function
+		return initTalent;
+		
 	}
 }
