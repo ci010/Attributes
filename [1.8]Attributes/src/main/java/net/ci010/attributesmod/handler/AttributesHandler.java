@@ -1,5 +1,6 @@
 package net.ci010.attributesmod.handler;
 
+import net.ci010.attributesmod.properties.Attributes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -7,33 +8,32 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 public class AttributesHandler
 {
-	@SubscribeEvent(priority=EventPriority.NORMAL)
+	@SubscribeEvent(priority = EventPriority.NORMAL)
 	public void onPlayerLogin(PlayerLoggedInEvent event)
 	{
-		if(event.player.getEntityData().hasKey("Talent"))
-			
+		NBTTagCompound playerData = event.player.getEntityData();
+		
+		if(playerData.hasKey("Talent"))
 		{
 			//TODO set the init value
+		
+			NBTTagCompound initTalent = TalentHandler.getInitTalent(playerData);
 			
-			NBTTagCompound tag = event.player.getEntityData();
-			if(!tag.hasKey("ENDURANCE"))
+			if(!playerData.hasKey("ENDURANCE"))
 			{
-				//tag.setInteger("ENDURANCE", ());
+				playerData.setInteger("ENDURANCE", Attributes.getInitValueByTalent(initTalent.getInteger("ENDURANCE")));
 			}
-			else
+			if(!playerData.hasKey("AGILITY"))
 			{
-				//power = tag.getInteger("ENDURANCE");
+				playerData.setInteger("AGILITY", Attributes.getInitValueByTalent(initTalent.getInteger("AGILITY")));
 			}
-			if(!tag.hasKey("AGILITY"))
+			if(!playerData.hasKey("POWER"))
 			{
-				//tag.setInteger("AGILITY", value);
+				playerData.setInteger("POWER", Attributes.getInitValueByTalent(initTalent.getInteger("POWER")));
 			}
-			if(!tag.hasKey("POWER"))
-			{
-				//tag.setInteger("POWER", value);
-			}
-			
 		}
 	}
+	
+
 
 }
