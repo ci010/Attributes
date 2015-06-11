@@ -1,6 +1,5 @@
 package net.ci010.attributesmod.handler;
 
-import net.ci010.attributesmod.properties.Attributes;
 import net.ci010.attributesmod.properties.Status;
 import net.ci010.attributesmod.properties.dynamic.Sleepness;
 import net.ci010.attributesmod.properties.dynamic.Strength;
@@ -59,6 +58,7 @@ public class CommonHandler
 			{
 				i = ((EntityPlayerMP)event.entityLiving).getStatFile().readStat(distance);
 				System.out.println("server player: "+i);
+				System.out.println("dmg is " + ((EntityPlayerMP)event.entityLiving).getStatFile().readStat(StatList.damageDealtStat));
 			}
 
 			
@@ -87,22 +87,25 @@ public class CommonHandler
 		DamageSource source = event.source;
 		
 		Entity victim = event.entity;
+		Entity inflictor = source.getEntity();
 		
 		if (victim instanceof EntityPlayer)
 		{
+			System.out.println("player is attacked");
 			EntityPlayer player = (EntityPlayer) victim;
 			//do something to reduce the dmg 
 			//and add up the level of endurance here
 			//by do something with event.ammount
 		}
 		
-		Entity inflictor = source.getEntity();
-		
 		if(inflictor instanceof EntityPlayer)
 		{
+			System.out.println("player attacks");
 			EntityPlayer player = (EntityPlayer) inflictor;
 			ItemStack heldItem = player.getHeldItem();
 			
+			System.out.println("dmg is " + event.ammount);
+			/*
 			float multiply = Attributes.powerInstance.getMultiplier(player);
 			
 			if (heldItem != null)
@@ -117,10 +120,30 @@ public class CommonHandler
 				event.ammount *= multiply;
 			}
 			//add up the level of power here
+			 * 
+			 */
 		}
 		
 		
 	}
+	
+	
+	@SubscribeEvent
+	public void attackEvent(LivingAttackEvent event)
+	{
+		Entity inflictor = event.source.getEntity();
+		if(inflictor instanceof EntityPlayer)
+		{
+			Strength playerSt = Strength.get((EntityPlayer) inflictor);
+			Sleepness playerSl = Sleepness.get((EntityPlayer) inflictor);
+
+			if (playerSt.getCurrent() < 0 || playerSl.getCurrent() < 0)
+			{
+
+			}
+		}
+	}
+	
 	
 	//this event must be the longest......
 	@SubscribeEvent
@@ -149,18 +172,7 @@ public class CommonHandler
 	}
 	
 
-	
-	@SubscribeEvent
-	public void attackEvent(LivingAttackEvent event)
-	{
-		Strength playerSt = Strength.get((EntityPlayer)event.entityLiving);
-		Sleepness playerSl = Sleepness.get((EntityPlayer)event.entityLiving);
-		
-		if(playerSt.getCurrent()<0||playerSl.getCurrent()<0)
-		{
-			
-		}
-	}
+
 	
 	
 	//I believe if we fill above out, it must be messy.... so maybe we need a way to manage these codes.
