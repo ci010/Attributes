@@ -1,8 +1,6 @@
 package net.ci010.attributesmod.handler;
 
-import java.util.Random;
-
-import net.minecraft.entity.player.EntityPlayer;
+import net.ci010.attributesmod.Resource;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -19,48 +17,72 @@ public class TalentHandler
 		{
 			NBTTagCompound talent = new NBTTagCompound();
 
-			NBTTagCompound upgrade = new NBTTagCompound();
-
-			Random r = event.player.getRNG();
-			
-			upgrade.setInteger("AGILITY", (r.nextInt(5) + 1));
-			upgrade.setInteger("POWER", (r.nextInt(5) + 1));
-			upgrade.setInteger("ENDURANCE", (r.nextInt(5) + 1));
-
-			talent.setTag("UPGRADE", upgrade);
-
-			NBTTagCompound limit = new NBTTagCompound();
-
-			limit.setInteger("AGILITY", (r.nextInt(5) + 1));
-			limit.setInteger("POWER", (r.nextInt(5) + 1));
-			limit.setInteger("ENDURANCE", (r.nextInt(5) + 1));
-
-			talent.setTag("LIMIT", limit);
-			
-			NBTTagCompound init = new NBTTagCompound();
-			
-			init.setInteger("AGILITY", (r.nextInt(5) + 1));
-			init.setInteger("POWER", (r.nextInt(5) + 1));
-			init.setInteger("ENDURANCE", (r.nextInt(5) + 1));
-			
-			talent.setTag("INIT", init);
+			talent.setInteger("AGILITY", (Resource.r.nextInt(5) + 1));
+			talent.setInteger("POWER", (Resource.r.nextInt(5) + 1));
+			talent.setInteger("ENDURANCE", (Resource.r.nextInt(5) + 1));
 			
 			playerData.setTag("Talent", talent);
 		}
+		
+		if(!playerData.hasKey("Limit"))
+		{
+			NBTTagCompound limit = new NBTTagCompound();
+
+			int[] value = generateLimitValue();
+			
+			limit.setInteger("AGILITY", value[0]);
+			limit.setInteger("POWER", value[1]);
+			limit.setInteger("ENDURANCE", value[2]);
+			
+			playerData.setTag("Limit", limit);
+		}
+		
+
+
+		if (!playerData.hasKey("ENDURANCE") || !playerData.hasKey("AGILITY") || !playerData.hasKey("POWER"))
+		{
+			int[] sum = TalentHandler.generateInitValue();
+
+			playerData.setInteger("ENDURANCE", sum[0]);
+			playerData.setInteger("AGILITY", sum[1]);
+			playerData.setInteger("POWER", sum[2]);
+		}
+
 	}
 	
-	public static NBTTagCompound getUpgradeTalent(NBTTagCompound playerData)
+	private static int[] generateInitValue()
 	{
-		return playerData.getCompoundTag("Talent").getCompoundTag("UPGRADE");
+		int sum = (int) (Resource.r.nextGaussian() * 5d) + 20;
+
+		int i = Resource.r.nextInt(sum) + 1;
+
+		int j = Resource.r.nextInt(sum - i) + 1;
+
+		int k = sum - i - j;
+
+		return new int[] { i, j, k };
 	}
 	
-	public static NBTTagCompound getLimitTalent(NBTTagCompound playerData)
+	private static int[] generateLimitValue()
 	{
-		return playerData.getCompoundTag("Talent").getCompoundTag("LIMIT");
+		int sum = (int)(Resource.r.nextGaussian()*20d)+200;
+		
+		int i = Resource.r.nextInt(sum) + 1;
+
+		int j = Resource.r.nextInt(sum - i) + 1;
+
+		int k = sum - i - j;
+		
+		return new int[] { i, j, k };
 	}
 	
-	public static NBTTagCompound getInitTalent(NBTTagCompound playerData)
+	public static NBTTagCompound getTalent(NBTTagCompound playerData)
 	{
-		return playerData.getCompoundTag("Talent").getCompoundTag("INIT");
+		return playerData.getCompoundTag("Talent");
+	}
+	
+	public static NBTTagCompound getLimit(NBTTagCompound playerData)
+	{
+		return playerData.getCompoundTag("Limit");
 	}
 }
