@@ -15,7 +15,6 @@ public class CommonProxy
 	{
 		MinecraftForge.EVENT_BUS.register(new CommonHandler());
 		FMLCommonHandler.instance().bus().register(new TalentHandler());
-		FMLCommonHandler.instance().bus().register(new AttributesHandler());
 	}
 
 	public void iniConfig(FMLPreInitializationEvent event)
