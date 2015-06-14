@@ -6,16 +6,14 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class Power extends Attributes 
 {
-	public Power(int value)
+	public Power(String id)
 	{
-		super(value);
-		this.id = "POWER";
+		super(id);
 	}
 	
 	@Override
-	public float getMultiplier(EntityPlayer player)
+	public float transformToPerformance(int attribute)
 	{
-		//TODO need to be rewritten
-		return 0;
+		return ((float)attribute/50f)+1f;
 	}
 }

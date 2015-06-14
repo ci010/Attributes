@@ -5,16 +5,22 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class Agility extends Attributes
 {
-	public Agility(int value)
+	public Agility(String id)
 	{
-		super(value);
-		id = "AGILITY";
+		super(id);
 	}
 
 	@Override
-	public float getMultiplier(EntityPlayer player)
+	public int affectByTalent(int upgradeTalent, int limitTalent, int distance)
 	{
-		// TODO need to be rewritten
+		int attributes = 300- 1/(distance*upgradeTalent);
+		return attributes;
+	}
+	
+	@Override
+	public float transformToPerformance(int attribute)
+	{
+		
 		return 0;
 	}
 }

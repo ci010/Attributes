@@ -1,20 +1,21 @@
 package net.ci010.attributesmod.properties.basic;
 
+import net.ci010.attributesmod.Resource;
 import net.ci010.attributesmod.properties.Attributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class Endurance extends Attributes
 {
-	public Endurance(int value)
+	public Endurance(String id)
 	{
-		super(value);
-		this.id = "ENDURANCE";
+		super(id, Resource.getFactor(id));
 	}
 
 	@Override
-	public float getMultiplier(EntityPlayer player)
+	public float transformToPerformance(int attribute)
 	{
-		// TODO need to be rewritten
-		return 0;
+		return (float)attribute;
+		//TODO consider if write as .... abs
 	}
 }
