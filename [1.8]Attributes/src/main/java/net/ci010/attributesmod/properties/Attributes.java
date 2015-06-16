@@ -5,8 +5,14 @@ import net.ci010.attributesmod.properties.basic.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatList;
 
+/**
+ * 
+ * @author CI010
+ *
+ */
 public abstract class Attributes
 {
 	public static final Agility agilityInstance = new Agility("AGILITY");
@@ -17,63 +23,57 @@ public abstract class Attributes
 
 	protected String id = "dummy";
 
-	public Attributes(String id, float... factor)
+	protected Attributes(String id, float... factor)
 	{
-		this.id = id;
+		this.id = id;	
 		this.factor = factor;
 	}
 
-	public final void upgradeTo(EntityPlayer player, int statistic)
+	/**
+	 * Update player's attribute by the statistic value of player
+	 * @param player The entity player needed to be update attribute
+	 * @param statistic The integer value of player
+	 */
+	protected final void upgrade(EntityPlayerMP player)
 	{
 		NBTTagCompound playerData = player.getEntityData();
-
+		
 		int talent = TalentHandler.getTalent(playerData).getInteger(this.id);
 
 		int limit = TalentHandler.getLimit(playerData).getInteger(this.id);
-
-		playerData.setInteger(this.id, affectByTalent(talent, limit, statistic));
+		
+		playerData.setInteger(this.id, affectByTalent(talent, limit, player));
 	}
 
-	public int affectByTalent(int upgradeTalent, int limitTalent, int statistic)
-	{
-		int performance = statistic * upgradeTalent;
-		// TODO transform the statistic value i into the attribute value, by the
-		// upgrade talent and limit talent
-		return performance;
-	}
+	protected abstract int affectByTalent(int upgradeTalent, int limitTalent, EntityPlayerMP player);
 
-	// transform the multiply value to the actual performance multiplier
-	public final float getMultiplier(EntityPlayer player)
+	
+    /**
+     * transform the player's attribute value to the actual performance multiplier(float)
+     * @return float multiplier
+     */
+	protected final float getMultiplier(EntityPlayer player)
 	{
 		NBTTagCompound playerData = player.getEntityData();
 		int attribute = playerData.getInteger(this.id);
 		return this.transformToPerformance(attribute);
 	}
 
-	public float transformToPerformance(int attribute)
-	{
-		return 0;
-	}
+	protected abstract float transformToPerformance(int attribute);
 	
+	/**
+	 * Update all the attributes of the player
+	 * @param player The player needed to be updated attributes
+	 * */
 	public static final void updatePlayer(EntityPlayer player)
 	{
 		if (player instanceof EntityPlayerMP)
 		{
-			int runDistance = ((EntityPlayerMP) player).getStatFile().readStat(StatList.distanceSprintedStat);
-			int walkDistance = ((EntityPlayerMP) player).getStatFile().readStat(StatList.distanceWalkedStat);
-			int damageDealt = ((EntityPlayerMP) player).getStatFile().readStat(StatList.damageDealtStat);
-			int damageTaken = ((EntityPlayerMP) player).getStatFile().readStat(StatList.damageTakenStat);
-
-			int agility = runDistance * 10 + walkDistance / 2;
-			// TODO separate the effect of run and effect of walk to the agility
-			// and endurance
-			int endurance = damageTaken;
-			int power = damageDealt;
-
-			Attributes.agilityInstance.upgradeTo(player, agility);
-			Attributes.enduranceInstance.upgradeTo(player, endurance);
-			Attributes.powerInstance.upgradeTo(player, power);
+			EntityPlayerMP playerMP = (EntityPlayerMP)player;
+		
+			Attributes.agilityInstance.upgrade(playerMP);
+			Attributes.enduranceInstance.upgrade(playerMP);
+			Attributes.powerInstance.upgrade(playerMP);
 		}
 	}
-
 }
