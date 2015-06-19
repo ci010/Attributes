@@ -1,5 +1,6 @@
 package net.ci010.attributesmod.handler;
 
+import net.ci010.attributesmod.properties.Attributes;
 import net.ci010.attributesmod.properties.Status;
 import net.ci010.attributesmod.properties.dynamic.Sleepness;
 import net.ci010.attributesmod.properties.dynamic.Strength;
@@ -50,18 +51,6 @@ public class CommonHandler
 			Strength playerSt = Strength.get(player);
 			
 			playerSt.consume(5);
-			
-			StatBase distance = StatList.distanceSprintedStat;
-			
-			int i=-1;
-			if(player instanceof EntityPlayerMP)
-			{
-				i = ((EntityPlayerMP)event.entityLiving).getStatFile().readStat(distance);
-				System.out.println("server player: "+i);
-				System.out.println("dmg is " + ((EntityPlayerMP)event.entityLiving).getStatFile().readStat(StatList.damageDealtStat));
-			}
-
-			
 			//that is just a sample... the value of consume method need to be adjust
 		}
 	}
@@ -91,7 +80,7 @@ public class CommonHandler
 		
 		if (victim instanceof EntityPlayer)
 		{
-			System.out.println("player is attacked");
+
 			EntityPlayer player = (EntityPlayer) victim;
 			//do something to reduce the dmg 
 			//and add up the level of endurance here
@@ -100,11 +89,10 @@ public class CommonHandler
 		
 		if(inflictor instanceof EntityPlayer)
 		{
-			System.out.println("player attacks");
+
 			EntityPlayer player = (EntityPlayer) inflictor;
 			ItemStack heldItem = player.getHeldItem();
 			
-			System.out.println("dmg is " + event.ammount);
 			/*
 			float multiply = Attributes.powerInstance.getMultiplier(player);
 			
