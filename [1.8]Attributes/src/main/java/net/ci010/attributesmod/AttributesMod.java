@@ -3,6 +3,7 @@ package net.ci010.attributesmod;
 import net.ci010.attributesmod.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -15,12 +16,18 @@ public class AttributesMod
 	public static final String NAME = "Attributes";
 	public static final String VERSION = "1.0";
 
+	
+	
 	@SidedProxy(serverSide = "net.ci010.attributesmod.proxy.CommonProxy", clientSide = "net.ci010.attributesmod.proxy.ClientProxy")
 	public static CommonProxy proxy;
 
+	@Instance("Attributes")
+	public static AttributesMod instance;
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		instance = this;
 		proxy.iniConfig(event);
 	}
 
