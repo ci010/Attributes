@@ -1,6 +1,10 @@
 package net.ci010.attributesmod.handler;
 
 import net.ci010.attributesmod.Resource;
+import net.ci010.attributesmod.network.PacketDispatcher;
+import net.ci010.attributesmod.network.SyncAttributesMessage;
+import net.ci010.attributesmod.properties.Attributes;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -11,6 +15,7 @@ public class TalentHandler
 	@SubscribeEvent(priority=EventPriority.HIGH)
 	public void onPlayerLogin(PlayerLoggedInEvent event)
 	{
+		System.out.println("login event");
 		NBTTagCompound playerData = event.player.getEntityData();
 		
 		if(!playerData.hasKey("Talent"))
@@ -39,15 +44,22 @@ public class TalentHandler
 		
 
 
-		if (!playerData.hasKey("ENDURANCE") || !playerData.hasKey("AGILITY") || !playerData.hasKey("POWER"))
+		if (!playerData.hasKey("ATTRIBUTES"))
 		{
-			int[] sum = TalentHandler.generateInitValue();
-
-			playerData.setInteger("ENDURANCE", sum[0]);
-			playerData.setInteger("AGILITY", sum[1]);
-			playerData.setInteger("POWER", sum[2]);
+			System.out.println("init generate");
+			
+			NBTTagCompound attr = new NBTTagCompound();
+			
+			int[] sum = generateInitValue();
+			
+			attr.setInteger(Attributes.enduranceInstance.id, sum[0]);
+			attr.setInteger(Attributes.agilityInstance.id, sum[1]);
+			attr.setInteger(Attributes.powerInstance.id, sum[2]);
+			
+			playerData.setTag("ATTRIBUTES", attr);
 		}
-
+		
+		PacketDispatcher.sendTo(new SyncAttributesMessage(event.player), (EntityPlayerMP) event.player);
 	}
 	
 	private static int[] generateInitValue()
