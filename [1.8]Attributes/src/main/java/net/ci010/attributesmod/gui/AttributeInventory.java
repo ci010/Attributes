@@ -3,10 +3,12 @@ package net.ci010.attributesmod.gui;
 import net.ci010.attributesmod.properties.Attributes;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 
 public class AttributeInventory extends GuiInventory
 {
 	//private ResourceLocation texture = new ResourceLocation("attributes", "textures/gui/texture.png"); 
+	private ResourceLocation texture = new ResourceLocation("textures/gui/container/inventory.png"); 
 	
 	EntityPlayer player;
 	
@@ -20,9 +22,55 @@ public class AttributeInventory extends GuiInventory
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
 		super.drawScreen(mouseX, mouseY, partialTicks);
-		drawString(fontRendererObj, String.valueOf(Attributes.powerInstance.getAttribute(player)), (int)(width*0.2), (int)(height*0.4), 0xFFFFFF);
-		drawString(fontRendererObj, String.valueOf(Attributes.agilityInstance.getAttribute(player)), (int)(width*0.2), (int)(height*0.5), 0xFFFFFF);
-		drawString(fontRendererObj, String.valueOf(Attributes.enduranceInstance.getAttribute(player)), (int)(width*0.2), (int)(height*0.6), 0xFFFFFF);
+		mc.renderEngine.bindTexture(texture);
+		
+		int invLength = 176;
+		int invHeight = 166;
+		int captureGap = 5;
+		
+		int left = this.guiLeft +this.xSize+10;
+		int right = this.guiLeft+ this.xSize + 10 + (int)(width*0.1);
+//		int left = (int) (width * 0.7);
+//		int right = (int) (width * 0.77);
+		int length = right - left;
+		
+		//int top = (int) (height * 0.16) - 1;
+		int top = this.guiTop;
+		int bottom = (int) (height * 0.5);
+		int h = bottom - top;
+
+		drawTexturedModalRect(left, top, 0, 0, length, captureGap);
+
+		drawTexturedModalRect(right, top, invLength-captureGap, 0, captureGap, h);
+
+		drawTexturedModalRect(left, top, 0, 0, captureGap, h);
+
+		drawTexturedModalRect(left, bottom, 0, invHeight-captureGap, length, captureGap);
+
+		drawTexturedModalRect(right, bottom, invLength-captureGap, invHeight-captureGap, captureGap, captureGap);
+
+		drawTexturedModalRect(left+captureGap, top+captureGap, invLength-captureGap - length , captureGap, length-captureGap, h/3);
+		
+		drawTexturedModalRect(left+captureGap, top+captureGap+h/3, invLength-captureGap - length , captureGap, length-captureGap, h/3);
+		
+		drawTexturedModalRect(left+captureGap, top+captureGap+(2*h/3)-1, invLength-captureGap - length , captureGap, length-captureGap, h/3);
+		
+		int center = left+length/2;
+		
+		drawString(fontRendererObj, String.valueOf(Attributes.powerInstance.getAttribute(player)), center+5, top+10, 0xFFFFFF);
+		drawString(fontRendererObj, String.valueOf(Attributes.agilityInstance.getAttribute(player)), center+5, top+20, 0xFFFFFF);
+		drawString(fontRendererObj, String.valueOf(Attributes.enduranceInstance.getAttribute(player)), center+5, top+30, 0xFFFFFF);
+	}
+	
+	public void draw4P()
+	{
+		drawTexturedModalRect((int)(width*0.2), (int) (height*0.16)-1, 0, 0, 5, 5);
+		
+		drawTexturedModalRect((int) (width*0.27), (int) (height*0.16)-1, 171, 0, 5, 5);
+		
+		drawTexturedModalRect((int)(width*0.2), (int)(height*0.5), 0, 161, 5, 5);
+		
+		drawTexturedModalRect((int) (width*0.27), (int)(height*0.5), 171, 161, 5, 5);
 	}
 
 }
