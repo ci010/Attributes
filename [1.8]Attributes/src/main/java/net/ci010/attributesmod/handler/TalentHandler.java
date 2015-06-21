@@ -59,11 +59,6 @@ public class TalentHandler
 			
 			playerData.setTag("ATTRIBUTES", attr);
 		}
-		
-		if(event.player instanceof EntityPlayerMP)
-		{
-			PacketDispatcher.sendTo(new SyncAttributesMessage((EntityPlayer) event.player), (EntityPlayerMP) event.player);
-		}
 	}
 	
 	private static int[] generateInitValue()
