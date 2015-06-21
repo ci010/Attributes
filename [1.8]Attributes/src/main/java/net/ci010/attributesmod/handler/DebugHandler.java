@@ -41,6 +41,8 @@ public class DebugHandler
 		{
 			EntityPlayer player = (EntityPlayer) event.entityLiving;
 		}
+		
+
 	}
 	
 
