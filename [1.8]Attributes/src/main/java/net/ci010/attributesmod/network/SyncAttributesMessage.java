@@ -18,7 +18,7 @@ public class SyncAttributesMessage implements IMessage
 
 	public SyncAttributesMessage(EntityPlayer player)
 	{
-		data = Attributes.getAttributes(player);
+		data = Attributes.getNBTData(player);
 	}
 
 	@Override
@@ -35,13 +35,10 @@ public class SyncAttributesMessage implements IMessage
 	
 	public static class Handler extends AbstractClientMessageHandler<SyncAttributesMessage> 
 	{
-		 // the fruits of our labor: we immediately know from the method name that we are handling
-		 // a message on the client side, and we have our EntityPlayer right there ready for use. Awesome.
 		 @Override
 		 public IMessage handleClientMessage(EntityPlayer player, SyncAttributesMessage message, MessageContext ctx) 
 		 {
-		 // now we can just load the NBTTagCompound data directly; one and done, folks
-			 Attributes.setAttributes(player, message.data);
+			 Attributes.setFromNBT(player, message.data);
 			 return null;
 		 }
 	}
