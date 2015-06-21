@@ -60,9 +60,9 @@ public class AttributeInventory extends GuiInventory
 		
 		int center = left+length/2;
 		
-		drawString(fontRendererObj, String.valueOf(Attributes.powerInstance.getAttribute(player)), center+5, top+10, 0xFFFFFF);
-		drawString(fontRendererObj, String.valueOf(Attributes.agilityInstance.getAttribute(player)), center+5, top+20, 0xFFFFFF);
-		drawString(fontRendererObj, String.valueOf(Attributes.enduranceInstance.getAttribute(player)), center+5, top+30, 0xFFFFFF);
+		drawString(fontRendererObj, String.valueOf(Attributes.power.getAttribute(player)), center+5, top+10, 0xFFFFFF);
+		drawString(fontRendererObj, String.valueOf(Attributes.agility.getAttribute(player)), center+5, top+20, 0xFFFFFF);
+		drawString(fontRendererObj, String.valueOf(Attributes.endurance.getAttribute(player)), center+5, top+30, 0xFFFFFF);
 		
 	}
 	
