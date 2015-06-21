@@ -19,7 +19,7 @@ public class CommonProxy
 		MinecraftForge.EVENT_BUS.register(new CommonHandler());
 		MinecraftForge.EVENT_BUS.register(new DebugHandler());
 		FMLCommonHandler.instance().bus().register(new TalentHandler());
-		FMLCommonHandler.instance().bus().register(new TestHandler());
+		FMLCommonHandler.instance().bus().register(new LoginSynHandler());
 		NetworkRegistry.INSTANCE.registerGuiHandler(AttributesMod.instance, new GuiHandler());
 	}
 
