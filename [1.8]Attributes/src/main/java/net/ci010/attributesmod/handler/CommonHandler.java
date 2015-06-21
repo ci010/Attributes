@@ -1,5 +1,6 @@
 package net.ci010.attributesmod.handler;
 
+import net.ci010.attributesmod.properties.Attributes;
 import net.ci010.attributesmod.properties.Status;
 import net.ci010.attributesmod.properties.dynamic.Sleepness;
 import net.ci010.attributesmod.properties.dynamic.Strength;
@@ -91,8 +92,8 @@ public class CommonHandler
 			EntityPlayer player = (EntityPlayer) inflictor;
 			ItemStack heldItem = player.getHeldItem();
 			
-			/*
-			float multiply = Attributes.powerInstance.getMultiplier(player);
+			
+			float multiply = Attributes.power.getMultiplier(player);
 			
 			if (heldItem != null)
 			{
@@ -106,8 +107,8 @@ public class CommonHandler
 				event.ammount *= multiply;
 			}
 			//add up the level of power here
-			 * 
-			 */
+			
+			 
 		}
 		
 		
