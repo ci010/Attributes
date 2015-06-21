@@ -1,11 +1,7 @@
 package net.ci010.attributesmod.handler;
 
 import net.ci010.attributesmod.Resource;
-import net.ci010.attributesmod.network.PacketDispatcher;
-import net.ci010.attributesmod.network.SyncAttributesMessage;
 import net.ci010.attributesmod.properties.Attributes;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -22,9 +18,9 @@ public class TalentHandler
 		{
 			NBTTagCompound talent = new NBTTagCompound();
 
-			talent.setInteger("AGILITY", (Resource.r.nextInt(5) + 1));
-			talent.setInteger("POWER", (Resource.r.nextInt(5) + 1));
-			talent.setInteger("ENDURANCE", (Resource.r.nextInt(5) + 1));
+			talent.setInteger(Attributes.agility.id, (Resource.r.nextInt(5) + 1));
+			talent.setInteger(Attributes.power.id, (Resource.r.nextInt(5) + 1));
+			talent.setInteger(Attributes.endurance.id, (Resource.r.nextInt(5) + 1));
 			
 			playerData.setTag("Talent", talent);
 		}
@@ -35,9 +31,9 @@ public class TalentHandler
 
 			int[] value = generateLimitValue();
 			
-			limit.setInteger("AGILITY", value[0]);
-			limit.setInteger("POWER", value[1]);
-			limit.setInteger("ENDURANCE", value[2]);
+			limit.setInteger(Attributes.agility.id, value[0]);
+			limit.setInteger(Attributes.power.id, value[1]);
+			limit.setInteger(Attributes.endurance.id, value[2]);
 			
 			playerData.setTag("Limit", limit);
 		}
@@ -52,9 +48,9 @@ public class TalentHandler
 			
 			int[] sum = generateInitValue();
 			
-			attr.setInteger(Attributes.enduranceInstance.id, sum[0]);
-			attr.setInteger(Attributes.agilityInstance.id, sum[1]);
-			attr.setInteger(Attributes.powerInstance.id, sum[2]);
+			attr.setInteger(Attributes.endurance.id, sum[0]);
+			attr.setInteger(Attributes.agility.id, sum[1]);
+			attr.setInteger(Attributes.power.id, sum[2]);
 			
 			playerData.setTag("ATTRIBUTES", attr);
 		}
