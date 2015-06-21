@@ -1,10 +1,14 @@
 package net.ci010.attributesmod.properties;
 
 import net.ci010.attributesmod.handler.TalentHandler;
+import net.ci010.attributesmod.network.PacketDispatcher;
+import net.ci010.attributesmod.network.SyncAttributesMessage;
 import net.ci010.attributesmod.properties.basic.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * 
@@ -35,21 +39,16 @@ public abstract class Attributes
 	 * @param statistic
 	 *            The integer value of player
 	 */
-	protected final void upgrade(EntityPlayerMP player)
+	public final void upgrade(EntityPlayerMP player)
 	{
 		NBTTagCompound playerData = player.getEntityData();
 
 		int talent = TalentHandler.getTalent(playerData).getInteger(this.id);
 
-		int limit = TalentHandler.getLimit(playerData).getInteger(this.id);
-
-		playerData.getCompoundTag("ATTRIBUTES").setInteger(	this.id,
-															affectByTalent(	talent,
-																			limit,
-																			player));
+		setAttribute(player, affectByTalent(talent, player));
 	}
 
-	protected abstract int affectByTalent(int upgradeTalent, int limitTalent, EntityPlayerMP player);
+	protected abstract int affectByTalent(int upgradeTalent, EntityPlayerMP player);
 
 	/**
 	 * transform the player's attribute value to the actual performance
@@ -57,9 +56,9 @@ public abstract class Attributes
 	 * 
 	 * @return float multiplier
 	 */
-	protected final float getMultiplier(EntityPlayer player)
+	public final float getMultiplier(EntityPlayer player)
 	{
-		int attribute = getAttributes(player).getInteger(this.id);
+		int attribute = getNBTData(player).getInteger(this.id);
 		return this.transformToPerformance(attribute);
 	}
 
@@ -67,7 +66,7 @@ public abstract class Attributes
 
 	public int getAttribute(EntityPlayer player)
 	{
-		return getAttributes(player).getInteger(this.id);
+		return getNBTData(player).getInteger(this.id);
 	}
 
 	/**
@@ -89,12 +88,12 @@ public abstract class Attributes
 		}
 	}
 
-	public static final NBTTagCompound getAttributes(EntityPlayer player)
+	public static final NBTTagCompound getNBTData(EntityPlayer player)
 	{
 		return player.getEntityData().getCompoundTag("ATTRIBUTES");
 	}
 
-	public static final void setAttributes(EntityPlayer player, NBTTagCompound data)
+	public static final void setFromNBT(EntityPlayer player, NBTTagCompound data)
 	{
 		if (player == null)
 		{
@@ -103,5 +102,24 @@ public abstract class Attributes
 		}
 
 		player.getEntityData().setTag("ATTRIBUTES", data);
+	}
+	
+	public void setAttribute(EntityPlayer player, int value)
+	{
+		if (player == null)
+		{
+			return;
+		}
+		int limit = TalentHandler.getLimit(player.getEntityData()).getInteger(this.id);
+		
+		if(value > limit)
+			value = limit;
+			
+		getNBTData(player).setInteger(this.id, value);
+		
+		if(player instanceof EntityPlayerMP)
+		{
+			PacketDispatcher.sendTo(new SyncAttributesMessage(player), (EntityPlayerMP)player);
+		}
 	}
 }

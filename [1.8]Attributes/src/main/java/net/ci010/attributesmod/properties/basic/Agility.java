@@ -1,7 +1,6 @@
 package net.ci010.attributesmod.properties.basic;
 
 import net.ci010.attributesmod.properties.Attributes;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.stats.StatList;
 
@@ -13,7 +12,7 @@ public class Agility extends Attributes
 	}
 
 	@Override
-	public int affectByTalent(int upgradeTalent, int limitTalent, EntityPlayerMP player)
+	protected int affectByTalent(int upgradeTalent, EntityPlayerMP player)
 	{
 		int runDistance = player.getStatFile().readStat(StatList.distanceSprintedStat);
 		int walkDistance = player.getStatFile().readStat(StatList.distanceWalkedStat);
@@ -22,17 +21,8 @@ public class Agility extends Attributes
 	}
 
 	@Override
-	public float transformToPerformance(int attribute)
+	protected float transformToPerformance(int attribute)
 	{
 		return (float) attribute / 299f + 298f / 299f;
 	}
-
-	// public int getAttribute(EntityPlayer player)
-	// {
-	// if(player instanceof EntityPlayerMP)
-	// System.out.println("is Mp");
-	// else
-	// System.out.println("is Sp");
-	// return player.getEntityData().getInteger(this.id);
-	// }
 }

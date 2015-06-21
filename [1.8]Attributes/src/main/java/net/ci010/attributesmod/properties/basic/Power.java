@@ -12,14 +12,14 @@ public class Power extends Attributes
 	}
 
 	@Override
-	public int affectByTalent(int upgradeTalent, int limitTalent, EntityPlayerMP player)
+	protected int affectByTalent(int upgradeTalent, EntityPlayerMP player)
 	{
 		int damageDealt = player.getStatFile().readStat(StatList.damageDealtStat);
 		return 300 - (280 / damageDealt);
 	}
 
 	@Override
-	public float transformToPerformance(int attribute)
+	protected float transformToPerformance(int attribute)
 	{
 		return ((float) attribute / 60f) + 1f;
 	}

@@ -13,14 +13,14 @@ public class Endurance extends Attributes
 	}
 
 	@Override
-	public int affectByTalent(int upgradeTalent, int limitTalent, EntityPlayerMP player)
+	protected int affectByTalent(int upgradeTalent, EntityPlayerMP player)
 	{
 		int damageTaken = player.getStatFile().readStat(StatList.damageTakenStat);
 		return 300 - (280 / damageTaken);
 	}
 
 	@Override
-	public float transformToPerformance(int attribute)
+	protected float transformToPerformance(int attribute)
 	{
 		return (float) attribute / 280f;
 		// TODO consider if write as .... abs
