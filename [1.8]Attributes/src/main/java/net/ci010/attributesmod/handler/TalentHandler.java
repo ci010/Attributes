@@ -16,7 +16,6 @@ public class TalentHandler
 	@SubscribeEvent(priority=EventPriority.HIGH)
 	public void onPlayerLogin(PlayerLoggedInEvent event)
 	{
-		System.out.println("login event");
 		NBTTagCompound playerData = event.player.getEntityData();
 		
 		if(!playerData.hasKey("Talent"))
