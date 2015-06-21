@@ -4,6 +4,7 @@ import net.ci010.attributesmod.properties.Attributes;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class AttribueCommand extends CommandBase
@@ -17,61 +18,88 @@ public class AttribueCommand extends CommandBase
 	@Override
 	public String getCommandUsage(ICommandSender sender)
 	{
-		return "/attri set [value]";
+		return "attri.command.usage";
+	}
+
+	@Override
+	public int getRequiredPermissionLevel()
+	{
+		return 3;
 	}
 
 	@Override
 	public void execute(ICommandSender sender, String[] args)
 			throws CommandException
 	{
-		{
-			if (sender instanceof EntityPlayer)
-			{
-				if (SyntexHelper.isNumeric(args[1]))
-				{
-					EntityPlayer player = (EntityPlayer) sender;
 
-					if (args[0].equals("setA")||args[0].equals("setAgility"))
-					{
-						Attributes.agility.setAttribute(player,Integer.valueOf(args[1]));
-						notifyOperators(sender,
-										this,
-										"commands.attri.setA",
-										new Object[]
-										{ Integer.valueOf(args[1]) });
-					}
-					
-					if (args[0].equals("setE")||args[0].equals("setEndurance"))
-					{
-						Attributes.endurance.setAttribute(player,Integer.valueOf(args[1]));	
-						notifyOperators(sender,
-										this,
-										"commands.attri.setE",
-										new Object[]
-										{ Integer.valueOf(args[1]) });
-					}
-					
-					if (args[0].equals("setP")||args[0].equals("setPower"))
-					{
-						Attributes.power.setAttribute(player,Integer.valueOf(args[1]));	
-						notifyOperators(sender,
-										this,
-										"commands.attri.setP",
-										new Object[]
-										{ Integer.valueOf(args[1]) });
-					}
+		EntityPlayer player;
+		if (args.length < 4)
+		{
+			throw new CommandException("attri.command.usage");
+		}
+		if (args[0].equals("set"))
+		{
+			if (SyntexHelper.isNumeric(args[3]))
+			{
+				// EntityPlayer player = (EntityPlayer) sender;
+				try
+				{
+					player = getPlayer(sender, args[1]);
 				}
+				catch (PlayerNotFoundException e)
+				{
+					throw new CommandException("attri.command.exception.noname", args[1]);
+				}
+
+				if (args[2].equals("agility"))
+				{
+
+					Attributes.agility.setAttribute(player,
+													Integer.valueOf(args[3]));
+					notifyOperators(sender,
+									this,
+									"attri.command.set.agility",
+									new Object[]
+									{ args[1], Integer.valueOf(args[3]) });
+				}
+
+				else if (args[2].equals("endurance"))
+				{
+					Attributes.endurance.setAttribute(	player,
+														Integer.valueOf(args[3]));
+					notifyOperators(sender,
+									this,
+									"attri.command.set.endurance",
+									new Object[]
+									{ args[1], Integer.valueOf(args[3]) });
+				}
+
+				else if (args[2].equals("power"))
+				{
+					Attributes.power.setAttribute(	player,
+													Integer.valueOf(args[3]));
+					notifyOperators(sender,
+									this,
+									"attri.command.set.power",
+									new Object[]
+									{ args[1], Integer.valueOf(args[3]) });
+				}
+
 				else
 				{
-					throw new CommandException("The value needs to be an integer.");
+					throw new CommandException("attri.command.exception.type");
 				}
 			}
 			else
 			{
-				throw new CommandException("This command is for player only");
+				throw new CommandException("attri.command.exception.value");
 			}
-
+		}
+		else
+		{
+			throw new CommandException("attri.command.exception");
 		}
 
 	}
+
 }
