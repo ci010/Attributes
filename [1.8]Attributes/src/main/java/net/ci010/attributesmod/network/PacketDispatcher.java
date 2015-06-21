@@ -32,13 +32,17 @@ public class PacketDispatcher
 		PacketDispatcher.registerMessage(	SyncAttributesMessage.Handler.class,
 											SyncAttributesMessage.class,
 											Side.CLIENT);
+		PacketDispatcher.registerMessage(	OpenGuiMessage.Handler.class,
+		                                 	OpenGuiMessage.class,
+											Side.SERVER);
 	}
 
 	/**
 	 * Registers a message and message handler
 	 */
-	@SuppressWarnings("unchecked")
-	private static final void registerMessage(Class handlerClass, Class messageClass, Side side)
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static final void registerMessage(Class handlerClass, Class<? extends IMessage> messageClass, Side side)
 	{
 		dispatcher.registerMessage(handlerClass, messageClass, packetId++, side);
 	}
