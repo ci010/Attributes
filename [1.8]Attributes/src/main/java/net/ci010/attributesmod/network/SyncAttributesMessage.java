@@ -41,12 +41,8 @@ public class SyncAttributesMessage implements IMessage
 		 public IMessage handleClientMessage(EntityPlayer player, SyncAttributesMessage message, MessageContext ctx) 
 		 {
 		 // now we can just load the NBTTagCompound data directly; one and done, folks
-			 if(player == null)
-			 {
-				 System.out.println("player is null in handler");
-			 }
-		 Attributes.setAttributes(player, message.data);
-		 return null;
+			 Attributes.setAttributes(player, message.data);
+			 return null;
 		 }
 	}
 
