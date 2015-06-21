@@ -27,7 +27,7 @@ public class KeybindingHandler
 		{
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			//this works...... yet I want a better solution...
-			if(player.getEntityData().getCompoundTag("ATTRIBUTES").getInteger(Attributes.powerInstance.id)==0)
+			if(player.getEntityData().getCompoundTag("ATTRIBUTES").getInteger(Attributes.power.id)==0)
 				PacketDispatcher.sendToServer(new OpenGuiMessage(0));
 			player.openGui(AttributesMod.instance, 0, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
 		}
