@@ -6,10 +6,6 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.StatBase;
-import net.minecraft.stats.StatList;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * 
@@ -91,32 +87,16 @@ public abstract class Attributes
 
 	public static final NBTTagCompound getAttributes(EntityPlayer player)
 	{
-//		if(player instanceof EntityPlayerSP)
-//		{
-//			System.out.println("getAttributes is SP");
-//		}
-//		if(player instanceof EntityPlayerMP)
-//		{
-//			System.out.println("getAttributes is MP");
-//		}
 		return player.getEntityData().getCompoundTag("ATTRIBUTES");
 	}
 	
 	public static final void setAttributes(EntityPlayer player, NBTTagCompound data)
 	{
-		if(player instanceof EntityPlayerSP)
-		{
-			System.out.println("setAttributes is SP");
-		}
-		if(player instanceof EntityPlayerMP)
-		{
-			System.out.println("setAttributes is MP");
-		}
 		if(player == null)
 		{
-			System.out.println("player is null");
 			return;
 		}
 		player.getEntityData().setTag("ATTRIBUTES",data);
 	}
+	
 }
