@@ -4,6 +4,7 @@ import net.ci010.attributesmod.Resource;
 import net.ci010.attributesmod.network.PacketDispatcher;
 import net.ci010.attributesmod.network.SyncAttributesMessage;
 import net.ci010.attributesmod.properties.Attributes;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -59,7 +60,10 @@ public class TalentHandler
 			playerData.setTag("ATTRIBUTES", attr);
 		}
 		
-		PacketDispatcher.sendTo(new SyncAttributesMessage(event.player), (EntityPlayerMP) event.player);
+		if(event.player instanceof EntityPlayerMP)
+		{
+			PacketDispatcher.sendTo(new SyncAttributesMessage((EntityPlayer) event.player), (EntityPlayerMP) event.player);
+		}
 	}
 	
 	private static int[] generateInitValue()
