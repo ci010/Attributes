@@ -2,7 +2,6 @@ package net.ci010.attributesmod.properties;
 
 import net.ci010.attributesmod.handler.TalentHandler;
 import net.ci010.attributesmod.properties.basic.*;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -94,8 +93,10 @@ public abstract class Attributes
 	{
 		if(player == null)
 		{
-			return;
+				System.out.println("Player is null when set");
+				return;
 		}
+		
 		player.getEntityData().setTag("ATTRIBUTES",data);
 	}
 	
