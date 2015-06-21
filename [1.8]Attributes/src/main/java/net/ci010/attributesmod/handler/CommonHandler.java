@@ -1,15 +1,11 @@
 package net.ci010.attributesmod.handler;
 
-import net.ci010.attributesmod.properties.Attributes;
 import net.ci010.attributesmod.properties.Status;
 import net.ci010.attributesmod.properties.dynamic.Sleepness;
 import net.ci010.attributesmod.properties.dynamic.Strength;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.StatBase;
-import net.minecraft.stats.StatList;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -23,15 +19,17 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class CommonHandler
 {
-	//all accomplishment works are done in Handler
-	
+
 	@SubscribeEvent
 	public void onEntityConstructing(EntityConstructing event)
 	{
-		if (event.entity instanceof EntityPlayer && Sleepness.get((EntityPlayer) event.entity) == null)
+		if (event.entity instanceof EntityPlayer)
 		{
-			Sleepness.register((EntityPlayer)event.entity);
-			Strength.register((EntityPlayer)event.entity);
+			EntityPlayer player = (EntityPlayer)event.entity;
+			
+			if(Sleepness.get(player) == null)
+			Sleepness.register(player);
+			Strength.register(player);
 			
 			//not sure what happening if player switch the world
 			//this register method is from some Tutorials which told me if I use IExtendedEntityProperties,
