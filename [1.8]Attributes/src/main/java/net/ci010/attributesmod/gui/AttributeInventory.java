@@ -18,21 +18,24 @@ public class AttributeInventory extends GuiInventory
 		this.player = player;
 	}
 
-	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks)
+	
+	@Override 
+	public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
 	{
-		super.drawScreen(mouseX, mouseY, partialTicks);
+		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 		mc.renderEngine.bindTexture(texture);
-		
+
 		int invLength = 176;
 		int invHeight = 166;
 		int captureGap = 5;
 		
-		int left = this.guiLeft +this.xSize+10;
-		int right = this.guiLeft+ this.xSize + 10 + (int)(width*0.1);
+		
+		int length = (int)(width*0.1);
+		int left = this.guiLeft +this.xSize+ 10;
+		int right = this.guiLeft+ this.xSize + 10 + length;
 //		int left = (int) (width * 0.7);
 //		int right = (int) (width * 0.77);
-		int length = right - left;
+
 		
 		//int top = (int) (height * 0.16) - 1;
 		int top = this.guiTop;
@@ -60,6 +63,7 @@ public class AttributeInventory extends GuiInventory
 		drawString(fontRendererObj, String.valueOf(Attributes.powerInstance.getAttribute(player)), center+5, top+10, 0xFFFFFF);
 		drawString(fontRendererObj, String.valueOf(Attributes.agilityInstance.getAttribute(player)), center+5, top+20, 0xFFFFFF);
 		drawString(fontRendererObj, String.valueOf(Attributes.enduranceInstance.getAttribute(player)), center+5, top+30, 0xFFFFFF);
+		
 	}
 	
 	public void draw4P()
