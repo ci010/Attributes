@@ -18,21 +18,21 @@ public class Agility extends Attributes
 		int runDistance = player.getStatFile().readStat(StatList.distanceSprintedStat);
 		int walkDistance = player.getStatFile().readStat(StatList.distanceWalkedStat);
 		int agility = runDistance * 10 + walkDistance / 2;
-		return 300-(280/agility);
+		return 300 - (280 / agility);
 	}
-	
+
 	@Override
 	public float transformToPerformance(int attribute)
 	{
-		return (float)attribute/299f+298f/299f;
+		return (float) attribute / 299f + 298f / 299f;
 	}
-	
-//	public int getAttribute(EntityPlayer player)
-//	{
-//		if(player instanceof EntityPlayerMP)
-//			System.out.println("is Mp");
-//		else
-//			System.out.println("is Sp");
-//		return player.getEntityData().getInteger(this.id);
-//	}
+
+	// public int getAttribute(EntityPlayer player)
+	// {
+	// if(player instanceof EntityPlayerMP)
+	// System.out.println("is Mp");
+	// else
+	// System.out.println("is Sp");
+	// return player.getEntityData().getInteger(this.id);
+	// }
 }
