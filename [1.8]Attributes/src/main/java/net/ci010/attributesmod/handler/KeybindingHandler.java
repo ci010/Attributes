@@ -1,8 +1,10 @@
 package net.ci010.attributesmod.handler;
 
 import net.ci010.attributesmod.AttributesMod;
+import net.ci010.attributesmod.network.OpenGuiMessage;
+import net.ci010.attributesmod.network.PacketDispatcher;
+import net.ci010.attributesmod.properties.Attributes;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -21,9 +23,12 @@ public class KeybindingHandler
 	@SubscribeEvent
 	public void keyDown(InputEvent.KeyInputEvent event)  
 	{
-		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		if(Minecraft.getMinecraft().gameSettings.keyBindInventory.isPressed())
 		{
+			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+			//this works...... yet I want a better solution...
+			if(player.getEntityData().getCompoundTag("ATTRIBUTES").getInteger(Attributes.powerInstance.id)==0)
+				PacketDispatcher.sendToServer(new OpenGuiMessage(0));
 			player.openGui(AttributesMod.instance, 0, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
 		}
 	}
