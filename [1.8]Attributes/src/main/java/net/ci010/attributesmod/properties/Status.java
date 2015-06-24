@@ -1,53 +1,92 @@
 package net.ci010.attributesmod.properties;
 
-import net.ci010.attributesmod.Resource;
+import net.ci010.attributesmod.properties.dynamic.Sleepness;
+import net.ci010.attributesmod.properties.dynamic.Strength;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
-public class Status implements IExtendedEntityProperties
-{
-	// id is used to identify the nbt compound
-	public String id;
-	
+public abstract class Status implements IExtendedEntityProperties
+{	
 	protected int dataId;
+	
+	protected String id;
 
 	protected final EntityPlayer player;
 
 	protected int max;
 
-	public int commonFactor, highFactor;
+//	public int commonFactor, highFactor;
 	
 	public static int timer;
 
 	public Status(EntityPlayer player)
 	{
 		this.player = player;
-
-		this.max = Resource.getInitalValue();
-
-		this.commonFactor = Resource.getCommonFactor();
-
-		this.highFactor = Resource.getHighFactor();
+		
+//		this.commonFactor = Resource.getCommonFactor();
+//
+//		this.highFactor = Resource.getHighFactor();
 	}
 
-	public int getCurrent()
+	protected void registerDataWatcher(EntityPlayer player,int temp)
 	{
-		return this.player.getDataWatcher().getWatchableObjectInt(this.dataId);
+		if(temp > 31)
+			return;
+		try
+		{
+			this.player.getDataWatcher().addObject(temp, this.max);
+		}
+		catch(IllegalArgumentException e)
+		{
+			if(e.getMessage().equals("Duplicate id value for " + temp + "!"))
+			{
+				temp++;
+				registerDataWatcher(player, temp);
+			}
+		}
+		this.dataId = temp;
 	}
+	
 
+	/**
+	 * get max value of this status from this status obj
+	 */
 	public int getMax()
 	{
 		return this.max;
 	}
 	
+	
+	/**
+	 * get current value of this status from data watcher
+	 */
+	public int getCurrent()
+	{
+		return this.player.getDataWatcher().getWatchableObjectInt(this.dataId);
+	}
+
+	
+	/**
+	 * set current value of this status to data watcher
+	 */
 	protected void setCurrent(int value)
 	{
 		this.player.getDataWatcher().updateObject(this.dataId, value);
 	}
 
+	/**
+	 * register all the status of the player
+	 * @param player the player need to register the status
+	 */
+	public static final void register(EntityPlayer player)
+	{
+		player.registerExtendedProperties("sleepness", new Sleepness(player));
+		player.registerExtendedProperties("strength", new Strength(player));
+	}
+	
 	@Override
 	public void saveNBTData(NBTTagCompound compound)
 	{
@@ -56,7 +95,7 @@ public class Status implements IExtendedEntityProperties
 		properties.setInteger("current", getCurrent());
 		properties.setInteger("max", max);
 
-		compound.setTag(id, properties);
+		compound.setTag(this.id, properties);
 	}
 
 	@Override
@@ -73,8 +112,7 @@ public class Status implements IExtendedEntityProperties
 	@Override
 	public void init(Entity entity, World world)
 	{
-		// no idea what this for
-
+		registerDataWatcher(player,20);
 	}
 
 	public boolean consume(int amount)
@@ -97,33 +135,26 @@ public class Status implements IExtendedEntityProperties
 	
 	public void recover(int value)
 	{
-		int total = this.getCurrent() + value;
-		if (total > this.max)
-		{
-			this.setCurrent(this.max);
-		}
-		else
-		{
-			this.setCurrent(total);
-		}
+		int amount = value + this.getCurrent();
+		this.setCurrent(amount < max ? amount : this.max);
 	}
 
-	public boolean consume(boolean b)
-	{
-		return b ? consumeHigh() : consumeLow();
-	}
+//	public boolean consume(boolean b)
+//	{
+//		return b ? consumeHigh() : consumeLow();
+//	}
 
-	private boolean consumeLow()
-	{
-		this.consume(commonFactor);
-		return false;
-	}
-
-	private boolean consumeHigh()
-	{
-		this.consume(highFactor);
-		return true;
-	}
-	
+//	private boolean consumeLow()
+//	{
+//		this.consume(commonFactor);
+//		return false;
+//	}
+//
+//	private boolean consumeHigh()
+//	{
+//		this.consume(highFactor);
+//		return true;
+//	}
+//	
 
 }
