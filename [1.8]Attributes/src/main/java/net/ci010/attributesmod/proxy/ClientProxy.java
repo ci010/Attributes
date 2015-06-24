@@ -1,6 +1,7 @@
 package net.ci010.attributesmod.proxy;
 
 import net.ci010.attributesmod.gui.SleepnessBar;
+import net.ci010.attributesmod.gui.StrengthBar;
 import net.ci010.attributesmod.handler.GuiEventHandler;
 import net.ci010.attributesmod.handler.KeybindingHandler;
 import net.minecraft.client.Minecraft;
@@ -16,6 +17,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.iniHandler();
 		MinecraftForge.EVENT_BUS.register(new SleepnessBar(Minecraft.getMinecraft()));
+		MinecraftForge.EVENT_BUS.register(new StrengthBar(Minecraft.getMinecraft()));
 		FMLCommonHandler.instance().bus().register(new KeybindingHandler());
 		MinecraftForge.EVENT_BUS.register(new GuiEventHandler());
 	}
