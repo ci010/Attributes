@@ -3,6 +3,7 @@ package net.ci010.attributesmod;
 import net.ci010.attributesmod.command.AttribueCommand;
 import net.ci010.attributesmod.proxy.CommonProxy;
 import net.minecraft.command.ServerCommandManager;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -29,7 +30,7 @@ public class AttributesMod
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		instance = this;
-		proxy.iniConfig(event);
+		Resource.iniConfig(new Configuration(event.getSuggestedConfigurationFile()));
 	}
 
 	@EventHandler
