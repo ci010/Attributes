@@ -1,11 +1,13 @@
 package net.ci010.attributesmod.handler;
 
+import net.ci010.attributesmod.Resource;
 import net.ci010.attributesmod.properties.Attributes;
 import net.ci010.attributesmod.properties.Status;
 import net.ci010.attributesmod.properties.dynamic.Sleepness;
 import net.ci010.attributesmod.properties.dynamic.Strength;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
@@ -20,17 +22,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class CommonHandler
 {
-
 	@SubscribeEvent
 	public void onEntityConstructing(EntityConstructing event)
 	{
 		if (event.entity instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer)event.entity;
-			
-			if(Sleepness.get(player) == null)
-			Sleepness.register(player);
-			Strength.register(player);
+				
+			Status.register(player);
 			
 			//not sure what happening if player switch the world
 			//this register method is from some Tutorials which told me if I use IExtendedEntityProperties,
@@ -48,8 +47,10 @@ public class CommonHandler
 		{
 			EntityPlayer player = (EntityPlayer)event.entityLiving;
 			Strength playerSt = Strength.get(player);
+			if(playerSt == null)
+				return;
 			
-			playerSt.consume(5);
+			playerSt.consume(Resource.speedOfStCos);
 			//that is just a sample... the value of consume method need to be adjust
 		}
 	}
@@ -121,12 +122,49 @@ public class CommonHandler
 		Entity inflictor = event.source.getEntity();
 		if(inflictor instanceof EntityPlayer)
 		{
-			Strength playerSt = Strength.get((EntityPlayer) inflictor);
-			Sleepness playerSl = Sleepness.get((EntityPlayer) inflictor);
-
-			if (playerSt.getCurrent() < 0 || playerSl.getCurrent() < 0)
+			
+			EntityPlayer player = (EntityPlayer) inflictor;
+			
+			Strength playerSt = Strength.get(player);
+			Sleepness playerSl = Sleepness.get(player);
+			
+			
+			if(inflictor instanceof EntityPlayerMP)
+				System.out.println("catch attack event. mp fires this event. Now mp strength is "+playerSt.getCurrent());
+			if (inflictor instanceof EntityPlayerMP)
+				System.out.println("catch attack event. sp fires this event. Now sp strength is " +playerSt.getCurrent());
+			
+			
+			if(player.getHeldItem()!=null)
 			{
-
+				//TODO make this '20' and '10' dynamic
+				if(playerSt.getCurrent() <= Resource.speedOfStCos*1.5)
+				{
+					
+					System.out.println("canceled lower than 20 ("+playerSt.getCurrent());
+					event.setCanceled(true);
+				}
+				else
+				{
+					playerSt.consume((int)(Resource.speedOfStCos*1.5));
+				}
+			}
+			else
+			{
+				if(playerSt.getCurrent() <= Resource.speedOfStCos)
+				{
+					System.out.println("canceled lower than 10 ("+playerSt.getCurrent());
+					event.setCanceled(true);
+				}
+				else
+				{
+					playerSt.consume(Resource.speedOfStCos);
+				}
+			}
+			
+			if (playerSl.getCurrent() <= 0)
+			{
+				
 			}
 		}
 	}
@@ -142,18 +180,45 @@ public class CommonHandler
 		}
 		if(event.entityLiving instanceof EntityPlayer)
 		{
+			
+			EntityPlayer player = (EntityPlayer)event.entityLiving;
+			
 			Status.timer++;
 			if(Status.timer>20)
 			{
-				Sleepness playerSl = Sleepness.get((EntityPlayer)event.entityLiving);
-				Strength playerSt = Strength.get((EntityPlayer)event.entityLiving);
 				
-				Status.timer = 0;
-				if(playerSl.isSleeping)
+					Sleepness playerSl = Sleepness.get(player);
+					Strength playerSt = Strength.get(player);
+
+					if(player.isSprinting())
+					{
+						playerSt.consume(Resource.speedOfStCos);
+					}
+					else
+					{
+						if (player.motionX == 0 && player.motionZ == 0)
+						{
+							playerSt.recover(Resource.speedOfStReg);
+						} 
+						else
+						{
+							playerSt.recover((int)(Resource.speedOfStReg*1.5));
+						}
+					}
+				
+				
 				{
-					playerSl.consume(false);
-					playerSt.consume(0);
+					float multiplier = Attributes.agility.getMultiplier(player);
+
+					player.motionX *= multiplier;
+					player.motionZ *= multiplier;
 				}
+				Status.timer = 0;
+				// if(playerSl.isSleeping)
+				// {
+				// playerSl.consume(false);
+//					playerSt.consume(0);
+//				}
 			}
 		}
 	}
