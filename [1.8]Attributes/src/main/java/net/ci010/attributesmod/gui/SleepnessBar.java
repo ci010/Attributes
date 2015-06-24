@@ -7,6 +7,7 @@ import net.ci010.attributesmod.properties.dynamic.Sleepness;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -67,7 +68,7 @@ public class SleepnessBar extends Gui
 		
 		if (prop == null)
 		{
-
+			System.out.println("prop is null");
 			return;
 		}
 		// Starting position for the buff bar - 2 pixels from the top left
@@ -93,7 +94,7 @@ public class SleepnessBar extends Gui
 		GL11.glDisable(GL11.GL_LIGHTING);
 
 		// Bind your texture to the render engine
-		this.mc.getTextureManager().bindTexture(Resource.sleepTexturepath);
+		
 
 		/*
 		x and y are the on-screen position at which to render.
@@ -113,19 +114,23 @@ public class SleepnessBar extends Gui
 		
 		// Add this block of code before you draw the section of your texture containing transparency
 		
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glDepthMask(false);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GL11.glDisable(GL11.GL_ALPHA_TEST);
+//		GL11.glEnable(GL11.GL_BLEND);
+//		GL11.glDisable(GL11.GL_DEPTH_TEST);
+//		GL11.glDepthMask(false);
+//		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+//		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+//		GL11.glDisable(GL11.GL_ALPHA_TEST);
+		
 		// Here we draw the background bar which contains a transparent section; note the new size
-		
+
 		//drawTexturedModalRect(xPos, yPos, 0, 0, 56, 9);
-		
+		this.mc.getTextureManager().bindTexture(new ResourceLocation("attributes", "textures/gui/sleep_bar.png"));
 		// You can keep drawing without changing anything
 		int barwidth = (int)(((float) prop.getCurrent() / prop.getMax()) * 49);
-		drawTexturedModalRect(xPos + 3, yPos + 3, 0, 9, barwidth, 3);
+//		drawTexturedModalRect(xPos + 3, yPos + 3, 0, 0, barwidth, 3);
+		drawString(this.mc.fontRendererObj,prop.getCurrent()+"", xPos+20, yPos/2, 0xFFFFFF);
+		drawString(this.mc.fontRendererObj,prop.getMax()+"", xPos+20, yPos/2+20, 0xFFFFFF);
+		drawTexturedModalRect(xPos + 3, yPos + 3, 0, 0, 10, 3); 
 		// NOTE: be sure to reset the openGL settings after you're done or your character model will be messed up
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
