@@ -1,7 +1,8 @@
 package net.ci010.attributesmod.gui;
 
 import net.ci010.attributesmod.network.PacketDispatcher;
-import net.ci010.attributesmod.network.SyncAttributesMessage;
+import net.ci010.attributesmod.network.SyncPlayerDataMessage;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
@@ -15,7 +16,7 @@ public class GuiHandler implements IGuiHandler
 	{
 		if(ID == 0)
 		{
-			PacketDispatcher.sendTo(new SyncAttributesMessage(player),
+			PacketDispatcher.sendTo(new SyncPlayerDataMessage(player),
 									(EntityPlayerMP) player);
 		}
 		return null;

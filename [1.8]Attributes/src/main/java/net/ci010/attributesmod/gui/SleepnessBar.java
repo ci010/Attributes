@@ -124,13 +124,13 @@ public class SleepnessBar extends Gui
 		// Here we draw the background bar which contains a transparent section; note the new size
 
 		//drawTexturedModalRect(xPos, yPos, 0, 0, 56, 9);
-		this.mc.getTextureManager().bindTexture(new ResourceLocation("attributes", "textures/gui/sleep_bar.png"));
+//		this.mc.getTextureManager().bindTexture(new ResourceLocation("attributes", "textures/gui/sleep_bar.png"));
 		// You can keep drawing without changing anything
 		int barwidth = (int)(((float) prop.getCurrent() / prop.getMax()) * 49);
 //		drawTexturedModalRect(xPos + 3, yPos + 3, 0, 0, barwidth, 3);
-		drawString(this.mc.fontRendererObj,prop.getCurrent()+"", xPos+20, yPos/2, 0xFFFFFF);
-		drawString(this.mc.fontRendererObj,prop.getMax()+"", xPos+20, yPos/2+20, 0xFFFFFF);
-		drawTexturedModalRect(xPos + 3, yPos + 3, 0, 0, 10, 3); 
+//		drawString(this.mc.fontRendererObj,prop.getCurrent()+"", xPos+20, yPos/2, 0xFFFFFF);
+//		drawString(this.mc.fontRendererObj,prop.getMax()+"", xPos+20, yPos/2+20, 0xFFFFFF);
+//		drawTexturedModalRect(xPos + 3, yPos + 3, 0, 0, 10, 3); 
 		// NOTE: be sure to reset the openGL settings after you're done or your character model will be messed up
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);

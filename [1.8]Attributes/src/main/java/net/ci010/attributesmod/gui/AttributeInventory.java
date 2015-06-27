@@ -3,6 +3,7 @@ package net.ci010.attributesmod.gui;
 import net.ci010.attributesmod.properties.Attributes;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.stats.AchievementList;
 import net.minecraft.util.ResourceLocation;
 
 public class AttributeInventory extends GuiInventory
@@ -55,6 +56,8 @@ public class AttributeInventory extends GuiInventory
 		drawTexturedModalRect(left+captureGap, top+captureGap, invLength-captureGap - length , captureGap, length-captureGap, h/3);
 		
 		drawTexturedModalRect(left+captureGap, top+captureGap+h/3, invLength-captureGap - length , captureGap, length-captureGap, h/3);
+		
+		drawTexturedModalRect(left+captureGap, top+captureGap+(2*h/3)-1, invLength-captureGap - length , captureGap, length-captureGap, h/3);
 		
 		drawTexturedModalRect(left+captureGap, top+captureGap+(2*h/3)-1, invLength-captureGap - length , captureGap, length-captureGap, h/3);
 		
