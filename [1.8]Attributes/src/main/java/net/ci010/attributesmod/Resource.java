@@ -14,7 +14,7 @@ public class Resource
 
 	public static final ResourceLocation sleepTexturepath = new ResourceLocation("attributes", "textures/gui/sleep_bar.png");
 	
-	public static final ResourceLocation strengthTexturepath = new ResourceLocation("attributes", "textures/gui/strength_bar.png");
+	public static final ResourceLocation strengthTexturepath = new ResourceLocation("attributes", "textures/gui/bar.png");
 	
 	public static void iniConfig(Configuration config)
 	{
@@ -28,7 +28,7 @@ public class Resource
 		String strength = "Strength";
 		maxOfSt = config.getInt("max", strength, 100, 50, 300, "use to set the max value");
 		speedOfStReg = config.getInt("regeration speed", strength, 20, 50, 300, "use to set the speed ");
-		speedOfStCos = config.getInt("consumption speed", strength, 30, 50, 300, "use to set the speed ");
+		speedOfStCos = config.getInt("consumption speed", strength, 30, 20, 300, "use to set the speed ");
 		
 		config.save();
 		//there is no config file now though...
