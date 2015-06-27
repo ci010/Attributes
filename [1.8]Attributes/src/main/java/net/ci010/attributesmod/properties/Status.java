@@ -19,8 +19,6 @@ public abstract class Status implements IExtendedEntityProperties
 	protected int max;
 
 //	public int commonFactor, highFactor;
-	
-	public static int timer;
 
 	public Status(EntityPlayer player)
 	{
@@ -115,17 +113,11 @@ public abstract class Status implements IExtendedEntityProperties
 		registerDataWatcher(player,20);
 	}
 
-	public boolean consume(int amount)
+	public void consume(int value)
 	{
-		int current = getCurrent();
+		int current = this.getCurrent();
 		
-		boolean sufficient = amount <= current;
-
-		current -= (amount < current ? amount : current);
-		
-		setCurrent(current);
-
-		return sufficient;
+		this.setCurrent(value < current? current - value : 0);
 	}
 
 	public void replenish()
