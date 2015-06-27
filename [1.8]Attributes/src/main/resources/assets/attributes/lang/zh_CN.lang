@@ -1,0 +1,8 @@
+attri.command.usage=/attri set [player] [type] [value], type 可以是 agility/endurance/power
+attri.command.exception.noname=没有找到 %s 玩家
+attri.command.exception.type=[type] 可以是 power/agility/endurance.
+attri.command.exception.value=value只能是一个整数.
+attri.command.exception=命令应当是 /attri set [player] [type] [value], type 可以是 agility/endurance/power
+attri.command.set.agility=将%s的敏捷设置为 %s
+attri.command.set.power=将%s的力量设置为 %s
+attri.command.set.endurance=将%s的耐力设置为 %s

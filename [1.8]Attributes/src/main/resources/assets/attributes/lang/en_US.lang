@@ -1,0 +1,8 @@
+attri.command.usage=/attri set [player] [type] [value], type could be agility/endurance/power
+attri.command.exception.noname=not player named %s
+attri.command.exception.type=The type should be power/agility/endurance.
+attri.command.exception.value=The value needs to be an integer.
+attri.command.exception=The command should be like /attri set [player] [type] [value], type could be agility/endurance/power
+attri.command.set.agility=set the agility of %s to %s
+attri.command.set.power=set the power of %s to %s
+attri.command.set.endurance=set the endurance of %s to %s
