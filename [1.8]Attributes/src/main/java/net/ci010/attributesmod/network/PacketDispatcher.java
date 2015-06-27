@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.Side;
 import net.ci010.attributesmod.AttributesMod;
-import net.ci010.attributesmod.network.SyncAttributesMessage;
+import net.ci010.attributesmod.network.SyncPlayerDataMessage;
 
 public class PacketDispatcher
 {
@@ -29,12 +29,9 @@ public class PacketDispatcher
 	{
 		// PacketDispatcher.registerMessage(OpenGuiMessage.OpenGuiMessageHandler.class,
 		// OpenGuiMessage.class, Side.SERVER);
-		PacketDispatcher.registerMessage(	SyncAttributesMessage.Handler.class,
-											SyncAttributesMessage.class,
-											Side.CLIENT);
-		PacketDispatcher.registerMessage(	OpenGuiMessage.Handler.class,
-		                                 	OpenGuiMessage.class,
-											Side.SERVER);
+		PacketDispatcher.registerMessage(SyncPlayerDataMessage.Handler.class, SyncPlayerDataMessage.class, Side.CLIENT);
+		PacketDispatcher.registerMessage(OpenGuiMessage.Handler.class, OpenGuiMessage.class, Side.SERVER);
+		PacketDispatcher.registerMessage(SynAttributesMessage.Handler.class, SynAttributesMessage.class, Side.CLIENT);
 	}
 
 	/**
