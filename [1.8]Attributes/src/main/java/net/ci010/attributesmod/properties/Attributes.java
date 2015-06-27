@@ -2,13 +2,11 @@ package net.ci010.attributesmod.properties;
 
 import net.ci010.attributesmod.handler.TalentHandler;
 import net.ci010.attributesmod.network.PacketDispatcher;
-import net.ci010.attributesmod.network.SyncAttributesMessage;
+import net.ci010.attributesmod.network.SynAttributesMessage;
 import net.ci010.attributesmod.properties.basic.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * 
@@ -92,6 +90,7 @@ public abstract class Attributes
 	{
 		return player.getEntityData().getCompoundTag("ATTRIBUTES");
 	}
+	
 
 	public static final void setFromNBT(EntityPlayer player, NBTTagCompound data)
 	{
@@ -119,7 +118,7 @@ public abstract class Attributes
 		
 		if(player instanceof EntityPlayerMP)
 		{
-			PacketDispatcher.sendTo(new SyncAttributesMessage(player), (EntityPlayerMP)player);
+			PacketDispatcher.sendTo(new SynAttributesMessage(player), (EntityPlayerMP)player);
 		}
 	}
 }
