@@ -19,8 +19,14 @@ public class Power extends Attributes
 	}
 
 	@Override
-	protected float transformToPerformance(int attribute)
+	public float transformToPerformance(int attribute)
 	{
 		return ((float) attribute / 60f) + 1f;
+	}
+
+	@Override
+	protected char getMessageId()
+	{
+		return 'p';
 	}
 }

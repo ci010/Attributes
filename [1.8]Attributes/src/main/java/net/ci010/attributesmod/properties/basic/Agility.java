@@ -21,8 +21,15 @@ public class Agility extends Attributes
 	}
 
 	@Override
-	protected float transformToPerformance(int attribute)
+	public float transformToPerformance(int attribute)
 	{
-		return (float) attribute / 299f + 298f / 299f;
+		return (float) attribute / 300f + 298f / 299f;
+//		return (float) attribute / 160f + 298f / 299f;
+	}
+
+	@Override
+	protected char getMessageId()
+	{
+		return 'a';
 	}
 }

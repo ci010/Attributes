@@ -1,6 +1,5 @@
 package net.ci010.attributesmod.properties.basic;
 
-import net.ci010.attributesmod.Resource;
 import net.ci010.attributesmod.properties.Attributes;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.stats.StatList;
@@ -9,7 +8,7 @@ public class Endurance extends Attributes
 {
 	public Endurance(String id)
 	{
-		super(id, Resource.getFactor(id));
+		super(id);
 	}
 
 	@Override
@@ -20,9 +19,15 @@ public class Endurance extends Attributes
 	}
 
 	@Override
-	protected float transformToPerformance(int attribute)
+	public float transformToPerformance(int attribute)
 	{
 		return (float) attribute / 280f;
 		// TODO consider if write as .... abs
+	}
+
+	@Override
+	protected char getMessageId()
+	{
+		return 'e';
 	}
 }
