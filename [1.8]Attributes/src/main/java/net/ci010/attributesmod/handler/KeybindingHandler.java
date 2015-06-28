@@ -26,7 +26,7 @@ public class KeybindingHandler
 		{
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			// this works...... yet I want a better solution...
-			if (Attributes.getNBTData(player).getInteger(Attributes.power.id) == 0)
+			if (Attributes.power.getAttribute(player) == 0)
 				PacketDispatcher.sendToServer(new OpenGuiMessage(0));
 			
 			Minecraft.getMinecraft().getNetHandler().addToSendQueue(new C16PacketClientStatus(
