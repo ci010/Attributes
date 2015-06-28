@@ -33,10 +33,10 @@ public class DataBuffer implements Runnable
 			System.out.println("is still null");
 			return;
 		}
-		
+
 		TalentHandler.setTalent(player, this.data);
 		TalentHandler.setLimit(player, this.data);
-		Attributes.setFromNBT(player, this.data.getCompoundTag("ATTRIBUTES"));
+		Attributes.loadFromNBT(player, this.data);
 	}
 
 }
