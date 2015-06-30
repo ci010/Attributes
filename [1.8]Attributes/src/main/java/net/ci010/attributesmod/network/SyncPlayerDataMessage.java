@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class SyncPlayerDataMessage implements IMessage
 {
-	private NBTTagCompound data;
+	private NBTTagCompound playerData;
 
 	public SyncPlayerDataMessage()
 	{
@@ -20,39 +20,37 @@ public class SyncPlayerDataMessage implements IMessage
 
 	public SyncPlayerDataMessage(EntityPlayer player)
 	{
-		data = player.getEntityData();
-		 System.out.println("send syn packet to client");
+		playerData = player.getEntityData();
+		System.out.println("send syn packet to client");
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		 data = ByteBufUtils.readTag(buf);
+		playerData = ByteBufUtils.readTag(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		ByteBufUtils.writeTag(buf, data);
+		ByteBufUtils.writeTag(buf, playerData);
 	}
-	
-	public static class Handler extends AbstractClientMessageHandler<SyncPlayerDataMessage> 
+
+	public static class Handler extends AbstractClientMessageHandler<SyncPlayerDataMessage>
 	{
 		@Override
-		public IMessage handleClientMessage(EntityPlayer player,
-				SyncPlayerDataMessage message, MessageContext ctx)
+		public IMessage handleClientMessage(EntityPlayer player, SyncPlayerDataMessage message, MessageContext ctx)
 		{
 			if (player == null)
 			{
 				System.out.println("play is null when handle");
-				new Thread(new DataBuffer(message.data)).start();
+				new Thread(new DataBuffer(message.playerData)).start();
 				return null;
 			}
 
-			TalentHandler.setTalent(player, message.data);
-			TalentHandler.setLimit(player, message.data);
-
-			Attributes.setFromNBT(player, message.data.getCompoundTag("ATTRIBUTES"));
+			TalentHandler.setTalent(player, message.playerData);
+			TalentHandler.setLimit(player, message.playerData);
+			Attributes.loadFromNBT(player, message.playerData);
 			return null;
 		}
 	}

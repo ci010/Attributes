@@ -8,10 +8,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.ci010.attributesmod.AttributesMod;
 import net.ci010.attributesmod.network.SyncPlayerDataMessage;
 
+/**
+ * @author coolAlias
+ * 
+ * @modifiedBy ci010
+ * 
+ */
 public class PacketDispatcher
 {
-	// a simple counter will allow us to get rid of 'magic' numbers used during
-	// packet registration
 	private static byte packetId = 0;
 
 	/**
@@ -29,26 +33,29 @@ public class PacketDispatcher
 	{
 		// PacketDispatcher.registerMessage(OpenGuiMessage.OpenGuiMessageHandler.class,
 		// OpenGuiMessage.class, Side.SERVER);
-		PacketDispatcher.registerMessage(SyncPlayerDataMessage.Handler.class, SyncPlayerDataMessage.class, Side.CLIENT);
-		PacketDispatcher.registerMessage(OpenGuiMessage.Handler.class, OpenGuiMessage.class, Side.SERVER);
-		PacketDispatcher.registerMessage(SynAttributesMessage.Handler.class, SynAttributesMessage.class, Side.CLIENT);
+		PacketDispatcher.registerMessage(	SyncPlayerDataMessage.Handler.class,
+											SyncPlayerDataMessage.class,
+											Side.CLIENT);
+		PacketDispatcher.registerMessage(	OpenGuiMessage.Handler.class,
+											OpenGuiMessage.class,
+											Side.SERVER);
+		PacketDispatcher.registerMessage(	SynAttributesMessage.Handler.class,
+											SynAttributesMessage.class,
+											Side.CLIENT);
+		PacketDispatcher.registerMessage(	SynAttributeMessage.Handler.class,
+											SynAttributeMessage.class,
+											Side.CLIENT);
 	}
 
 	/**
 	 * Registers a message and message handler
 	 */
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings(
+	{ "rawtypes", "unchecked" })
 	private static final void registerMessage(Class handlerClass, Class<? extends IMessage> messageClass, Side side)
 	{
 		dispatcher.registerMessage(handlerClass, messageClass, packetId++, side);
 	}
-
-	// ========================================================//
-	// The following methods are the 'wrapper' methods; again,
-	// this just makes sending a message slightly more compact
-	// and is purely a matter of stylistic preference
-	// ========================================================//
 
 	/**
 	 * Send this message to the specified player. See

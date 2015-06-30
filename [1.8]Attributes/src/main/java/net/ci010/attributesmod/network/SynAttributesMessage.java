@@ -11,14 +11,16 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class SynAttributesMessage implements IMessage
 {
 	private NBTTagCompound data;
-	
+
 	public SynAttributesMessage()
-	{}
-	
+	{
+	}
+
 	public SynAttributesMessage(EntityPlayer player)
 	{
-		this.data = Attributes.getNBTData(player);
+		this.data = Attributes.getNBTAttributes(player);
 	}
+
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
@@ -31,15 +33,14 @@ public class SynAttributesMessage implements IMessage
 		ByteBufUtils.writeTag(buf, data);
 	}
 
-	public static class Handler extends AbstractClientMessageHandler<SynAttributesMessage> 
+	public static class Handler extends AbstractClientMessageHandler<SynAttributesMessage>
 	{
 		@Override
-		public IMessage handleClientMessage(EntityPlayer player,
-				SynAttributesMessage message, MessageContext ctx)
+		public IMessage handleClientMessage(EntityPlayer player, SynAttributesMessage message, MessageContext ctx)
 		{
-			Attributes.setFromNBT(player, message.data.getCompoundTag("ATTRIBUTES"));
+			Attributes.loadFromNBT(player, message.data);
 			return null;
 		}
-		
+
 	}
 }
