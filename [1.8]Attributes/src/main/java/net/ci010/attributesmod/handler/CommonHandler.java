@@ -45,7 +45,7 @@ public class CommonHandler
 			event.entityLiving.motionZ *= multiplier;
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void jumpEvent(LivingJumpEvent event)
 	{
@@ -56,7 +56,7 @@ public class CommonHandler
 			if (playerSt == null)
 				return;
 
-//			System.out.println("consume (jump)");
+			// System.out.println("consume (jump)");
 			playerSt.consume(Resource.speedOfStCos);
 		}
 	}
@@ -92,12 +92,12 @@ public class CommonHandler
 		{
 
 			EntityPlayer player = (EntityPlayer) victim;
-			event.ammount *= (1-Attributes.endurance.getMultiplier(player));
+			event.ammount *= (1 - Attributes.endurance.getMultiplier(player));
 			// do something to reduce the dmg
 			// and add up the level of endurance here
 			// by do something with event.ammount
 		}
-			
+
 		else if (inflictor instanceof EntityPlayerMP)
 		{
 
@@ -107,10 +107,10 @@ public class CommonHandler
 			float multiply = Attributes.power.getMultiplier(player);
 
 			PlayerTickHandler.attackTracker.add(player);
-			
-			if(player.isSneaking())
+
+			if (player.isSneaking())
 			{
-				event.ammount *= multiply*1.5; 
+				event.ammount *= multiply * 1.5;
 			}
 			if (heldItem != null)
 			{
@@ -126,7 +126,7 @@ public class CommonHandler
 			// add up the level of power here
 
 		}
-		
+
 	}
 
 	// SIDE server
