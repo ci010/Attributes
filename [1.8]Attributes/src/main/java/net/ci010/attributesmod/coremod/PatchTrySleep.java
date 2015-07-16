@@ -10,7 +10,7 @@ public class PatchTrySleep extends ClassAPI
 	public PatchTrySleep(ClassWriter writer)
 	{
 		super(writer);
-		System.out.println("add methodToPatch");
+
 		this.methodsToPatch.add(new MethodInfo("trySleep", "(Lnet/minecraft/util/BlockPos;)Lnet/minecraft/entity/player/EntityPlayer$EnumStatus;"));
 		// this.methodsToPatch.add(new MethodInfo("a", "(III)Lza;"));
 		this.methodsToPatch.add(new MethodInfo("onUpdate", "()V"));
@@ -20,7 +20,6 @@ public class PatchTrySleep extends ClassAPI
 	@Override
 	public MethodVisitor acceptMethod(MethodVisitor visitor)
 	{
-		System.out.println("return MethodVisitor");
 		return new TrySleepVisitor(visitor);
 	}
 
@@ -56,12 +55,13 @@ public class PatchTrySleep extends ClassAPI
 		// super.visitFieldInsn(opcode, owner, name, desc);
 		// }
 
+		@Override
 		public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf)
 		{
 			// INVOKEVIRTUAL net/minecraft/world/World.isDaytime ()Z
 			if (opcode == INVOKEVIRTUAL && (desc.equals("()Z")) && ((name.equals("isDaytime")) || (name.equals("w"))))
 			{
-				System.out.println("find method");
+				
 				super.visitInsn(POP);
 				// this.mv.visitVarInsn(ALOAD, 0);
 				super.visitMethodInsn(	INVOKESTATIC,

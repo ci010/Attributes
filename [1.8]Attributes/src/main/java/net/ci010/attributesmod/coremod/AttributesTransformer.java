@@ -5,9 +5,6 @@ import java.util.Arrays;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.MethodNode;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
@@ -16,7 +13,7 @@ public class AttributesTransformer implements IClassTransformer
 	boolean isObfscated;
 
 	private static final String[] classList =
-	{ "net.minecraft.entity.player.EntityPlayer" };
+	{ "net.minecraft.entity.player.EntityPlayer", "net.minecraft.world.WorldServer", "net.minecraft.entity.EntityLivingBase" };
 
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass)
@@ -33,19 +30,25 @@ public class AttributesTransformer implements IClassTransformer
 			ClassReader reader = new ClassReader(classDataByte);
 			ClassVisitor visitor = null;
 			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-			
+
 			System.out.println("start to handle");
-			
+
 			switch (index)
 			{
 				case 0:
 					visitor = new PatchTrySleep(writer);
 					break;
+				case 1:
+					visitor = new PatchTick(writer);
+					break;
+				case 2:
+//					visitor = new PatchSwing(writer);
+					break;
 			}
 
 			if (visitor == null)
 				return classDataByte;
-			
+
 			reader.accept(visitor, 0);
 			return writer.toByteArray();
 		}
@@ -55,23 +58,4 @@ public class AttributesTransformer implements IClassTransformer
 		}
 		return classDataByte;
 	}
-
-//	private void transformClass(ClassNode classData)
-//	{
-//		for (MethodNode method : classData.methods)
-//		{
-//			AbstractInsnNode target = null;
-//
-//			findInWater(method, target);
-//			handleTick(method, target);
-//		}
-//	}
-//
-//	void findMethod(MethodNode method, AbstractInsnNode target)
-//	{
-//	}
-//
-//	void handleMethod(MethodNode method, AbstractInsnNode target)
-//	{
-//	}
 }
