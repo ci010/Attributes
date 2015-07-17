@@ -2,9 +2,18 @@ package net.ci010.attributesmod.gui;
 
 import net.ci010.attributesmod.Resource;
 import net.ci010.attributesmod.properties.dynamic.Strength;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.Potion;
+import net.minecraft.util.FoodStats;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -62,27 +71,36 @@ public class StrengthBar extends Gui
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glDisable(GL11.GL_LIGHTING);
-		
+
 		// GL11.glEnable(GL11.GL_BLEND);
 		// GL11.glDisable(GL11.GL_DEPTH_TEST);
 		// GL11.glDepthMask(false);
 		// GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		// GL11.glDisable(GL11.GL_ALPHA_TEST);
 
-		this.mc.getTextureManager().bindTexture(Resource.strengthTexturepath);
+		this.mc.getTextureManager().bindTexture(Resource.iconTexturepath);
 
-		
 		int barwidth = (int) (((float) prop.getCurrent() / prop.getMax()) * 49);
 
 		drawTexturedModalRect(5, height / 2, 0, 0, barwidth, 5);
-		
-		drawString(this.mc.fontRendererObj, prop.getCurrent() + "", xPos + 40, yPos / 2, 0xFFFFFF);
-		drawString(this.mc.fontRendererObj, prop.getMax() + "", xPos + 40, yPos / 2 + 20, 0xFFFFFF);
-		
+
+		drawString(	this.mc.fontRendererObj,
+					prop.getCurrent() + "",
+					xPos + 40,
+					yPos / 2,
+					0xFFFFFF);
+		drawString(	this.mc.fontRendererObj,
+					prop.getMax() + "",
+					xPos + 40,
+					yPos / 2 + 20,
+					0xFFFFFF);
+
 		// NOTE: be sure to reset the openGL settings after you're done or your
 		// character model will be messed up
 		// GL11.glDisable(GL11.GL_BLEND);
 		// GL11.glEnable(GL11.GL_DEPTH_TEST);
 		// GL11.glDepthMask(true);
 	}
+
+	
 }
