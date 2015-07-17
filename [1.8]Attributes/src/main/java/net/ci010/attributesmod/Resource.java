@@ -11,9 +11,9 @@ public class Resource
 
 	public static int maxOfSl,speedOfSlCos,speedOfSlReg,maxOfSt,speedOfStCos,speedOfStReg;
 
-	public static final ResourceLocation sleepTexturepath = new ResourceLocation("attributes", "textures/gui/sleep_bar.png");
+//	public static final ResourceLocation sleepTexturepath = new ResourceLocation("attributes", "textures/gui/sleep_bar.png");
 	
-	public static final ResourceLocation strengthTexturepath = new ResourceLocation("attributes", "textures/gui/bar.png");
+	public static final ResourceLocation iconTexturepath = new ResourceLocation("attributes", "textures/gui/icon.png");
 	
 	public static void iniConfig(Configuration config)
 	{

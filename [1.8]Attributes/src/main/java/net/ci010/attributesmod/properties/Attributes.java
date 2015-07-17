@@ -205,4 +205,6 @@ public abstract class Attributes
 	 * @return The character id
 	 */
 	protected abstract char getMessageId();
+	
+	
 }
