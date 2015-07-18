@@ -6,16 +6,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.Potion;
-import net.minecraft.util.FoodStats;
-import net.minecraft.util.MathHelper;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.Post;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -32,42 +26,22 @@ public class StrengthBar extends Gui
 		this.mc = mc;
 	}
 
-	private static final int BUFF_ICON_SIZE = 18;
-	private static final int BUFF_ICON_SPACING = BUFF_ICON_SIZE + 2; // 2 pixels
-																		// between
-																		// buff
-																		// icons
-	private static final int BUFF_ICON_BASE_U_OFFSET = 0;
-	private static final int BUFF_ICON_BASE_V_OFFSET = 198;
-	private static final int BUFF_ICONS_PER_ROW = 8;
-
-	//
-	// This event is called by GuiIngameForge during each frame by
-	// GuiIngameForge.pre() and GuiIngameForce.post().
-	//
 	@SubscribeEvent(priority = EventPriority.NORMAL)
-	public void onRenderExperienceBar(RenderGameOverlayEvent event)
+	public void onRenderStrengthBar(Post event)
 	{
-		if (event.isCancelable() || event.type != ElementType.EXPERIENCE)
+		if (event.type != ElementType.FOOD)
 			return;
 
 		Strength prop = Strength.get(Minecraft.getMinecraft().thePlayer);
 
 		if (prop == null)
-		{
-			System.out.println("prop is null");
 			return;
-		}
 
+		GlStateManager.enableBlend();
 		ScaledResolution scaleRes = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 
-		// int width = scaleRes.getScaledWidth();
 		int height = scaleRes.getScaledHeight();
-
-		int xPos = 2;
-		int yPos = 2;
-
-		yPos = height - 10;
+		int width = scaleRes.getScaledWidth();
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -80,20 +54,34 @@ public class StrengthBar extends Gui
 
 		this.mc.getTextureManager().bindTexture(Resource.iconTexturepath);
 
-		int barwidth = (int) (((float) prop.getCurrent() / prop.getMax()) * 49);
+		// int barwidth = (int) (((float) prop.getCurrent() / prop.getMax()) *
+		// 49);
+		int current = prop.getCurrent();
+		int remainder = current % 10;
 
-		drawTexturedModalRect(5, height / 2, 0, 0, barwidth, 5);
+		int x = width / 2 + 3;
+		int y = height - GuiIngameForge.right_height;
 
-		drawString(	this.mc.fontRendererObj,
-					prop.getCurrent() + "",
-					xPos + 40,
-					yPos / 2,
-					0xFFFFFF);
-		drawString(	this.mc.fontRendererObj,
-					prop.getMax() + "",
-					xPos + 40,
-					yPos / 2 + 20,
-					0xFFFFFF);
+		if (mc.thePlayer.isInsideOfMaterial(Material.water))
+			y -= 10;
+
+		int approx = current - remainder + remainder > 4 ? 10 : 0;
+		
+		for (short i = 0; i < 10; ++i)
+		{
+			int idx = i * 10;
+
+			int offset = i * 8 + 9;
+
+			if (idx < approx)
+				drawTexturedModalRect(x + offset, y, 0, 0, 5, 5);
+			else if (idx == approx)
+				drawTexturedModalRect(x + offset, y, 0, 0, 5, 5);
+		}
+
+		GlStateManager.disableBlend();
+
+		this.mc.getTextureManager().bindTexture(Gui.icons);
 
 		// NOTE: be sure to reset the openGL settings after you're done or your
 		// character model will be messed up
@@ -101,6 +89,4 @@ public class StrengthBar extends Gui
 		// GL11.glEnable(GL11.GL_DEPTH_TEST);
 		// GL11.glDepthMask(true);
 	}
-
-	
 }

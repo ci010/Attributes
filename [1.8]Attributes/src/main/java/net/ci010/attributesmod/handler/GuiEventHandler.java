@@ -10,7 +10,7 @@ public class GuiEventHandler
 	@SubscribeEvent
 	public void guiScreenShow(InitGuiEvent.Pre event)
 	{
-		 if(event.gui instanceof GuiInventory&& !(event.gui instanceof AttributeInventory))
+		 if(event.gui instanceof GuiInventory && !(event.gui instanceof AttributeInventory))
 		 { 
 			 event.setCanceled(true);
 		 }
