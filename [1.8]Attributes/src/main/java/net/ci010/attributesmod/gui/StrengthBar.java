@@ -65,8 +65,9 @@ public class StrengthBar extends Gui
 		if (mc.thePlayer.isInsideOfMaterial(Material.water))
 			y -= 10;
 
-		int approx = current - remainder + remainder > 4 ? 10 : 0;
-		
+		int approx = current - remainder;
+		approx += remainder > 4 ? 10 : 0;
+		// + remainder > 4 ? 10 : 0
 		for (short i = 0; i < 10; ++i)
 		{
 			int idx = i * 10;
