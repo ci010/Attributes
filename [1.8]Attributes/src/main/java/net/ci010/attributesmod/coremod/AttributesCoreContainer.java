@@ -11,7 +11,7 @@ public class AttributesCoreContainer extends DummyModContainer
 	{
 		super(new ModMetadata());
 		ModMetadata data = getMetadata();
-		data.modId = "attributesCore";
+		data.modId = "attributesCowre";
 		data.name = "AttributesCore";
 		data.description = "Core mod of Attributes";
 		data.version = "0.1";
