@@ -9,6 +9,7 @@ public class Resource
 {
 	public static final Random r = new Random();
 
+	public static String[] supportBlock;
 	public static int maxOfSl,speedOfSlCos,speedOfSlReg,maxOfSt,speedOfStCos,speedOfStReg;
 
 //	public static final ResourceLocation sleepTexturepath = new ResourceLocation("attributes", "textures/gui/sleep_bar.png");
@@ -28,6 +29,8 @@ public class Resource
 		maxOfSt = config.getInt("max", strength, 100, 50, 300, "use to set the max value");
 		speedOfStReg = config.getInt("regeration speed", strength, 10, 1, 30, "use to set the speed ");
 		speedOfStCos = config.getInt("consumption speed", strength, 15, 1, 25, "use to set the speed ");
+		
+		supportBlock = config.getStringList("support block", "support block", new String[]{"stairs"}, "the list of block will support sitting on it");
 		
 		config.save();
 	}
