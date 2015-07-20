@@ -36,15 +36,15 @@ public class DebugHandler
 		}
 	}
 
-	@SubscribeEvent(priority = EventPriority.LOW)
-	public void jumpEvent(LivingJumpEvent event)
-	{
-		// StatBase distance = StatList.distanceSprintedStat;
-		if (event.entityLiving instanceof EntityPlayer)
-		{
-			EntityPlayer player = (EntityPlayer) event.entityLiving;
-		}
-
-	}
+//	@SubscribeEvent(priority = EventPriority.LOW)
+//	public void jumpEvent(LivingJumpEvent event)
+//	{
+//		// StatBase distance = StatList.distanceSprintedStat;
+//		if (event.entityLiving instanceof EntityPlayer)
+//		{
+//			EntityPlayer player = (EntityPlayer) event.entityLiving;
+//		}
+//
+//	}
 
 }

@@ -38,8 +38,10 @@ public class KeybindingHandler
 		if (Minecraft.getMinecraft().gameSettings.keyBindSneak.isPressed())
 		{
 			System.out.println("is pressing sneak");
+			System.out.println("jump fac is " + Minecraft.getMinecraft().thePlayer.jumpMovementFactor);
 			if (Minecraft.getMinecraft().gameSettings.keyBindAttack.isPressed())
 			{
+				
 				System.out.println("is pressing sneak and attack");
 				// TODO asm to get pressed time in KeyBinding && asm to change swing item in EntityPlayer
 				// PlayerTickHandler.trackPlayer(Minecraft.getMinecraft().thePlayer);
