@@ -5,17 +5,22 @@ import net.ci010.attributesmod.properties.Attributes;
 import net.ci010.attributesmod.properties.Status;
 import net.ci010.attributesmod.properties.dynamic.Sleepness;
 import net.ci010.attributesmod.properties.dynamic.Strength;
+import net.ci010.attributesmod.util.SittingUtil;
+import net.minecraft.block.BlockStairs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.EntityPlayer.EnumStatus;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
@@ -35,18 +40,6 @@ public class CommonHandler
 	}
 
 	@SubscribeEvent
-	public void entityLivingUpdate(LivingUpdateEvent event)
-	{
-		if (event.entityLiving instanceof EntityPlayer)
-		{
-			float multiplier = Attributes.agility.getMultiplier((EntityPlayer) event.entityLiving);
-
-			event.entityLiving.motionX *= multiplier;
-			event.entityLiving.motionZ *= multiplier;
-		}
-	}
-
-	@SubscribeEvent
 	public void jumpEvent(LivingJumpEvent event)
 	{
 		if (event.entityLiving instanceof EntityPlayerMP)
@@ -55,9 +48,53 @@ public class CommonHandler
 			Strength playerSt = Strength.get(player);
 			if (playerSt == null)
 				return;
-
-			// System.out.println("consume (jump)");
 			playerSt.consume(Resource.speedOfStCos);
+		}
+	}
+
+	@SubscribeEvent
+	public void onLivingUpdate(LivingUpdateEvent event)
+	{
+		// if (event.entityLiving instanceof EntityPlayer)
+		// ((EntityPlayer) event.entityLiving).jumpMovementFactor =
+		// ((EntityPlayer) event.entityLiving).capabilities.getWalkSpeed();
+	}
+
+	@SubscribeEvent
+	public void onPlayerInteract(PlayerInteractEvent event)
+	{
+		if(event.action==Action.RIGHT_CLICK_BLOCK)
+		{
+			if(event.entityPlayer.worldObj.getBlockState(event.pos).getBlock().getUnlocalizedName().contains("stairs"))
+			{
+				SittingUtil.sitOnBlock(event.entityPlayer.worldObj,event.pos.getX(),event.pos.getY(),event.pos.getZ(),event.entityPlayer,0.4d);
+				
+				EnumFacing face = ((EnumFacing)event.entityPlayer.worldObj.getBlockState(event.pos).getValue(BlockStairs.FACING));
+				
+				switch(face)
+				{
+					case DOWN:
+						break;
+					case EAST:
+						event.entityPlayer.rotationYaw = 90;
+						break;
+					case NORTH:
+						event.entityPlayer.rotationYaw = 0;
+						break;
+					case SOUTH:
+						event.entityPlayer.rotationYaw = 180;
+						break;
+					case UP:
+						break;
+					case WEST:
+						event.entityPlayer.rotationYaw = -90;
+						break;
+					default:
+						break;
+				}
+				event.entityPlayer.rotationPitch = -8;
+			}
+
 		}
 	}
 
@@ -70,7 +107,7 @@ public class CommonHandler
 			Strength playerSt = Strength.get(event.entityPlayer);
 			Sleepness playerSl = Sleepness.get(event.entityPlayer);
 
-			if (playerSt.getCurrent() < 0 || playerSl.getCurrent() < 0)
+			if (playerSt.getCurrent() < 10 || playerSl.getCurrent() < 10)
 			{
 				event.newSpeed = event.originalSpeed / 2;
 			}
@@ -152,7 +189,7 @@ public class CommonHandler
 				// TODO make this '20' and '10' dynamic
 				if (playerSt.getCurrent() < Resource.speedOfStCos * 1.5)
 				{
-
+					playerSl.consume(3);
 					System.out.println("canceled lower than 20 (" + playerSt.getCurrent());
 					event.setCanceled(true);
 				}
@@ -165,6 +202,7 @@ public class CommonHandler
 			{
 				if (playerSt.getCurrent() < Resource.speedOfStCos)
 				{
+					playerSl.consume(3);
 					System.out.println("canceled lower than " + Resource.speedOfStCos + " now:" + playerSt.getCurrent());
 					event.setCanceled(true);
 				}
@@ -188,17 +226,24 @@ public class CommonHandler
 	@SubscribeEvent
 	public void wakeEvent(PlayerWakeUpEvent event)
 	{
-		Sleepness playerSl = Sleepness.get((EntityPlayer) event.entityLiving);
-
-		playerSl.isSleeping = false;
+		PlayerTickHandler.sleepneesTracker.remove(event.entityPlayer);
 	}
 
 	@SubscribeEvent
 	public void sleepEvent(PlayerSleepInBedEvent event)
 	{
-		Sleepness playerSl = Sleepness.get((EntityPlayer) event.entityLiving);
+		PlayerTickHandler.sleepneesTracker.put(event.entityPlayer, true);
+	}
 
-		if (event.result == EnumStatus.OK)
-			playerSl.isSleeping = true;
+	@SuppressWarnings("deprecation")
+	public void toggleSpeed(EntityPlayer player, float modifier)
+	{
+		NBTTagCompound tag = new NBTTagCompound();
+		player.capabilities.writeCapabilitiesToNBT(tag);
+
+		tag.getCompoundTag("abilities").setFloat("walkSpeed", 0.1f * modifier);
+		player.capabilities.readCapabilitiesFromNBT(tag);
+
+		player.getToolDigEfficiency(null);
 	}
 }
