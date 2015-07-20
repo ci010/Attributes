@@ -22,8 +22,6 @@ public abstract class Attributes
 	public static Endurance endurance = new Endurance("ENDURANCE");
 	public static Power power = new Power("POWER");
 
-	public final float factor[];
-
 	/**
 	 * The id of an attribute
 	 */
@@ -32,12 +30,10 @@ public abstract class Attributes
 	/**
 	 * @param id
 	 *            The id of one attribute
-	 * @param factor
 	 */
-	protected Attributes(String id, float... factor)
+	protected Attributes(String id)
 	{
 		this.id = id;
-		this.factor = factor;
 	}
 
 	/**
@@ -47,7 +43,7 @@ public abstract class Attributes
 	 *            The player needed to be updated attributes
 	 * */
 
-	@SideOnly(Side.SERVER)
+	// @SideOnly(Side.SERVER)
 	public static final void updatePlayer(EntityPlayer player)
 	{
 		if (player instanceof EntityPlayerMP)
@@ -125,24 +121,14 @@ public abstract class Attributes
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static final void loadFromNBT(EntityPlayer player, NBTTagCompound playerData)
+	public static final void loadFromNBT(EntityPlayer player, NBTTagCompound attri)
 	{
 		if (player == null)
 		{
 			return;
 		}
-
-		// Attributes.agility.setFromValue(player,
-		// attribute.getInteger(agility.id), false);
-		// Attributes.power.setFromValue(player, attribute.getInteger(power.id),
-		// false);
-		// Attributes.endurance.setFromValue(player,
-		// attribute.getInteger(endurance.id), false);
-
+		
 		NBTTagCompound per = new NBTTagCompound();
-		NBTTagCompound attri = playerData.getCompoundTag("ATTRIBUTES");
-		System.out.println("set from nbt");
-		System.out.println("calculate value: Agility from " + attri.getInteger(agility.id) + " to " + Attributes.agility.transformToPerformance(attri.getInteger(agility.id)));
 
 		per.setFloat(	agility.id,
 						Attributes.agility.transformToPerformance(attri.getInteger(agility.id)));
@@ -167,18 +153,14 @@ public abstract class Attributes
 
 		int limit = TalentHandler.getLimit(player).getInteger(this.id);
 
-		// System.out.println(limit+" is the limit of " +this.id);
-
-		if (limit == 0)
-			System.out.println("lmt is 0");
+//		if (limit == 0)
+//			System.out.println("lmt is 0");
 
 		int attribute = value > limit ? limit : value;
 
-		// System.out.println(this.id+ " try to set to "+attribute);
-		// System.out.println("----------------");
-
+		
 		getNBTAttributes(player).setInteger(this.id, attribute);
-
+		
 		getNBTPerformance(player).setFloat(	this.id,
 											this.transformToPerformance(attribute));
 
@@ -205,6 +187,5 @@ public abstract class Attributes
 	 * @return The character id
 	 */
 	protected abstract char getMessageId();
-	
-	
+
 }

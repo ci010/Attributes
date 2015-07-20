@@ -14,7 +14,7 @@ public class Power extends Attributes
 	@Override
 	protected int affectByTalent(int upgradeTalent, EntityPlayerMP player)
 	{
-		int damageDealt = player.getStatFile().readStat(StatList.damageDealtStat);
+		int damageDealt = player.getStatFile().readStat(StatList.damageDealtStat)+1;
 		return 300 - (280 / damageDealt);
 	}
 

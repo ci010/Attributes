@@ -14,7 +14,8 @@ public class Endurance extends Attributes
 	@Override
 	protected int affectByTalent(int upgradeTalent, EntityPlayerMP player)
 	{
-		int damageTaken = player.getStatFile().readStat(StatList.damageTakenStat);
+		int damageTaken = player.getStatFile().readStat(StatList.damageTakenStat)+1;
+		System.out.println("end will return " + (300 - (280 / damageTaken)));
 		return 300 - (280 / damageTaken);
 	}
 
@@ -26,7 +27,7 @@ public class Endurance extends Attributes
 	}
 
 	@Override
-	protected char getMessageId()
+	public char getMessageId()
 	{
 		return 'e';
 	}

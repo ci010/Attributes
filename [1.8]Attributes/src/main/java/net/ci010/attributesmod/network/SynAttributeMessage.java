@@ -3,8 +3,6 @@ package net.ci010.attributesmod.network;
 import io.netty.buffer.ByteBuf;
 import net.ci010.attributesmod.properties.Attributes;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
@@ -42,7 +40,7 @@ public class SynAttributeMessage implements IMessage
 		@Override
 		public IMessage handleClientMessage(EntityPlayer player, SynAttributeMessage message, MessageContext ctx)
 		{
-			Attributes.getNBTAttributes(player).setInteger(	message.id == 'a' ? Attributes.agility.id : message.id == 'e' ? Attributes.endurance.id : Attributes.power.id,
+			Attributes.getNBTAttributes(player).setInteger(	message.id == Attributes.agility.getMessageId() ? Attributes.agility.id : message.id == Attributes.endurance.getMessageId() ? Attributes.endurance.id : Attributes.power.id,
 															message.data);
 			return null;
 		}

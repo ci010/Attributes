@@ -8,9 +8,6 @@ import net.minecraftforge.common.IExtendedEntityProperties;
 public class Sleepness extends Status implements IExtendedEntityProperties
 {
 	// NAME is used to register extended property
-	
-	public boolean isSleeping;
-
 	public Sleepness(EntityPlayer player)
 	{
 		super(player);

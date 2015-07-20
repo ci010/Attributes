@@ -50,7 +50,7 @@ public class SyncPlayerDataMessage implements IMessage
 
 			TalentHandler.setTalent(player, message.playerData);
 			TalentHandler.setLimit(player, message.playerData);
-			Attributes.loadFromNBT(player, message.playerData);
+			Attributes.loadFromNBT(player, message.playerData.getCompoundTag("ATTRIBUTES"));
 			return null;
 		}
 	}

@@ -18,6 +18,7 @@ public class SynAttributesMessage implements IMessage
 
 	public SynAttributesMessage(EntityPlayer player)
 	{
+		System.out.println("start to send message");
 		this.data = Attributes.getNBTAttributes(player);
 	}
 
@@ -38,6 +39,7 @@ public class SynAttributesMessage implements IMessage
 		@Override
 		public IMessage handleClientMessage(EntityPlayer player, SynAttributesMessage message, MessageContext ctx)
 		{
+			System.out.println("start to load message");
 			Attributes.loadFromNBT(player, message.data);
 			return null;
 		}
