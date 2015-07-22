@@ -39,6 +39,9 @@ public class PacketDispatcher
 		PacketDispatcher.registerMessage(	OpenGuiMessage.Handler.class,
 											OpenGuiMessage.class,
 											Side.SERVER);
+		PacketDispatcher.registerMessage(	PlayerSitMessage.Handler.class,
+		                                 	PlayerSitMessage.class,
+											Side.SERVER);
 		PacketDispatcher.registerMessage(	SynAttributesMessage.Handler.class,
 											SynAttributesMessage.class,
 											Side.CLIENT);
