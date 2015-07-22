@@ -1,15 +1,19 @@
 package net.ci010.attributesmod.handler;
 
 import net.ci010.attributesmod.Resource;
+import net.ci010.attributesmod.network.PacketDispatcher;
+import net.ci010.attributesmod.network.PlayerSitMessage;
 import net.ci010.attributesmod.properties.Attributes;
 import net.ci010.attributesmod.properties.Status;
 import net.ci010.attributesmod.properties.dynamic.Sleepness;
 import net.ci010.attributesmod.properties.dynamic.Strength;
 import net.ci010.attributesmod.util.SittingUtil;
 import net.minecraft.block.BlockStairs;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -25,6 +29,7 @@ import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class CommonHandler
 {
@@ -63,15 +68,27 @@ public class CommonHandler
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
-		if(event.action==Action.RIGHT_CLICK_BLOCK)
+		if (event.action == Action.RIGHT_CLICK_BLOCK)
 		{
-			if(event.entityPlayer.worldObj.getBlockState(event.pos).getBlock().getUnlocalizedName().contains("stairs"))
+			if (event.entityPlayer.worldObj.getBlockState(event.pos).getBlock().getUnlocalizedName().contains("stairs"))
 			{
-				SittingUtil.sitOnBlock(event.entityPlayer.worldObj,event.pos.getX(),event.pos.getY(),event.pos.getZ(),event.entityPlayer,0.4d);
+				if (event.entityPlayer instanceof EntityPlayerSP)
+				{
+					PacketDispatcher.sendToServer(new PlayerSitMessage(event.pos.getX(), event.pos.getY(), event.pos.getZ()));
+				}
 				
-				EnumFacing face = ((EnumFacing)event.entityPlayer.worldObj.getBlockState(event.pos).getValue(BlockStairs.FACING));
-				
-				switch(face)
+				SittingUtil.sitOnBlock(	event.entityPlayer.worldObj,
+										event.pos.getX(),
+										event.pos.getY(),
+										event.pos.getZ(),
+										event.entityPlayer,
+										0.4d);
+
+				// event.entityPlayer.getPersistentID()
+
+				EnumFacing face = ((EnumFacing) event.entityPlayer.worldObj.getBlockState(event.pos).getValue(BlockStairs.FACING));
+
+				switch (face)
 				{
 					case DOWN:
 						break;
@@ -104,6 +121,7 @@ public class CommonHandler
 	{
 		if (event.entityLiving instanceof EntityPlayerMP)
 		{
+			System.out.println("breaking block");
 			Strength playerSt = Strength.get(event.entityPlayer);
 			Sleepness playerSl = Sleepness.get(event.entityPlayer);
 
@@ -218,7 +236,7 @@ public class CommonHandler
 			}
 		}
 	}
-
+ 
 	// I believe if we fill above out, it must be messy.... so maybe we need a
 	// way to manage these codes.
 
@@ -226,17 +244,20 @@ public class CommonHandler
 	@SubscribeEvent
 	public void wakeEvent(PlayerWakeUpEvent event)
 	{
-		PlayerTickHandler.sleepneesTracker.remove(event.entityPlayer);
+		if(event.entityPlayer instanceof EntityPlayerMP)
+			togglespSpeed(event.entityPlayer, Attributes.agility.getMultiplier(event.entityPlayer));
+		else
+			System.out.println("is single");
 	}
 
 	@SubscribeEvent
 	public void sleepEvent(PlayerSleepInBedEvent event)
 	{
-		PlayerTickHandler.sleepneesTracker.put(event.entityPlayer, true);
+		
 	}
 
 	@SuppressWarnings("deprecation")
-	public void toggleSpeed(EntityPlayer player, float modifier)
+	public void toggleSpeedOld(EntityPlayer player, float modifier)
 	{
 		NBTTagCompound tag = new NBTTagCompound();
 		player.capabilities.writeCapabilitiesToNBT(tag);
@@ -245,5 +266,12 @@ public class CommonHandler
 		player.capabilities.readCapabilitiesFromNBT(tag);
 
 		player.getToolDigEfficiency(null);
+	}
+	
+	public static void togglespSpeed(EntityPlayer player, float modifier)
+	{
+		float value = 0.1f * modifier;
+		ReflectionHelper.setPrivateValue(PlayerCapabilities.class, player.capabilities, value, "walkSpeed");
+		ReflectionHelper.setPrivateValue(EntityPlayer.class, player, value/5, "speedInAir");
 	}
 }
