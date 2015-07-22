@@ -1,6 +1,7 @@
 package net.ci010.attributesmod;
 
 import net.ci010.attributesmod.command.AttribueCommand;
+import net.ci010.attributesmod.command.StatusCommand;
 import net.ci010.attributesmod.proxy.CommonProxy;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraftforge.common.config.Configuration;
@@ -50,5 +51,6 @@ public class AttributesMod
 	{
 		ServerCommandManager serverCommandManager = (ServerCommandManager) event.getServer().getCommandManager();
 		serverCommandManager.registerCommand(new AttribueCommand());
+		serverCommandManager.registerCommand(new StatusCommand());
 	}
 }
