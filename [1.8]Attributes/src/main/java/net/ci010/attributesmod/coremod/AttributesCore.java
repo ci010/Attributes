@@ -13,7 +13,6 @@ public class AttributesCore implements IFMLLoadingPlugin
 	@Override
 	public String[] getASMTransformerClass()
 	{
-		System.out.println("get class");
 		return new String[]
 		{ "net.ci010.attributesmod.coremod.AttributesTransformer" };
 	}
@@ -21,8 +20,8 @@ public class AttributesCore implements IFMLLoadingPlugin
 	@Override
 	public String getModContainerClass()
 	{
-		return "net.ci010.attributesmod.coremod.AttributesCoreContainer";
-//				AttributesCoreContainer.class.getName();
+		return //"net.ci010.attributesmod.coremod.AttributesCoreContainer";
+				AttributesCoreContainer.class.getName();
 	}
 
 	@Override

@@ -24,7 +24,6 @@ public class OpenGuiMessage implements IMessage
 	public void fromBytes(ByteBuf buf)
 	{
 		 data = buf.readInt();
-		
 	}
 
 	@Override

@@ -27,6 +27,4 @@ public class CoreHook
 	{
 		return player.capabilities.getWalkSpeed()/5;
 	}
-
-
 }

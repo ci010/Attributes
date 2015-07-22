@@ -3,7 +3,6 @@ package net.ci010.attributesmod.network;
 import io.netty.buffer.ByteBuf;
 import net.ci010.attributesmod.handler.TalentHandler;
 import net.ci010.attributesmod.properties.Attributes;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;

@@ -20,10 +20,4 @@ public class Sleepness extends Status implements IExtendedEntityProperties
 	{
 		return (Sleepness) player.getExtendedProperties("sleepness");
 	}
-	
-//	@Override
-//	public void init(Entity entity, World world)
-//	{
-//		this.player.getDataWatcher().addObject(20, this.max);
-//	}
 }
