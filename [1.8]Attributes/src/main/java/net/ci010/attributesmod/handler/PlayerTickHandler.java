@@ -1,13 +1,12 @@
 package net.ci010.attributesmod.handler;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 //import java.util.concurrent.ConcurrentHashMap;
 
 import net.ci010.attributesmod.Resource;
+import net.ci010.attributesmod.entity.EntitySittableBlock;
 import net.ci010.attributesmod.properties.dynamic.Sleepness;
 import net.ci010.attributesmod.properties.dynamic.Strength;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +20,8 @@ public class PlayerTickHandler
 	// static ConcurrentHashMap<EntityPlayer, PlayerData> playerTracker = new
 	// ConcurrentHashMap<EntityPlayer, PlayerData>();
 	static Set<EntityPlayer> attackTracker = Collections.synchronizedSet(new HashSet<EntityPlayer>());
-	static Map<EntityPlayer, Boolean> sleepneesTracker = Collections.synchronizedMap(new HashMap<EntityPlayer,Boolean>());
+	// static Map<EntityPlayer, Boolean> sleepneesTracker =
+	// Collections.synchronizedMap(new HashMap<EntityPlayer, Boolean>());
 
 	private final int runValue = Resource.speedOfStCos / 2;
 	private final int sleepValue = Resource.speedOfSlCos;
@@ -29,42 +29,49 @@ public class PlayerTickHandler
 	@SubscribeEvent
 	public void playerTick(PlayerTickEvent event)
 	{
-		if (event.phase == Phase.END)
+		if (shouldUpdate(event))
 		{
-			if (event.player.worldObj.getWorldTime() % 10 == 0 && event.side == Side.SERVER)
+			if (event.player.onGround)
 			{
-				if (event.player.onGround)
+				if (event.player.isPlayerSleeping())
 				{
-					updateSleepness(event.player);
-					
-					updateStrength(event.player);	
+					Strength.get(event.player).recover((int) (Resource.speedOfStReg * 1.5));
+					Sleepness.get(event.player).recover(sleepValue);
+					return;
 				}
-				else if (event.player.isInWater())
+				updateStrength(event.player);
+			}
+			else if (event.player.isInWater())
+				updateStrength(event.player);
+			
+			else if (event.player.isRiding())
+			{
+				if (event.player.ridingEntity instanceof EntitySittableBlock)
 				{
-					updateStrength(event.player);
+					Sleepness.get(event.player).recover(sleepValue / 8);
+					Strength.get(event.player).recover((int) (sleepValue));
+				}
+				else
+				{
+					if (attackTracker.contains(event.player))
+					{
+						if (event.player.isSwingInProgress)
+							return;
+						else
+							attackTracker.remove(event.player);
+						Strength.get(event.player).recover(Resource.speedOfStReg);
+					}
 				}
 			}
 		}
-	}
 
-	private void updateSleepness(EntityPlayer player)
-	{
-		if (sleepneesTracker.containsKey(player))
-		{
-			Sleepness playerSl = Sleepness.get(player);
-			if(sleepneesTracker.get(player))
-				playerSl.recover(sleepValue);
-			else
-				playerSl.recover(sleepValue/2);
-		}
 	}
 
 	private void updateStrength(EntityPlayer player)
 	{
-		Strength playerSt = Strength.get(player);
-		
 		if (player.isSprinting())
 		{
+			Strength playerSt = Strength.get(player);
 			playerSt.consume(runValue);
 			if (playerSt.getCurrent() <= runValue)
 			{
@@ -84,6 +91,7 @@ public class PlayerTickHandler
 					attackTracker.remove(player);
 				}
 			}
+			Strength playerSt = Strength.get(player);
 			if (player.motionX == 0 && player.motionZ == 0)
 			{
 				playerSt.recover(Resource.speedOfStReg);
@@ -94,6 +102,11 @@ public class PlayerTickHandler
 			}
 
 		}
+	}
+
+	private boolean shouldUpdate(PlayerTickEvent event)
+	{
+		return event.phase == Phase.END && event.player.worldObj.getWorldTime() % 10 == 0 && event.side == Side.SERVER;
 	}
 	// public static void trackPlayer(EntityPlayerSP thePlayer)
 	// {
