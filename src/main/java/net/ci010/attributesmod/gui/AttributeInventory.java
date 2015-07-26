@@ -3,6 +3,7 @@ package net.ci010.attributesmod.gui;
 import net.ci010.attributesmod.properties.Attributes;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.stats.AchievementList;
 import net.minecraft.util.ResourceLocation;
 
 public class AttributeInventory extends GuiInventory
