@@ -3,7 +3,6 @@ package net.ci010.attributesmod.gui;
 import net.ci010.attributesmod.network.PacketDispatcher;
 import net.ci010.attributesmod.network.SynAttributesMessage;
 import net.ci010.attributesmod.network.SyncPlayerDataMessage;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
