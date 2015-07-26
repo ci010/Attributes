@@ -60,9 +60,9 @@ public class StrengthBar extends Gui
 			int offset = i * 8 + 9;
 
 			if (idx < approx)
-				drawTexturedModalRect(x + offset, y, 0, 0+9, 9, 9);
+				drawTexturedModalRect(x + offset, y, 0, 0, 9, 9);
 			else if (idx == approx)
-				drawTexturedModalRect(x + offset, y + 4, 0, 4+9, 9, 5);
+				drawTexturedModalRect(x + offset, y + 4, 0, 4, 9, 5);
 		}
 
 		GlStateManager.disableBlend();
