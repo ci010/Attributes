@@ -75,4 +75,7 @@ public class SleepnessBar extends Gui
 		this.mc.getTextureManager().bindTexture(Gui.icons);
 
 	}
+	
+	void dummy()
+	{}
 }
