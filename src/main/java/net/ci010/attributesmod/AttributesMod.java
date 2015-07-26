@@ -24,7 +24,7 @@ public class AttributesMod
 	@SidedProxy(serverSide = "net.ci010.attributesmod.proxy.CommonProxy", clientSide = "net.ci010.attributesmod.proxy.ClientProxy")
 	public static CommonProxy proxy;
 
-	@Instance("Attributes")
+	@Instance("attributes")
 	public static AttributesMod instance;
 
 	@EventHandler
