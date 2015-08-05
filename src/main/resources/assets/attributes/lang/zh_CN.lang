@@ -1,4 +1,5 @@
 attri.command.usage=/attri set [player] [type] [value], type 可以是 agility/endurance/power. 或/attri check [player]
+
 attri.command.exception.check=/attri check [player]
 attri.command.exception.set=命令应当是 /attri set [player] [type] [value], type 可以是 agility/endurance/power
 attri.command.exception.noname=没有找到 %s 玩家
@@ -20,3 +21,11 @@ attri.command.check.limit.endurance=耐力上限为%s
 attri.command.check.multiply.agility=敏捷乘数为%s
 attri.command.check.multiply.power=力量乘数为%s
 attri.command.check.multiply.endurance=耐力乘数为%s
+
+status.command.usage=/status set [player] [type] [value], type 可以是sleepness/strength
+
+status.command.exception.noname=没有找到 %s 玩家
+status.command.exception.value=value只能是一个整数.
+
+status.command.set.sleepness=将%s的疲劳设置为%s
+status.command.set.strength=将%s的体力设置为%s

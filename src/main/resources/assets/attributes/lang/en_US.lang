@@ -1,4 +1,5 @@
 attri.command.usage=The command should be like /attri set [player] [type] [value], type could be agility/endurance/power
+
 attri.command.exception.check=/attri check [player]
 attri.command.exception.set=/attri check [player]
 attri.command.exception.noname=not player named %s
@@ -20,3 +21,11 @@ attri.command.check.limit.endurance=The limit of endurance %s
 attri.command.check.multiply.agility=The multiply of agility %s
 attri.command.check.multiply.power=The multiply of power %s
 attri.command.check.multiply.endurance=The multiply of endurance %s
+
+status.command.usage=/status set [player] [type] [value], type ø…“‘ «sleepness/strength
+
+status.command.exception.noname=not player named %s
+status.command.exception.value=The value needs to be an integer.
+
+status.command.set.sleepness=set the sleepness of %s to %s
+status.command.set.strength=set the strength of %s to %s
