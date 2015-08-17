@@ -1,13 +1,18 @@
 package net.ci010.attributesmod.properties;
 
+import java.lang.reflect.Type;
+
 import net.ci010.attributesmod.handler.TalentHandler;
-import net.ci010.attributesmod.network.PacketDispatcher;
 import net.ci010.attributesmod.network.SynAttributeMessage;
 import net.ci010.attributesmod.network.SynAttributesMessage;
 import net.ci010.attributesmod.properties.basic.*;
+import net.ci010.minecraftUtil.network.PacketDispatcher;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -18,14 +23,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public abstract class Attributes
 {
-	public static Agility agility = new Agility("AGILITY");
-	public static Endurance endurance = new Endurance("ENDURANCE");
-	public static Power power = new Power("POWER");
+	public static final String tag = "attributes";
+
+	public static Agility agility = new Agility("agility");
+	public static Endurance endurance = new Endurance("endurance");
+	public static Power power = new Power("power");
 
 	/**
 	 * The id of an attribute
 	 */
-	public String id = "Attributes";
+	public String id;
 
 	/**
 	 * @param id
@@ -41,7 +48,7 @@ public abstract class Attributes
 	 * 
 	 * @param player
 	 *            The player needed to be updated attributes
-	 * */
+	 */
 
 	// @SideOnly(Side.SERVER)
 	public static final void updatePlayer(EntityPlayer player)
@@ -53,9 +60,6 @@ public abstract class Attributes
 			Attributes.agility.upgrade(playerMP);
 			Attributes.endurance.upgrade(playerMP);
 			Attributes.power.upgrade(playerMP);
-
-			PacketDispatcher.sendTo(new SynAttributesMessage(playerMP),
-									playerMP);
 		}
 	}
 
@@ -71,7 +75,7 @@ public abstract class Attributes
 	{
 		int talent = TalentHandler.getTalent(player).getInteger(this.id);
 
-		setFromValue(player, this.affectByTalent(talent, player), false);
+		setFromValue(player, this.affectByTalent(talent, player));
 	}
 
 	protected abstract int affectByTalent(int upgradeTalent, EntityPlayerMP player);
@@ -84,7 +88,7 @@ public abstract class Attributes
 	 */
 	public static final NBTTagCompound getNBTPerformance(EntityPlayer player)
 	{
-		return player.getEntityData().getCompoundTag("Performance");
+		return player.getEntityData().getCompoundTag("performance");
 	}
 
 	/**
@@ -95,7 +99,7 @@ public abstract class Attributes
 	 */
 	public static final NBTTagCompound getNBTAttributes(EntityPlayer player)
 	{
-		return player.getEntityData().getCompoundTag("ATTRIBUTES");
+		return player.getEntityData().getCompoundTag(Attributes.tag);
 	}
 
 	/**
@@ -127,7 +131,7 @@ public abstract class Attributes
 		{
 			return;
 		}
-		
+
 		NBTTagCompound per = new NBTTagCompound();
 
 		per.setFloat(	agility.id,
@@ -137,38 +141,55 @@ public abstract class Attributes
 		per.setFloat(	endurance.id,
 						Attributes.endurance.transformToPerformance(attri.getInteger(endurance.id)));
 
-		player.getEntityData().setTag("Performance", per);
-		player.getEntityData().setTag("ATTRIBUTES", attri);
-
+		player.getEntityData().setTag("performance", per);
+		player.getEntityData().setTag(Attributes.tag, attri);
 	}
 
-	public void setFromValue(EntityPlayer player, int value, boolean needSyn)
+	public void setFromValue(EntityPlayer player, int value)
 	{
-		// System.out.println("----------------");
-		if (player == null)
-		{
-			// System.out.println("player is null when setFromValue");
-			return;
-		}
+		if (player == null) return;
 
 		int limit = TalentHandler.getLimit(player).getInteger(this.id);
 
-//		if (limit == 0)
-//			System.out.println("lmt is 0");
-
 		int attribute = value > limit ? limit : value;
 
-		
+		// getNBTAttributes(player).setInteger(this.id, attribute);
+
+		// if (player instanceof EntityPlayerSP)
+		// {
+		// getNBTAttributes(Minecraft.getMinecraft().thePlayer).setInteger(this.id,
+		// attribute);
+		// System.out.println("sp set");
+		// }
+		// else
 		getNBTAttributes(player).setInteger(this.id, attribute);
-		
+
 		getNBTPerformance(player).setFloat(	this.id,
 											this.transformToPerformance(attribute));
 
-		if (needSyn && player instanceof EntityPlayerMP)
+		if (player instanceof EntityPlayerMP)
 		{
-			PacketDispatcher.sendTo(new SynAttributeMessage(attribute, this.getMessageId()),
-									(EntityPlayerMP) player);
+			System.out.println("mp set");
+			PacketDispatcher.instance.sendTo(	new SynAttributeMessage(this.getMessageId(), value),
+												(EntityPlayerMP) player);
 		}
+	}
+
+	public String getLocalizedName()
+	{
+		return StatCollector.translateToLocal("attri." + this.id + ".name");
+	}
+
+	public String getLocalizedDes(EntityPlayer player)
+	{
+		return StatCollector.translateToLocalFormatted(	"attri." + this.id + ".desc",
+														this.getDescriptionVar(player)[0]);
+	}
+
+	protected float[] getDescriptionVar(EntityPlayer player)
+	{
+		return new float[]
+		{ getMultiplier(player) };
 	}
 
 	/**
@@ -186,6 +207,14 @@ public abstract class Attributes
 	 * 
 	 * @return The character id
 	 */
-	protected abstract char getMessageId();
+	public char getMessageId()
+	{
+		return this.id.charAt(0);
+	}
+	
+	public final static Attributes getInstance(char messageId)
+	{
+		return messageId == agility.getMessageId() ? agility : messageId == endurance.getMessageId() ? endurance : Attributes.power;
+	}
 
 }
