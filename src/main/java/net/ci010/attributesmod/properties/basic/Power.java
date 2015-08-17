@@ -23,10 +23,4 @@ public class Power extends Attributes
 	{
 		return ((float) attribute / 60f) + 1f;
 	}
-
-	@Override
-	protected char getMessageId()
-	{
-		return 'p';
-	}
 }

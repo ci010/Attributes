@@ -25,10 +25,4 @@ public class Endurance extends Attributes
 		return (float) attribute / 280f;
 		// TODO consider if write as .... abs
 	}
-
-	@Override
-	public char getMessageId()
-	{
-		return 'e';
-	}
 }
