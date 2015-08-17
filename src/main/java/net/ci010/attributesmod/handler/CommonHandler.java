@@ -1,13 +1,12 @@
 package net.ci010.attributesmod.handler;
 
 import net.ci010.attributesmod.Resource;
-import net.ci010.attributesmod.network.PacketDispatcher;
-import net.ci010.attributesmod.network.PlayerSitMessage;
 import net.ci010.attributesmod.properties.Attributes;
 import net.ci010.attributesmod.properties.Status;
 import net.ci010.attributesmod.properties.dynamic.Sleepness;
 import net.ci010.attributesmod.properties.dynamic.Strength;
 import net.ci010.attributesmod.util.SittingUtil;
+import net.ci010.minecraftUtil.network.PacketDispatcher;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
@@ -65,57 +64,8 @@ public class CommonHandler
 		// ((EntityPlayer) event.entityLiving).capabilities.getWalkSpeed();
 	}
 
-	@SubscribeEvent
-	public void onPlayerInteract(PlayerInteractEvent event)
-	{
-		if (event.action == Action.RIGHT_CLICK_BLOCK)
-		{
-			if (event.entityPlayer.worldObj.getBlockState(event.pos).getBlock().getUnlocalizedName().contains("stairs"))
-			{
-				if (event.entityPlayer instanceof EntityPlayerSP)
-				{
-					PacketDispatcher.sendToServer(new PlayerSitMessage(event.pos.getX(), event.pos.getY(), event.pos.getZ()));
-				}
-				
-				SittingUtil.sitOnBlock(	event.entityPlayer.worldObj,
-										event.pos.getX(),
-										event.pos.getY(),
-										event.pos.getZ(),
-										event.entityPlayer,
-										0.4d);
+//	
 
-				// event.entityPlayer.getPersistentID()
-
-				EnumFacing face = ((EnumFacing) event.entityPlayer.worldObj.getBlockState(event.pos).getValue(BlockStairs.FACING));
-
-				switch (face)
-				{
-					case DOWN:
-						break;
-					case EAST:
-						event.entityPlayer.rotationYaw = 90;
-						break;
-					case NORTH:
-						event.entityPlayer.rotationYaw = 0;
-						break;
-					case SOUTH:
-						event.entityPlayer.rotationYaw = 180;
-						break;
-					case UP:
-						break;
-					case WEST:
-						event.entityPlayer.rotationYaw = -90;
-						break;
-					default:
-						break;
-				}
-				event.entityPlayer.rotationPitch = -8;
-			}
-
-		}
-	}
-
-	// SIDE server
 	@SubscribeEvent
 	public void breakEvent(BreakSpeed event)
 	{
@@ -236,16 +186,13 @@ public class CommonHandler
 			}
 		}
 	}
- 
-	// I believe if we fill above out, it must be messy.... so maybe we need a
-	// way to manage these codes.
 
-	// events below are done....(should be)
 	@SubscribeEvent
 	public void wakeEvent(PlayerWakeUpEvent event)
 	{
-		if(event.entityPlayer instanceof EntityPlayerMP)
-			togglespSpeed(event.entityPlayer, Attributes.agility.getMultiplier(event.entityPlayer));
+		if (event.entityPlayer instanceof EntityPlayerMP)
+			togglespSpeed(	event.entityPlayer,
+							Attributes.agility.getMultiplier(event.entityPlayer));
 		else
 			System.out.println("is single");
 	}
@@ -253,7 +200,7 @@ public class CommonHandler
 	@SubscribeEvent
 	public void sleepEvent(PlayerSleepInBedEvent event)
 	{
-		
+
 	}
 
 	@SuppressWarnings("deprecation")
@@ -267,11 +214,62 @@ public class CommonHandler
 
 		player.getToolDigEfficiency(null);
 	}
-	
+
 	public static void togglespSpeed(EntityPlayer player, float modifier)
 	{
 		float value = 0.1f * modifier;
-		ReflectionHelper.setPrivateValue(PlayerCapabilities.class, player.capabilities, value, "walkSpeed");
-		ReflectionHelper.setPrivateValue(EntityPlayer.class, player, value/5, "speedInAir");
+		ReflectionHelper.setPrivateValue(	PlayerCapabilities.class,
+											player.capabilities,
+											value,
+											"walkSpeed");
+		ReflectionHelper.setPrivateValue(	EntityPlayer.class,
+											player,
+											value / 5,
+											"speedInAir");
 	}
+	
+	
+//	@SubscribeEvent
+//	public void onPlayerInteract(PlayerInteractEvent event)
+//	{
+//		
+//		if (event.entityPlayer instanceof EntityPlayerMP && event.action == Action.RIGHT_CLICK_BLOCK)
+//		{
+//			if (event.entityPlayer.worldObj.getBlockState(event.pos).getBlock().getUnlocalizedName().contains("stairs"))
+//			{
+//				SittingUtil.sitOnBlock(	event.entityPlayer.worldObj,
+//										event.pos.getX(),
+//										event.pos.getY(),
+//										event.pos.getZ(),
+//										event.entityPlayer,
+//										0.5d);
+//
+//				EnumFacing face = ((EnumFacing) event.entityPlayer.worldObj.getBlockState(event.pos).getValue(BlockStairs.FACING));
+//
+//				switch (face)
+//				{
+//					case DOWN:
+//						break;
+//					case EAST:
+//						event.entityPlayer.rotationYaw = 90;
+//						break;
+//					case NORTH:
+//						event.entityPlayer.rotationYaw = 0;
+//						break;
+//					case SOUTH:
+//						event.entityPlayer.rotationYaw = 180;
+//						break;
+//					case UP:
+//						break;
+//					case WEST:
+//						event.entityPlayer.rotationYaw = -90;
+//						break;
+//					default:
+//						break;
+//				}
+//				event.entityPlayer.rotationPitch = -8;
+//			}
+//
+//		}
+//	}
 }
