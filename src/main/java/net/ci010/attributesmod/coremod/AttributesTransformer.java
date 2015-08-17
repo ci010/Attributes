@@ -13,7 +13,7 @@ public class AttributesTransformer implements IClassTransformer
 	boolean isObfscated;
 
 	private static final String[] classList =
-	{ "net.minecraft.entity.player.EntityPlayer", "net.minecraft.world.WorldServer", "net.minecraft.entity.EntityLivingBase" };
+	{ "net.minecraft.entity.player.EntityPlayer", "net.minecraft.world.WorldServer", "net.minecraft.entity.EntityLivingBase", "net.minecraft.block.BlockStairs" };
 
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass)
@@ -36,14 +36,17 @@ public class AttributesTransformer implements IClassTransformer
 			switch (index)
 			{
 				case 0:
-//					visitor = new PatchDepMethod(writer);
+					// visitor = new PatchDepMethod(writer);
 					visitor = new PatchTrySleep(writer);
 					break;
 				case 1:
 					visitor = new PatchTick(writer);
 					break;
 				case 2:
-//					visitor = new PatchSwing(writer);
+					// visitor = new PatchSwing(writer);
+					break;
+				case 3:
+					visitor = new PatchBlockStairs(writer);
 					break;
 			}
 

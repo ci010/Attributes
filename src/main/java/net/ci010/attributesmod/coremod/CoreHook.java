@@ -2,11 +2,14 @@ package net.ci010.attributesmod.coremod;
 
 import net.ci010.attributesmod.Resource;
 import net.ci010.attributesmod.properties.dynamic.Strength;
+import net.minecraft.block.BlockStairs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
 
 public class CoreHook
 {
 	static float test = 0f;
+	public static double height = 0.5d;
 
 	public static boolean getFalse()
 	{
@@ -27,4 +30,11 @@ public class CoreHook
 	{
 		return player.capabilities.getWalkSpeed()/5;
 	}
+	
+	public static void test()
+	{
+		BlockPos p = new BlockPos(0,0,0);
+		p.getX();
+	}
+	
 }
