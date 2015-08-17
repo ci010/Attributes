@@ -3,6 +3,9 @@ package net.ci010.attributesmod;
 import net.ci010.attributesmod.command.AttribueCommand;
 import net.ci010.attributesmod.command.StatusCommand;
 import net.ci010.attributesmod.proxy.CommonProxy;
+import net.ci010.minecraftUtil.network.NetworkMod;
+import net.ci010.minecraftUtil.network.PacketDispatcher;
+import net.ci010.minecraftUtil.network.Proxy;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
@@ -15,7 +18,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 @Mod(name = AttributesMod.NAME, modid = AttributesMod.MODID, version = AttributesMod.VERSION)
-public class AttributesMod
+public class AttributesMod implements NetworkMod
 {
 	public static final String MODID = "attributes";
 	public static final String NAME = "Attributes";
@@ -37,6 +40,7 @@ public class AttributesMod
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
+		PacketDispatcher.initInstance(MODID,this);
 		proxy.iniHandler();
 	}
 
@@ -52,5 +56,11 @@ public class AttributesMod
 		ServerCommandManager serverCommandManager = (ServerCommandManager) event.getServer().getCommandManager();
 		serverCommandManager.registerCommand(new AttribueCommand());
 		serverCommandManager.registerCommand(new StatusCommand());
+	}
+
+	@Override
+	public Proxy getProxy()
+	{
+		return proxy;
 	}
 }
