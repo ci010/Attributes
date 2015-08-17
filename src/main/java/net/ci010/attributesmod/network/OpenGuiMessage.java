@@ -2,6 +2,7 @@ package net.ci010.attributesmod.network;
 
 import io.netty.buffer.ByteBuf;
 import net.ci010.attributesmod.AttributesMod;
+import net.ci010.minecraftUtil.network.AbstractServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -30,7 +31,6 @@ public class OpenGuiMessage implements IMessage
 	public void toBytes(ByteBuf buf)
 	{
 		buf.writeInt(data);
-		
 	}
 	
 	public static class Handler extends AbstractServerMessageHandler<OpenGuiMessage> 

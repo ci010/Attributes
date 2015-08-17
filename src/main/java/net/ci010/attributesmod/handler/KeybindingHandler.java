@@ -2,8 +2,8 @@ package net.ci010.attributesmod.handler;
 
 import net.ci010.attributesmod.AttributesMod;
 import net.ci010.attributesmod.network.OpenGuiMessage;
-import net.ci010.attributesmod.network.PacketDispatcher;
 import net.ci010.attributesmod.properties.Attributes;
+import net.ci010.minecraftUtil.network.PacketDispatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.client.C16PacketClientStatus;
@@ -19,7 +19,7 @@ public class KeybindingHandler
 //		ClientRegistry.registerKeyBinding(attributeMenu);
 	}
 
-	@SubscribeEvent
+//	@SubscribeEvent
 	public void keyDown(InputEvent.KeyInputEvent event)
 	{
 		if (Minecraft.getMinecraft().gameSettings.keyBindInventory.isPressed())
@@ -27,7 +27,7 @@ public class KeybindingHandler
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			// this works...... yet I want a better solution...
 			if (Attributes.power.getAttribute(player) == 0)
-				PacketDispatcher.sendToServer(new OpenGuiMessage(0));
+				PacketDispatcher.instance.sendToServer(new OpenGuiMessage(0));
 			
 			Minecraft.getMinecraft().getNetHandler().addToSendQueue(new C16PacketClientStatus(
 					C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT));

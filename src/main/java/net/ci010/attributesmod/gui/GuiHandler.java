@@ -1,7 +1,7 @@
 package net.ci010.attributesmod.gui;
 
-import net.ci010.attributesmod.network.PacketDispatcher;
 import net.ci010.attributesmod.network.SynAttributesMessage;
+import net.ci010.minecraftUtil.network.PacketDispatcher;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
@@ -15,8 +15,9 @@ public class GuiHandler implements IGuiHandler
 	{
 		if(ID == 0)
 		{
-			PacketDispatcher.sendTo(new SynAttributesMessage(player),
-									(EntityPlayerMP) player);
+			System.out.println("get sever gui elemts");
+//			PacketDispatcher.instance.sendTo(new SynAttributesMessage(player),
+//									(EntityPlayerMP) player);
 		}
 		return null;
 	}

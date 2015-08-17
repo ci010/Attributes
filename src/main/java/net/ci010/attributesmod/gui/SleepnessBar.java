@@ -76,6 +76,4 @@ public class SleepnessBar extends Gui
 
 	}
 	
-	void dummy()
-	{}
 }
