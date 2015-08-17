@@ -1,9 +1,9 @@
 package net.ci010.attributesmod.handler;
 
 import net.ci010.attributesmod.Resource;
-import net.ci010.attributesmod.network.PacketDispatcher;
 import net.ci010.attributesmod.network.SyncPlayerDataMessage;
 import net.ci010.attributesmod.properties.Attributes;
+import net.ci010.minecraftUtil.network.PacketDispatcher;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -51,7 +51,7 @@ public class TalentHandler
 			playerData.setTag("Limit", limit);
 		}
 
-		if (!playerData.hasKey("ATTRIBUTES"))
+		if (!playerData.hasKey(Attributes.tag))
 		{
 			System.out.println("init generate");
 
@@ -63,7 +63,7 @@ public class TalentHandler
 			attr.setInteger(Attributes.agility.id, sum[1]);
 			attr.setInteger(Attributes.power.id, sum[2]);
 
-			playerData.setTag("ATTRIBUTES", attr);
+			playerData.setTag(Attributes.tag, attr);
 
 			NBTTagCompound per = new NBTTagCompound();
 
@@ -74,12 +74,38 @@ public class TalentHandler
 			per.setFloat(	Attributes.power.id,
 							Attributes.power.transformToPerformance(sum[2]));
 
-			playerData.setTag("Performance", per);
+			playerData.setTag("performance", per);
 		}
 
-		PacketDispatcher.sendTo(new SyncPlayerDataMessage((EntityPlayer) event.player),
-								(EntityPlayerMP) event.player);
+		int[] i = generateTalent();
+		System.out.println(i[0] + " " + i[1] + " " + i[2]);
+		PacketDispatcher.instance.sendTo(	new SyncPlayerDataMessage((EntityPlayer) event.player),
+											(EntityPlayerMP) event.player);
 
+	}
+
+	public static int[] generateTalent()
+	{
+		int offset = (int) (Resource.r.nextGaussian() * 5d) + 5;
+
+		System.out.println(offset);
+
+		int sum = 25 + offset;
+
+		int i = generateNonZero(sum);
+
+		int j = generateNonZero(sum-i);
+		int k = sum - i - j;
+
+		return new int[]
+		{ i, j, k };
+	}
+
+	private static int generateNonZero(int range)
+	{
+		int temp = Resource.r.nextInt(range);
+
+		return temp < range / 4 ? generateNonZero(range) : temp > (range / 3) * 2 ? generateNonZero(range) : temp;
 	}
 
 	private static int[] generateInitValue()

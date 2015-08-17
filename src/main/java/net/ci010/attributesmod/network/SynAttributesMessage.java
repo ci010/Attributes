@@ -2,6 +2,7 @@ package net.ci010.attributesmod.network;
 
 import io.netty.buffer.ByteBuf;
 import net.ci010.attributesmod.properties.Attributes;
+import net.ci010.minecraftUtil.network.AbstractClientMessageHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -43,6 +44,5 @@ public class SynAttributesMessage implements IMessage
 			Attributes.loadFromNBT(player, message.data);
 			return null;
 		}
-
 	}
 }
