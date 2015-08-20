@@ -1,7 +1,8 @@
 package net.ci010.attributesmod.network;
 
 import io.netty.buffer.ByteBuf;
-import net.ci010.attributesmod.handler.TalentHandler;
+import net.ci010.attributesmod.Resource;
+import net.ci010.attributesmod.handler.InitHandler;
 import net.ci010.attributesmod.properties.Attributes;
 import net.ci010.minecraftUtil.DataBuffer;
 import net.ci010.minecraftUtil.network.AbstractClientMessageHandler;
@@ -53,11 +54,6 @@ public class SyncPlayerDataMessage implements IMessage
 					{
 						EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 						wait(player);
-
-						TalentHandler.setTalent(player, message.data);
-						TalentHandler.setLimit(player, message.data);
-						Attributes.loadFromNBT(player, message.data);
-
 					}
 
 					public void wait(EntityPlayer player)
@@ -68,15 +64,18 @@ public class SyncPlayerDataMessage implements IMessage
 							super.waitTime();
 							this.wait(player);
 						}
+						else
+						{
+							Attributes.loadFromNBT(	player,
+													message.data.getCompoundTag(Resource.ATTRIBUTES));
+						}
 					}
 				}).start();
 				return null;
 			}
 
-			TalentHandler.setTalent(player, message.data);
-			TalentHandler.setLimit(player, message.data);
 			Attributes.loadFromNBT(	player,
-									message.data.getCompoundTag(Attributes.tag));
+									message.data.getCompoundTag(Resource.ATTRIBUTES));
 			return null;
 		}
 	}

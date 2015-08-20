@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
  * @author CIJhn
  * 
  */
-public class BackGroudHelper
+public class BackGroundHelper
 {
 	
 	/**
@@ -147,6 +147,11 @@ public class BackGroudHelper
 
 	}
 
+	public static void draw(GuiBlock block ,int x,int y)
+	{
+		block.list();
+	
+	}
 	/**
 	 * draw the default background sampled from inventory.png
 	 * @param gui the GuiContainer which is going to draw something on

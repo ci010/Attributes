@@ -2,6 +2,7 @@ package net.ci010.attributesmod.command;
 
 import net.ci010.attributesmod.properties.dynamic.Sleepness;
 import net.ci010.attributesmod.properties.dynamic.Strength;
+import net.ci010.minecraftUtil.SyntexHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;

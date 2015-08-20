@@ -1,4 +1,4 @@
-package net.ci010.attributesmod.command;
+package net.ci010.minecraftUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

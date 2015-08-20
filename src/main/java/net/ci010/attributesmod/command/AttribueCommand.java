@@ -1,7 +1,7 @@
 package net.ci010.attributesmod.command;
 
-import net.ci010.attributesmod.handler.TalentHandler;
 import net.ci010.attributesmod.properties.Attributes;
+import net.ci010.minecraftUtil.SyntexHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -53,33 +53,33 @@ public class AttribueCommand extends CommandBase
 									this,
 									"attri.command.check.talent.agility",
 									new Object[]
-									{ TalentHandler.getTalent(player).getInteger(Attributes.agility.id) });
+									{ Attributes.getTalent(player).getInteger(Attributes.agility.id) });
 					notifyOperators(sender,
 									this,
 									"attri.command.check.talent.power",
 									new Object[]
-									{ TalentHandler.getTalent(player).getInteger(Attributes.power.id) });
+									{ Attributes.getTalent(player).getInteger(Attributes.power.id) });
 					notifyOperators(sender,
 									this,
 									"attri.command.check.talent.endurance",
 									new Object[]
-									{ TalentHandler.getTalent(player).getInteger(Attributes.endurance.id) });
+									{ Attributes.getTalent(player).getInteger(Attributes.endurance.id) });
 					
 					notifyOperators(sender,
 									this,
 									"attri.command.check.limit.agility",
 									new Object[]
-									{ TalentHandler.getLimit(player).getInteger(Attributes.agility.id) });
+									{ Attributes.getLimit(player).getInteger(Attributes.agility.id) });
 					notifyOperators(sender,
 									this,
 									"attri.command.check.limit.power",
 									new Object[]
-									{ TalentHandler.getLimit(player).getInteger(Attributes.power.id) });
+									{ Attributes.getLimit(player).getInteger(Attributes.power.id) });
 					notifyOperators(sender,
 									this,
 									"attri.command.check.limit.endurance",
 									new Object[]
-									{ TalentHandler.getLimit(player).getInteger(Attributes.endurance.id) });
+									{ Attributes.getLimit(player).getInteger(Attributes.endurance.id) });
 
 					notifyOperators(sender,
 									this,
@@ -122,8 +122,7 @@ public class AttribueCommand extends CommandBase
 				{
 
 					Attributes.agility.setFromValue(player,
-													Integer.valueOf(args[3]),
-													true);
+													Integer.valueOf(args[3]));
 					notifyOperators(sender,
 									this,
 									"attri.command.set.agility",
@@ -134,8 +133,7 @@ public class AttribueCommand extends CommandBase
 				else if (args[2].equals("endurance"))
 				{
 					Attributes.endurance.setFromValue(	player,
-														Integer.valueOf(args[3]),
-														true);
+														Integer.valueOf(args[3]));
 					notifyOperators(sender,
 									this,
 									"attri.command.set.endurance",
@@ -146,8 +144,7 @@ public class AttribueCommand extends CommandBase
 				else if (args[2].equals("power"))
 				{
 					Attributes.power.setFromValue(	player,
-													Integer.valueOf(args[3]),
-													true);
+													Integer.valueOf(args[3]));
 					notifyOperators(sender,
 									this,
 									"attri.command.set.power",
