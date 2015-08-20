@@ -17,16 +17,14 @@ public abstract class Status implements IExtendedEntityProperties
 	protected final EntityPlayer player;
 
 	protected int max;
+	
+	protected int speedOfConsume;
 
 	// public int commonFactor, highFactor;
 
 	public Status(EntityPlayer player)
 	{
 		this.player = player;
-
-		// this.commonFactor = Resource.getCommonFactor();
-		//
-		// this.highFactor = Resource.getHighFactor();
 	}
 
 	protected void registerDataWatcher(EntityPlayer player, int temp)
@@ -123,6 +121,7 @@ public abstract class Status implements IExtendedEntityProperties
 	{
 		setCurrent(this.max);
 	}
+	
 
 	public void recover(int value)
 	{
@@ -130,23 +129,15 @@ public abstract class Status implements IExtendedEntityProperties
 		this.setCurrent(amount < max ? amount : this.max);
 	}
 
-
-	// public boolean consume(boolean b)
-	// {
-	// return b ? consumeHigh() : consumeLow();
-	// }
-
-	// private boolean consumeLow()
-	// {
-	// this.consume(commonFactor);
-	// return false;
-	// }
-	//
-	// private boolean consumeHigh()
-	// {
-	// this.consume(highFactor);
-	// return true;
-	// }
-	//
+	public void setMax(int max)
+	{
+		this.max = max;
+		replenish();
+	}
+	
+	public void setSpeed(int speed)
+	{
+		this.speedOfConsume = speed;
+	}
 
 }
