@@ -1,21 +1,20 @@
 package net.ci010.attributesmod.proxy;
 
 import net.ci010.attributesmod.AttributesMod;
-import net.ci010.attributesmod.gui.GuiHandler;
 import net.ci010.attributesmod.handler.*;
 import net.ci010.attributesmod.network.OpenGuiMessage;
 import net.ci010.attributesmod.network.PlayerSitMessage;
-import net.ci010.attributesmod.network.SynAttributeMessage;
-import net.ci010.attributesmod.network.SynAttributesMessage;
 import net.ci010.attributesmod.network.SyncPlayerDataMessage;
+import net.ci010.attributesmod.properties.Attributes;
+import net.ci010.attributesmod.properties.basic.Agility;
+import net.ci010.attributesmod.properties.basic.Endurance;
+import net.ci010.attributesmod.properties.basic.Power;
 import net.ci010.minecraftUtil.network.PacketDispatcher;
 import net.ci010.minecraftUtil.network.Proxy;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class CommonProxy implements Proxy
 {
@@ -24,37 +23,21 @@ public class CommonProxy implements Proxy
 		registerPackets();
 		MinecraftForge.EVENT_BUS.register(new CommonHandler());
 		MinecraftForge.EVENT_BUS.register(new DebugHandler());
-		FMLCommonHandler.instance().bus().register(new TalentHandler());
+		FMLCommonHandler.instance().bus().register(new InitHandler());
 		FMLCommonHandler.instance().bus().register(new PlayerTickHandler());
-		NetworkRegistry.INSTANCE.registerGuiHandler(AttributesMod.instance, new GuiHandler());
+		Attributes.registerAttributes(new Agility("agility"));
+		Attributes.registerAttributes(new Power("power"));
+		Attributes.registerAttributes(new Endurance("endurance"));
 	}
-
-	// dont know why this fucking shit doesnt work.
-	// @SideOnly(value = Side.SERVER)
-	// public int getStatValue(LivingJumpEvent event, StatBase stat)
-	// {
-	// return ((EntityPlayerMP)event.entityLiving).getStatFile().readStat(stat);
-	// }
 
 	private final void registerPackets()
 	{
-		// PacketDispatcher.registerMessage(OpenGuiMessage.OpenGuiMessageHandler.class,
-		// OpenGuiMessage.class, Side.SERVER);
 		PacketDispatcher.instance.registerMessage(	SyncPlayerDataMessage.Handler.class,
-											SyncPlayerDataMessage.class,
-											Side.CLIENT);
+											SyncPlayerDataMessage.class);
 		PacketDispatcher.instance.registerMessage(	OpenGuiMessage.Handler.class,
-											OpenGuiMessage.class,
-											Side.SERVER);
+											OpenGuiMessage.class);
 		PacketDispatcher.instance.registerMessage(	PlayerSitMessage.Handler.class,
-		                                 	PlayerSitMessage.class,
-											Side.CLIENT);
-		PacketDispatcher.instance.registerMessage(	SynAttributesMessage.Handler.class,
-											SynAttributesMessage.class,
-											Side.CLIENT);
-		PacketDispatcher.instance.registerMessage(	SynAttributeMessage.Handler.class,
-											SynAttributeMessage.class,
-											Side.CLIENT);
+		                                 	PlayerSitMessage.class);
 	}
 	
 	public boolean isClient()
