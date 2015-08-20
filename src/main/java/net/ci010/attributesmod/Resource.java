@@ -12,6 +12,12 @@ public class Resource
 	public static String[] supportBlock;
 	public static int maxOfSl,speedOfSlCos,speedOfSlReg,maxOfSt,speedOfStCos,speedOfStReg;
 
+	public static final String ATTRIBUTES = "attributes";
+	public static final String TALENTS = "talents";
+	public static final String PERFORMANCE = "performance";
+	public static final String INIT = "init";
+	public static final String LIMIT = "limit";
+	
 //	public static final ResourceLocation sleepTexturepath = new ResourceLocation("attributes", "textures/gui/sleep_bar.png");
 	
 	public static final ResourceLocation iconTexturepath = new ResourceLocation("attributes", "textures/gui/icon.png");
@@ -21,18 +27,17 @@ public class Resource
 		config.load();
 		
 		String sleepness = "Sleepness";
-		maxOfSl = config.getInt("max", sleepness, 100, 50, 300, "use to set the max value");
-		speedOfSlReg = config.getInt("regeration speed", sleepness, 10, 1, 30, "use to set the speed ");
-		speedOfSlCos = config.getInt("consumption speed", sleepness, 15, 1, 25, "use to set the speed ");
+		maxOfSl = config.getInt("max", sleepness, 4800, 1200, 6000, "use to set the max value");
+		speedOfSlReg = config.getInt("regeration speed", sleepness, 6, 1, 60, "use to set the speed ");
+		speedOfSlCos = config.getInt("consumption speed", sleepness, 1, 1, 10, "use to set the speed ");
 		
 		String strength = "Strength";
-		maxOfSt = config.getInt("max", strength, 100, 50, 300, "use to set the max value");
-		speedOfStReg = config.getInt("regeration speed", strength, 10, 1, 30, "use to set the speed ");
-		speedOfStCos = config.getInt("consumption speed", strength, 15, 1, 25, "use to set the speed ");
+		maxOfSt = config.getInt("max", strength, 60, 50, 300, "use to set the max value");
+		speedOfStReg = config.getInt("regeration speed", strength, 2, 1, 30, "use to set the speed ");
+		speedOfStCos = config.getInt("consumption speed", strength, 5, 1, 25, "use to set the speed ");
 		
 		supportBlock = config.getStringList("support block", "support block", new String[]{"stairs"}, "the list of block will support sitting on it");
 		
 		config.save();
 	}
-
 }
