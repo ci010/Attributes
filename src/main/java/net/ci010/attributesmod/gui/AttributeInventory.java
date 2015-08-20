@@ -6,7 +6,7 @@ import java.util.List;
 
 import net.ci010.attributesmod.Resource;
 import net.ci010.attributesmod.properties.Attributes;
-import net.ci010.minecraftUtil.gui.BackGroudHelper;
+import net.ci010.minecraftUtil.gui.BackGroundHelper;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
@@ -19,6 +19,11 @@ public class AttributeInventory extends GuiInventory
 	private ResourceLocation invTexture = new ResourceLocation("textures/gui/container/inventory.png");
 
 	EntityPlayer player;
+	int left;
+	int length;
+	int height;
+	int center;
+	int size = Attributes.attriMap.size();
 
 	public AttributeInventory(EntityPlayer player)
 	{
@@ -26,11 +31,21 @@ public class AttributeInventory extends GuiInventory
 		this.player = player;
 	}
 
+	public void initGui()
+	{
+		super.initGui();
+		left = this.guiLeft + this.xSize + 10;
+		length = (int) (this.width * 0.1);
+		height = (int) (super.height * 0.5) - this.guiTop;
+		center = left + length / 2;
+	}
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		ArrayList<String> list = new ArrayList<String>();
+
 		int tempX = (int) (width * 0.1) / 2 + this.guiLeft + this.xSize - 6;
 		int tempY = this.guiTop + 10;
 		if (mouseX > tempX && mouseX < tempX + 18)
@@ -75,22 +90,17 @@ public class AttributeInventory extends GuiInventory
 		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 		mc.renderEngine.bindTexture(invTexture);
 
-		int left = this.guiLeft + this.xSize + 10;
-		int length = (int) (width * 0.1);
-
-		int top = this.guiTop;
-		int height = (int) (this.height * 0.5) - top;
-
-		BackGroudHelper.draw(this, left, top, length, height);
-
-		int center = left + length / 2;
+		BackGroundHelper.draw(this, left, this.guiTop, length, height);
 
 		int tempX = center - 16;
-		int tempY = top + 10;
+		int tempY = this.guiTop + 10;
 
-		BackGroudHelper.drawSlot(this, tempX, tempY);
-		BackGroudHelper.drawSlot(this, tempX, tempY += 22);
-		BackGroudHelper.drawSlot(this, tempX, tempY += 22);
+		// for (int i = 0; i < size; i++)
+		// BackGroundHelper.drawSlot(this, tempX, tempY += 22);
+
+		BackGroundHelper.drawSlot(this, tempX, tempY);
+		BackGroundHelper.drawSlot(this, tempX, tempY += 22);
+		BackGroundHelper.drawSlot(this, tempX, tempY += 22);
 
 		mc.renderEngine.bindTexture(Resource.iconTexturepath);
 
@@ -101,17 +111,17 @@ public class AttributeInventory extends GuiInventory
 		drawString(	fontRendererObj,
 					String.valueOf(Attributes.power.getAttribute(player)),
 					center + 4,
-					top + 10 + 4,
+					this.guiTop + 10 + 4,
 					0xFFFFFF);
 		drawString(	fontRendererObj,
 					String.valueOf(Attributes.agility.getAttribute(player)),
 					center + 4,
-					top + 26 + 6 + 4,
+					this.guiTop + 26 + 6 + 4,
 					0xFFFFFF);
 		drawString(	fontRendererObj,
 					String.valueOf(Attributes.endurance.getAttribute(player)),
 					center + 4,
-					top + 42 + 12 + 4,
+					this.guiTop + 42 + 12 + 4,
 					0xFFFFFF);
 
 	}
@@ -160,7 +170,12 @@ public class AttributeInventory extends GuiInventory
 			this.zLevel = 300.0F;
 			this.itemRender.zLevel = 300.0F;
 			int color = -267386864;
-			this.drawGradientRect(j2 - 3, k2 - 4, j2 + k + 3, k2 - 3, color, color);
+			this.drawGradientRect(	j2 - 3,
+									k2 - 4,
+									j2 + k + 3,
+									k2 - 3,
+									color,
+									color);
 			this.drawGradientRect(	j2 - 3,
 									k2 + i1 + 3,
 									j2 + k + 3,
@@ -173,7 +188,12 @@ public class AttributeInventory extends GuiInventory
 									k2 + i1 + 3,
 									color,
 									color);
-			this.drawGradientRect(j2 - 4, k2 - 3, j2 - 3, k2 + i1 + 3, color, color);
+			this.drawGradientRect(	j2 - 4,
+									k2 - 3,
+									j2 - 3,
+									k2 + i1 + 3,
+									color,
+									color);
 			this.drawGradientRect(	j2 + k + 3,
 									k2 - 3,
 									j2 + k + 4,
@@ -214,7 +234,8 @@ public class AttributeInventory extends GuiInventory
 				{
 					font.drawString(s1, j2, k2, headColor);
 				}
-				else font.drawStringWithShadow(s1, j2, k2, -1);
+				else
+					font.drawStringWithShadow(s1, j2, k2, -1);
 
 				if (i2 == 0)
 				{

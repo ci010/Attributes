@@ -28,6 +28,7 @@ import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class CommonHandler
@@ -43,6 +44,7 @@ public class CommonHandler
 		}
 	}
 
+	
 	@SubscribeEvent
 	public void jumpEvent(LivingJumpEvent event)
 	{
@@ -71,7 +73,7 @@ public class CommonHandler
 	{
 		if (event.entityLiving instanceof EntityPlayerMP)
 		{
-			System.out.println("breaking block");
+//			System.out.println("breaking block");
 			Strength playerSt = Strength.get(event.entityPlayer);
 			Sleepness playerSl = Sleepness.get(event.entityPlayer);
 
@@ -200,7 +202,8 @@ public class CommonHandler
 	@SubscribeEvent
 	public void sleepEvent(PlayerSleepInBedEvent event)
 	{
-
+		if (event.entityPlayer instanceof EntityPlayerMP)
+			Attributes.updatePlayer((EntityPlayer)event.entityPlayer);
 	}
 
 	@SuppressWarnings("deprecation")
