@@ -7,8 +7,7 @@ import java.util.Set;
 
 import net.ci010.attributesmod.Resource;
 import net.ci010.attributesmod.entity.EntitySittableBlock;
-import net.ci010.attributesmod.properties.dynamic.Sleepness;
-import net.ci010.attributesmod.properties.dynamic.Strength;
+import net.ci010.attributesmod.properties.dynamic.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -17,12 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class PlayerTickHandler
 {
-	// static ConcurrentHashMap<EntityPlayer, PlayerData> playerTracker = new
-	// ConcurrentHashMap<EntityPlayer, PlayerData>();
 	static Set<EntityPlayer> attackTracker = Collections.synchronizedSet(new HashSet<EntityPlayer>());
-	// static Map<EntityPlayer, Boolean> sleepneesTracker =
-	// Collections.synchronizedMap(new HashMap<EntityPlayer, Boolean>());
-
 	private final int sleepValue = Resource.speedOfSlCos;
 
 	@SubscribeEvent
@@ -54,7 +48,7 @@ public class PlayerTickHandler
 				Strength playerSt = Strength.get(event.player);
 				playerSt.consume();
 
-				if (playerSt.getCurrent() <= playerSt.getSpeed())
+				if (playerSt.getCurrent() <= Resource.speedOfStCos)
 					event.player.setSprinting(false);
 			}
 			else
@@ -63,7 +57,7 @@ public class PlayerTickHandler
 					return;
 
 				Strength playerSt = Strength.get(event.player);
-
+				
 				if (event.player.motionX == 0 && event.player.motionZ == 0 && event.player.motionY == 0)
 					playerSt.recover(Resource.speedOfStReg);
 				else

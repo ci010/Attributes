@@ -2,13 +2,9 @@ package net.ci010.attributesmod.handler;
 
 import net.ci010.attributesmod.Resource;
 import net.ci010.attributesmod.properties.Attributes;
-import net.ci010.attributesmod.properties.Status;
+import net.ci010.attributesmod.properties.AttributesMap;
 import net.ci010.attributesmod.properties.dynamic.Sleepness;
 import net.ci010.attributesmod.properties.dynamic.Strength;
-import net.ci010.attributesmod.util.SittingUtil;
-import net.ci010.minecraftUtil.network.PacketDispatcher;
-import net.minecraft.block.BlockStairs;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -16,64 +12,35 @@ import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class CommonHandler
 {
 	@SubscribeEvent
-	public void onEntityConstructing(EntityConstructing event)
-	{
-		if (event.entity instanceof EntityPlayer)
-		{
-			EntityPlayer player = (EntityPlayer) event.entity;
-
-			Status.register(player);
-		}
-	}
-
-	
-	@SubscribeEvent
 	public void jumpEvent(LivingJumpEvent event)
 	{
 		if (event.entityLiving instanceof EntityPlayerMP)
 		{
-			EntityPlayer player = (EntityPlayer) event.entityLiving;
-			Strength playerSt = Strength.get(player);
+			Strength playerSt = Strength.get((EntityPlayer) event.entityLiving);
 			if (playerSt == null)
 				return;
-			playerSt.consume(Resource.speedOfStCos);
+			playerSt.consume();
 		}
 	}
-
-	@SubscribeEvent
-	public void onLivingUpdate(LivingUpdateEvent event)
-	{
-		// if (event.entityLiving instanceof EntityPlayer)
-		// ((EntityPlayer) event.entityLiving).jumpMovementFactor =
-		// ((EntityPlayer) event.entityLiving).capabilities.getWalkSpeed();
-	}
-
-//	
 
 	@SubscribeEvent
 	public void breakEvent(BreakSpeed event)
 	{
 		if (event.entityLiving instanceof EntityPlayerMP)
 		{
-//			System.out.println("breaking block");
 			Strength playerSt = Strength.get(event.entityPlayer);
 			Sleepness playerSl = Sleepness.get(event.entityPlayer);
 
@@ -156,7 +123,6 @@ public class CommonHandler
 
 			if (player.getHeldItem() != null)
 			{
-				// TODO make this '20' and '10' dynamic
 				if (playerSt.getCurrent() < Resource.speedOfStCos * 1.5)
 				{
 					playerSl.consume(3);
@@ -164,9 +130,8 @@ public class CommonHandler
 					event.setCanceled(true);
 				}
 				else
-				{
-					playerSt.consume((int) (Resource.speedOfStCos * 1.5));
-				}
+					playerSt.consume(1.5f);
+
 			}
 			else
 			{
@@ -177,9 +142,8 @@ public class CommonHandler
 					event.setCanceled(true);
 				}
 				else
-				{
-					playerSt.consume(Resource.speedOfStCos);
-				}
+					playerSt.consume();
+
 			}
 
 			if (playerSl.getCurrent() <= 0)
@@ -192,18 +156,16 @@ public class CommonHandler
 	@SubscribeEvent
 	public void wakeEvent(PlayerWakeUpEvent event)
 	{
-		if (event.entityPlayer instanceof EntityPlayerMP)
-			togglespSpeed(	event.entityPlayer,
-							Attributes.agility.getMultiplier(event.entityPlayer));
-		else
-			System.out.println("is single");
+//		if (event.entityPlayer instanceof EntityPlayerMP)
+//			togglespSpeed(	event.entityPlayer,
+//							Attributes.agility.getMultiplier(event.entityPlayer));
 	}
 
 	@SubscribeEvent
 	public void sleepEvent(PlayerSleepInBedEvent event)
 	{
 		if (event.entityPlayer instanceof EntityPlayerMP)
-			Attributes.updatePlayer((EntityPlayer)event.entityPlayer);
+			AttributesMap.updatePlayer((EntityPlayer) event.entityPlayer);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -230,49 +192,59 @@ public class CommonHandler
 											value / 5,
 											"speedInAir");
 	}
-	
-	
-//	@SubscribeEvent
-//	public void onPlayerInteract(PlayerInteractEvent event)
-//	{
-//		
-//		if (event.entityPlayer instanceof EntityPlayerMP && event.action == Action.RIGHT_CLICK_BLOCK)
-//		{
-//			if (event.entityPlayer.worldObj.getBlockState(event.pos).getBlock().getUnlocalizedName().contains("stairs"))
-//			{
-//				SittingUtil.sitOnBlock(	event.entityPlayer.worldObj,
-//										event.pos.getX(),
-//										event.pos.getY(),
-//										event.pos.getZ(),
-//										event.entityPlayer,
-//										0.5d);
-//
-//				EnumFacing face = ((EnumFacing) event.entityPlayer.worldObj.getBlockState(event.pos).getValue(BlockStairs.FACING));
-//
-//				switch (face)
-//				{
-//					case DOWN:
-//						break;
-//					case EAST:
-//						event.entityPlayer.rotationYaw = 90;
-//						break;
-//					case NORTH:
-//						event.entityPlayer.rotationYaw = 0;
-//						break;
-//					case SOUTH:
-//						event.entityPlayer.rotationYaw = 180;
-//						break;
-//					case UP:
-//						break;
-//					case WEST:
-//						event.entityPlayer.rotationYaw = -90;
-//						break;
-//					default:
-//						break;
-//				}
-//				event.entityPlayer.rotationPitch = -8;
-//			}
-//
-//		}
-//	}
+
+	@SubscribeEvent
+	public void onLivingUpdate(LivingUpdateEvent event)
+	{
+		// if (event.entityLiving instanceof EntityPlayer)
+		// ((EntityPlayer) event.entityLiving).jumpMovementFactor =
+		// ((EntityPlayer) event.entityLiving).capabilities.getWalkSpeed();
+	}
+
+	// @SubscribeEvent
+	// public void onPlayerInteract(PlayerInteractEvent event)
+	// {
+	//
+	// if (event.entityPlayer instanceof EntityPlayerMP && event.action ==
+	// Action.RIGHT_CLICK_BLOCK)
+	// {
+	// if
+	// (event.entityPlayer.worldObj.getBlockState(event.pos).getBlock().getUnlocalizedName().contains("stairs"))
+	// {
+	// SittingUtil.sitOnBlock( event.entityPlayer.worldObj,
+	// event.pos.getX(),
+	// event.pos.getY(),
+	// event.pos.getZ(),
+	// event.entityPlayer,
+	// 0.5d);
+	//
+	// EnumFacing face = ((EnumFacing)
+	// event.entityPlayer.worldObj.getBlockState(event.pos).getValue(BlockStairs.FACING));
+	//
+	// switch (face)
+	// {
+	// case DOWN:
+	// break;
+	// case EAST:
+	// event.entityPlayer.rotationYaw = 90;
+	// break;
+	// case NORTH:
+	// event.entityPlayer.rotationYaw = 0;
+	// break;
+	// case SOUTH:
+	// event.entityPlayer.rotationYaw = 180;
+	// break;
+	// case UP:
+	// break;
+	// case WEST:
+	// event.entityPlayer.rotationYaw = -90;
+	// break;
+	// default:
+	// break;
+	// }
+	// event.entityPlayer.rotationPitch = -8;
+	// }
+	//
+	// }
+	// }
 }

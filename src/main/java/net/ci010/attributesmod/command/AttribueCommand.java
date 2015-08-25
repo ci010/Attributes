@@ -1,6 +1,10 @@
 package net.ci010.attributesmod.command;
 
 import net.ci010.attributesmod.properties.Attributes;
+import net.ci010.attributesmod.properties.AttributesMap;
+
+import static net.ci010.attributesmod.properties.AttributesMap.getTalent;
+import static net.ci010.attributesmod.properties.AttributesMap.getLimit;
 import net.ci010.minecraftUtil.SyntexHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -32,7 +36,6 @@ public class AttribueCommand extends CommandBase
 	public void execute(ICommandSender sender, String[] args)
 			throws CommandException
 	{
-
 		EntityPlayer player;
 		if (args.length < 4)
 		{
@@ -49,54 +52,26 @@ public class AttribueCommand extends CommandBase
 						throw new CommandException("attri.command.exception.noname", args[1]);
 					}
 
-					notifyOperators(sender,
-									this,
-									"attri.command.check.talent.agility",
-									new Object[]
-									{ Attributes.getTalent(player).getInteger(Attributes.agility.id) });
-					notifyOperators(sender,
-									this,
-									"attri.command.check.talent.power",
-									new Object[]
-									{ Attributes.getTalent(player).getInteger(Attributes.power.id) });
-					notifyOperators(sender,
-									this,
-									"attri.command.check.talent.endurance",
-									new Object[]
-									{ Attributes.getTalent(player).getInteger(Attributes.endurance.id) });
-					
-					notifyOperators(sender,
-									this,
-									"attri.command.check.limit.agility",
-									new Object[]
-									{ Attributes.getLimit(player).getInteger(Attributes.agility.id) });
-					notifyOperators(sender,
-									this,
-									"attri.command.check.limit.power",
-									new Object[]
-									{ Attributes.getLimit(player).getInteger(Attributes.power.id) });
-					notifyOperators(sender,
-									this,
-									"attri.command.check.limit.endurance",
-									new Object[]
-									{ Attributes.getLimit(player).getInteger(Attributes.endurance.id) });
+					for (Attributes attri : AttributesMap.iterate())
+					{
+						notifyOperators(sender,
+										this,
+										"attri.command.check.talent." + attri.id,
+										new Object[]
+						{ getTalent(player).getInteger(attri.id) });
 
-					notifyOperators(sender,
-									this,
-									"attri.command.check.multiply.agility",
-									new Object[]
-									{ String.valueOf(Attributes.agility.getMultiplier(player)) });
-					notifyOperators(sender,
-									this,
-									"attri.command.check.multiply.power",
-									new Object[]
-									{ String.valueOf(Attributes.power.getMultiplier(player)) });
-					notifyOperators(sender,
-									this,
-									"attri.command.check.multiply.endurance",
-									new Object[]
-									{ String.valueOf(Attributes.endurance.getMultiplier(player)) });
-					
+						notifyOperators(sender,
+										this,
+										"attri.command.check.limit." + attri.id,
+										new Object[]
+						{ getLimit(player).getInteger(attri.id) });
+
+						notifyOperators(sender,
+										this,
+										"attri.command.check.multiply." + attri.id,
+										new Object[]
+						{ String.valueOf(attri.getMultiplier(player)) });
+					}
 				}
 				else
 					throw new CommandException("attri.command.exception.check");
@@ -108,7 +83,6 @@ public class AttribueCommand extends CommandBase
 		{
 			if (SyntexHelper.isNumeric(args[3]))
 			{
-				// EntityPlayer player = (EntityPlayer) sender;
 				try
 				{
 					player = getPlayer(sender, args[1]);
@@ -118,55 +92,21 @@ public class AttribueCommand extends CommandBase
 					throw new CommandException("attri.command.exception.noname", args[1]);
 				}
 
-				if (args[2].equals("agility"))
+				if(AttributesMap.containe(args[2]))
 				{
-
-					Attributes.agility.setFromValue(player,
-													Integer.valueOf(args[3]));
+					Attributes attri = AttributesMap.get(args[2]);
+					attri.setFromValue(player, Integer.valueOf(args[3]));
 					notifyOperators(sender,
 									this,
-									"attri.command.set.agility",
+									"attri.command.set." + attri.id,
 									new Object[]
-									{ args[1], Integer.valueOf(args[3]) });
-				}
-
-				else if (args[2].equals("endurance"))
-				{
-					Attributes.endurance.setFromValue(	player,
-														Integer.valueOf(args[3]));
-					notifyOperators(sender,
-									this,
-									"attri.command.set.endurance",
-									new Object[]
-									{ args[1], Integer.valueOf(args[3]) });
-				}
-
-				else if (args[2].equals("power"))
-				{
-					Attributes.power.setFromValue(	player,
-													Integer.valueOf(args[3]));
-					notifyOperators(sender,
-									this,
-									"attri.command.set.power",
-									new Object[]
-									{ args[1], Integer.valueOf(args[3]) });
-				}
-
-				else
-				{
-					throw new CommandException("attri.command.exception.type");
+					{ args[1], Integer.valueOf(args[3]) });
 				}
 			}
 			else
-			{
 				throw new CommandException("attri.command.exception.value");
-			}
 		}
 		else
-		{
 			throw new CommandException("attri.command.exception.set");
-		}
-
 	}
-
 }
