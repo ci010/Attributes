@@ -3,10 +3,9 @@ package net.ci010.attributesmod.handler;
 import static net.ci010.attributesmod.Resource.*;
 import net.ci010.attributesmod.network.SyncPlayerDataMessage;
 import net.ci010.attributesmod.properties.Attributes;
+import net.ci010.attributesmod.properties.AttributesMap;
 import net.ci010.minecraftUtil.network.PacketDispatcher;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -16,21 +15,19 @@ public class InitHandler
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerLoggedInEvent event)
 	{
-		System.out.println("catch the login event");
-		if (event.player instanceof EntityPlayerMP)
-			System.out.println("lg event fires with mp");
-		if (event.player instanceof EntityPlayerSP)
-			System.out.println("lg event fires with sp");
-
 		NBTTagCompound playerData = event.player.getEntityData();
+
+		int size = AttributesMap.size();
 
 		if (!playerData.hasKey(TALENTS))
 		{
 			NBTTagCompound talent = new NBTTagCompound();
 
-			talent.setInteger(Attributes.agility.id, (r.nextInt(5) + 1));
-			talent.setInteger(Attributes.power.id, (r.nextInt(5) + 1));
-			talent.setInteger(Attributes.endurance.id, (r.nextInt(5) + 1));
+			float[] value = generateTalent(size);
+
+			int i = 0;
+			for (Attributes attr : AttributesMap.iterate())
+				talent.setFloat(attr.id, value[i++]);
 
 			playerData.setTag(TALENTS, talent);
 		}
@@ -39,11 +36,11 @@ public class InitHandler
 		{
 			NBTTagCompound limit = new NBTTagCompound();
 
-			int[] value = generateLimitValue();
+			int[] value = generateLimitValue(size);
 
-			limit.setInteger(Attributes.agility.id, value[0]);
-			limit.setInteger(Attributes.power.id, value[1]);
-			limit.setInteger(Attributes.endurance.id, value[2]);
+			int i = 0;
+			for (Attributes attr : AttributesMap.iterate())
+				limit.setInteger(attr.id, value[i++]);
 
 			playerData.setTag(LIMIT, limit);
 		}
@@ -53,82 +50,94 @@ public class InitHandler
 			System.out.println("init generate");
 
 			NBTTagCompound attr = new NBTTagCompound();
+			NBTTagCompound per = new NBTTagCompound();
 
-			int[] sum = generateInitValue();
+			int[] sum = generateInitValue(size);
 
-			attr.setInteger(Attributes.endurance.id, sum[0]);
-			attr.setInteger(Attributes.agility.id, sum[1]);
-			attr.setInteger(Attributes.power.id, sum[2]);
+			int i = 0;
+			for (Attributes temp : AttributesMap.iterate())
+			{
+				int value = sum[i++];
+				attr.setInteger(temp.id, value);
+				per.setFloat(temp.id, temp.transformToPerformance(value));
+			}
 
 			playerData.setTag(INIT, attr);
 			playerData.setTag(ATTRIBUTES, attr);
-
-			NBTTagCompound per = new NBTTagCompound();
-
-			per.setFloat(	Attributes.endurance.id,
-							Attributes.endurance.transformToPerformance(sum[0]));
-			per.setFloat(	Attributes.agility.id,
-							Attributes.agility.transformToPerformance(sum[1]));
-			per.setFloat(	Attributes.power.id,
-							Attributes.power.transformToPerformance(sum[2]));
-
 			playerData.setTag(PERFORMANCE, per);
 		}
 
 		PacketDispatcher.instance.sendTo(	new SyncPlayerDataMessage((EntityPlayer) event.player),
-											(EntityPlayerMP) event.player);
-
+											event.player);
 	}
 
-	public static int[] generateTalent()
+	public static float[] generateTalent(int num)
 	{
-		int offset = (int) (r.nextGaussian() * 5d) + 5;
+		float[] arr = new float[num];
 
-		System.out.println(offset);
+		for (int i = 0; i < num; i++)
+		{
+			int ten;
+			int unit;
+			int possibility = r.nextInt(40);
 
-		int sum = 25 + offset;
+			if (possibility == 0)
+				ten = 2;
+			else
+				ten = 1;
 
-		int i = generateNonZero(sum);
+			if (ten == 1)
+				unit = r.nextInt(9) + 1;
+			else
+				unit = r.nextInt(4) + 1;
+			arr[i] = (float) (ten + unit * 0.1);
+		}
 
-		int j = generateNonZero(sum - i);
-		int k = sum - i - j;
-
-		return new int[]
-		{ i, j, k };
+		return arr;
 	}
 
-	private static int generateNonZero(int range)
+	public static int[] generateInitValue(int num)
 	{
-		int temp = r.nextInt(range);
+		int sum = (int) (r.nextGaussian() * (double) num * 2.5d) + num * 10;
 
-		return temp < range / 4 ? generateNonZero(range) : temp > (range / 3) * 2 ? generateNonZero(range) : temp;
+		int[] arr = new int[num++];
+
+		for (int i = 0; i < num; i++)
+			if (i == num - 1)
+				break;
+			else
+			{
+				int value = generateInRange(sum);
+				arr[i] = value + 11;
+				sum -= value;
+			}
+
+		return arr;
 	}
 
-	private static int[] generateInitValue()
+	public static int[] generateLimitValue(int num)
 	{
-		int sum = (int) (r.nextGaussian() * 5d) + 20;
+		int sum = (int) (r.nextGaussian() * (double) (num - 1) * 10d) + (num - 1) * 100;
 
-		int i = r.nextInt(sum);
+		int[] arr = new int[num++];
 
-		int j = r.nextInt(sum - i);
+		for (int i = 0; i < num; i++)
+			if (i == num - 1)
+				break;
+			else
+			{
+				int value = generateInRange(sum);
+				arr[i] = value + 101;
+				sum -= value;
+			}
 
-		int k = sum - i - j;
-
-		return new int[]
-		{ i + 11, j + 11, k + 11 };
+		return arr;
 	}
 
-	private static int[] generateLimitValue()
+	private static int generateInRange(int num)
 	{
-		int sum = (int) (r.nextGaussian() * 20d) + 200;
+		int temp = r.nextInt(num);
 
-		int i = r.nextInt(sum);
-
-		int j = r.nextInt(sum - i);
-
-		int k = sum - i - j;
-
-		return new int[]
-		{ i + 101, j + 101, k + 101 };
+		return temp < num / 4 ? generateInRange(num) : temp > (num / 3) * 2 ? generateInRange(num) : temp;
 	}
 }
