@@ -30,26 +30,24 @@ public class SleepnessBar extends Gui
 	@SubscribeEvent(priority = EventPriority.NORMAL)
 	public void onRenderSleepnessBar(Post event)
 	{
-		ScaledResolution scaleRes = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-
-		int width = scaleRes.getScaledWidth();
-		int height = scaleRes.getScaledHeight();
-
 		if (event.type != ElementType.HEALTH)
-		{
 			return;
-		}
 
 		Sleepness prop = Sleepness.get(this.mc.thePlayer);
 
 		if (prop == null)
 			return;
 
+		ScaledResolution scaleRes = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+
 		int current = prop.getCurrent();
+
 		int approx = current - current % 5;
 
-		int x = width / 2 - 100;
-		int y = height - GuiIngameForge.left_height;
+		int numPerIndex = prop.getMax() / 10;
+
+		int x = scaleRes.getScaledWidth() / 2 - 100;
+		int y = scaleRes.getScaledHeight() - GuiIngameForge.left_height;
 
 		if (ForgeHooks.getTotalArmorValue(mc.thePlayer) != 0)
 			y -= 10;
@@ -60,7 +58,7 @@ public class SleepnessBar extends Gui
 
 		for (short i = 0; i < 10; ++i)
 		{
-			int idx = i * 10 + 5;
+			int idx = i * numPerIndex + numPerIndex / 2;
 
 			int offset = i * 8 + 9;
 
@@ -73,7 +71,6 @@ public class SleepnessBar extends Gui
 		GlStateManager.disableBlend();
 
 		this.mc.getTextureManager().bindTexture(Gui.icons);
-
 	}
-	
+
 }
