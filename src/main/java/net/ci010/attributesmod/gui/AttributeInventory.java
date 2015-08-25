@@ -6,8 +6,11 @@ import java.util.List;
 
 import net.ci010.attributesmod.Resource;
 import net.ci010.attributesmod.properties.Attributes;
+import net.ci010.attributesmod.properties.AttributesMap;
 import net.ci010.minecraftUtil.gui.BackGroundHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -23,7 +26,8 @@ public class AttributeInventory extends GuiInventory
 	int length;
 	int height;
 	int center;
-	int size = Attributes.attriMap.size();
+	int size = AttributesMap.size();
+	AttributeGuiIcon[] iconArr;
 
 	public AttributeInventory(EntityPlayer player)
 	{
@@ -38,50 +42,34 @@ public class AttributeInventory extends GuiInventory
 		length = (int) (this.width * 0.1);
 		height = (int) (super.height * 0.5) - this.guiTop;
 		center = left + length / 2;
+		iconArr = new AttributeGuiIcon[size];
+		int i = 0;
+		int x, y, iconU, iconV;
+		iconV = 18;
+		iconU = 0;
+		x = center - 16;
+		y = this.guiTop + 10;
+		for (Attributes attri : AttributesMap.iterate())
+			if (attri.phenotype)
+				iconArr[i] = new AttributeGuiIcon(x, y + (22 * i), iconU + 16 * i++, iconV, attri);
+			else
+			{
+
+			}
+
 	}
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
 		super.drawScreen(mouseX, mouseY, partialTicks);
-		ArrayList<String> list = new ArrayList<String>();
 
-		int tempX = (int) (width * 0.1) / 2 + this.guiLeft + this.xSize - 6;
-		int tempY = this.guiTop + 10;
-		if (mouseX > tempX && mouseX < tempX + 18)
-		{
-			if (mouseY > tempY && mouseY < tempY + 18)
-			{
-				list.add(Attributes.power.getLocalizedName());
-				list.add(Attributes.power.getLocalizedDes(player));
-				this.drawHoveringText(	list,
+		for (int i = 0; i < size; i++)
+			if (iconArr[i].isHovered())
+				this.drawHoveringText(	iconArr[i].getTextLine(),
 										mouseX,
 										mouseY,
-										this.fontRendererObj,
 										0xCD5C5C);
-			}
-			else if (mouseY > (tempY += 22) && mouseY < tempY + 18)
-			{
-				list.add(Attributes.agility.getLocalizedName());
-				list.add(Attributes.agility.getLocalizedDes(player));
-				this.drawHoveringText(	list,
-										mouseX,
-										mouseY,
-										this.fontRendererObj,
-										0xCD5C5C);
-			}
-			else if (mouseY > (tempY += 22) && mouseY < tempY + 18)
-			{
-				list.add(Attributes.endurance.getLocalizedName());
-				list.add(Attributes.endurance.getLocalizedDes(player));
-				this.drawHoveringText(	list,
-										mouseX,
-										mouseY,
-										this.fontRendererObj,
-										0xCD5C5C);
-			}
-		}
-
 	}
 
 	@Override
@@ -91,22 +79,10 @@ public class AttributeInventory extends GuiInventory
 		mc.renderEngine.bindTexture(invTexture);
 
 		BackGroundHelper.draw(this, left, this.guiTop, length, height);
+	
 
-		int tempX = center - 16;
-		int tempY = this.guiTop + 10;
-
-		// for (int i = 0; i < size; i++)
-		// BackGroundHelper.drawSlot(this, tempX, tempY += 22);
-
-		BackGroundHelper.drawSlot(this, tempX, tempY);
-		BackGroundHelper.drawSlot(this, tempX, tempY += 22);
-		BackGroundHelper.drawSlot(this, tempX, tempY += 22);
-
-		mc.renderEngine.bindTexture(Resource.iconTexturepath);
-
-		drawTexturedModalRect(tempX += 1, tempY += 1, 32, 18, 16, 16);
-		drawTexturedModalRect(tempX, tempY -= 22, 16, 18, 16, 16);
-		drawTexturedModalRect(tempX, tempY -= 22, 0, 18, 16, 16);
+		for (int i = 0; i < size; i++)
+			iconArr[i].drawIcon(mouseX, mouseY);
 
 		drawString(	fontRendererObj,
 					String.valueOf(Attributes.power.getAttribute(player)),
@@ -126,7 +102,7 @@ public class AttributeInventory extends GuiInventory
 
 	}
 
-	protected void drawHoveringText(List textLines, int x, int y, FontRenderer font, int headColor)
+	protected void drawHoveringText(List<String> textLines, int x, int y, int headColor)
 	{
 		if (!textLines.isEmpty())
 		{
@@ -134,18 +110,15 @@ public class AttributeInventory extends GuiInventory
 			RenderHelper.disableStandardItemLighting();
 			GlStateManager.disableLighting();
 			GlStateManager.disableDepth();
-			int k = 0;
-			Iterator iterator = textLines.iterator();
+			int length = 0;
+			FontRenderer font = Minecraft.getMinecraft().fontRendererObj;
 
-			while (iterator.hasNext())
+			for (String s : textLines)
 			{
-				String s = (String) iterator.next();
 				int l = font.getStringWidth(s);
 
-				if (l > k)
-				{
-					k = l;
-				}
+				if (l > length)
+					length = l;
 			}
 
 			int j2 = x + 12;
@@ -153,38 +126,32 @@ public class AttributeInventory extends GuiInventory
 			int i1 = 8;
 
 			if (textLines.size() > 1)
-			{
 				i1 += 2 + (textLines.size() - 1) * 10;
-			}
 
-			if (j2 + k > this.width)
-			{
-				j2 -= 28 + k;
-			}
+			if (j2 + length > this.width)
+				j2 -= 28 + length;
 
 			if (k2 + i1 + 6 > this.height)
-			{
 				k2 = this.height - i1 - 6;
-			}
 
 			this.zLevel = 300.0F;
 			this.itemRender.zLevel = 300.0F;
 			int color = -267386864;
 			this.drawGradientRect(	j2 - 3,
 									k2 - 4,
-									j2 + k + 3,
+									j2 + length + 3,
 									k2 - 3,
 									color,
 									color);
 			this.drawGradientRect(	j2 - 3,
 									k2 + i1 + 3,
-									j2 + k + 3,
+									j2 + length + 3,
 									k2 + i1 + 4,
 									color,
 									color);
 			this.drawGradientRect(	j2 - 3,
 									k2 - 3,
-									j2 + k + 3,
+									j2 + length + 3,
 									k2 + i1 + 3,
 									color,
 									color);
@@ -194,9 +161,9 @@ public class AttributeInventory extends GuiInventory
 									k2 + i1 + 3,
 									color,
 									color);
-			this.drawGradientRect(	j2 + k + 3,
+			this.drawGradientRect(	j2 + length + 3,
 									k2 - 3,
-									j2 + k + 4,
+									j2 + length + 4,
 									k2 + i1 + 3,
 									color,
 									color);
@@ -208,21 +175,21 @@ public class AttributeInventory extends GuiInventory
 									k2 + i1 + 3 - 1,
 									k1,
 									l1);
-			this.drawGradientRect(	j2 + k + 2,
+			this.drawGradientRect(	j2 + length + 2,
 									k2 - 3 + 1,
-									j2 + k + 3,
+									j2 + length + 3,
 									k2 + i1 + 3 - 1,
 									k1,
 									l1);
 			this.drawGradientRect(	j2 - 3,
 									k2 - 3,
-									j2 + k + 3,
+									j2 + length + 3,
 									k2 - 3 + 1,
 									k1,
 									k1);
 			this.drawGradientRect(	j2 - 3,
 									k2 + i1 + 2,
-									j2 + k + 3,
+									j2 + length + 3,
 									k2 + i1 + 3,
 									l1,
 									l1);
@@ -231,16 +198,12 @@ public class AttributeInventory extends GuiInventory
 			{
 				String s1 = (String) textLines.get(i2);
 				if (i2 == 0)
-				{
 					font.drawString(s1, j2, k2, headColor);
-				}
 				else
 					font.drawStringWithShadow(s1, j2, k2, -1);
 
 				if (i2 == 0)
-				{
 					k2 += 2;
-				}
 
 				k2 += 10;
 			}
