@@ -1,16 +1,18 @@
 package net.ci010.attributesmod.properties.basic;
 
+import net.ci010.attributesmod.Resource;
 import net.ci010.attributesmod.properties.Attributes;
 import net.ci010.attributesmod.properties.dynamic.Sleepness;
 import net.ci010.attributesmod.properties.dynamic.Strength;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.stats.StatList;
 
 public class Endurance extends Attributes
 {
-	public Endurance(String id)
+	public Endurance()
 	{
-		super(id);
+		super("endurance");
 	}
 
 	@Override
@@ -18,12 +20,8 @@ public class Endurance extends Attributes
 	{
 		float damageTaken = (player.getStatFile().readStat(StatList.damageTakenStat) + 1) * upgradeTalent;
 		System.out.println("end will return " + (300 - (280 / damageTaken)));
-		int result = 280 - (int) (280 / damageTaken) + init;
-		
-		Strength st = Strength.get(player);
-		st.setMax((int) (st.getMax() * ((float) result / 100f) + 1));
-		
-		return result;
+
+		return 280 - (int) (280 / damageTaken) + init;
 	}
 
 	@Override
@@ -31,5 +29,11 @@ public class Endurance extends Attributes
 	{
 		return (float) attribute / 280f;
 		// TODO consider if write as .... abs
+	}
+
+	@Override
+	protected void applyOnStatus(EntityPlayer player, int value)
+	{
+		Strength.get(player).setMax((int) (Resource.maxOfSt * ((float) value / 100f) + 1));
 	}
 }

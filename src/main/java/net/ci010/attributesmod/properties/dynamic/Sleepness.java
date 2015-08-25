@@ -7,13 +7,11 @@ import net.minecraftforge.common.IExtendedEntityProperties;
 
 public class Sleepness extends Status implements IExtendedEntityProperties
 {
-	// NAME is used to register extended property
 	public Sleepness(EntityPlayer player)
 	{
 		super(player);
 		this.id = "sleepness";
 		this.max = Resource.maxOfSl;
-		
 	}
 
 	public static final Sleepness get(EntityPlayer player)

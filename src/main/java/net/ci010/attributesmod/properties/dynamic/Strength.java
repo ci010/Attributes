@@ -12,16 +12,12 @@ public class Strength extends Status implements IExtendedEntityProperties
 		super(player);
 		this.id = "strength";
 		this.max = Resource.maxOfSt;
+		this.speedOfConsume = Resource.speedOfStCos;
+		this.speedOfRegeneration = Resource.speedOfStReg;
 	}
 
 	public static final Strength get(EntityPlayer player)
 	{
 		return (Strength) player.getExtendedProperties("strength");
 	}
-	
-//	@Override
-//	public void init(Entity entity, World world)
-//	{
-//		this.player.getDataWatcher().addObject(21, this.max);
-//	}
 }

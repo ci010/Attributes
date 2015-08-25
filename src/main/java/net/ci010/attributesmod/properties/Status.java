@@ -1,7 +1,5 @@
 package net.ci010.attributesmod.properties;
 
-import net.ci010.attributesmod.properties.dynamic.Sleepness;
-import net.ci010.attributesmod.properties.dynamic.Strength;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,10 +15,10 @@ public abstract class Status implements IExtendedEntityProperties
 	protected final EntityPlayer player;
 
 	protected int max;
-	
+
 	protected int speedOfConsume;
 
-	// public int commonFactor, highFactor;
+	protected int speedOfRegeneration;
 
 	public Status(EntityPlayer player)
 	{
@@ -70,18 +68,6 @@ public abstract class Status implements IExtendedEntityProperties
 		this.player.getDataWatcher().updateObject(this.dataId, value);
 	}
 
-	/**
-	 * register all the status of the player
-	 * 
-	 * @param player
-	 *            the player need to register the status
-	 */
-	public static final void register(EntityPlayer player)
-	{
-		player.registerExtendedProperties("sleepness", new Sleepness(player));
-		player.registerExtendedProperties("strength", new Strength(player));
-	}
-
 	@Override
 	public void saveNBTData(NBTTagCompound compound)
 	{
@@ -89,7 +75,8 @@ public abstract class Status implements IExtendedEntityProperties
 
 		properties.setInteger("current", getCurrent());
 		properties.setInteger("max", max);
-
+		properties.setInteger("consumption", speedOfConsume);
+		properties.setInteger("regeneration", speedOfRegeneration);
 		compound.setTag(this.id, properties);
 	}
 
@@ -100,7 +87,8 @@ public abstract class Status implements IExtendedEntityProperties
 		// TODO check this
 
 		this.setCurrent(properties.getInteger("current"));
-
+		this.setConSpeed(properties.getInteger("consumption"));
+		this.setRegSpeed(properties.getInteger("regeneration"));
 		this.max = properties.getInteger("max");
 	}
 
@@ -110,18 +98,23 @@ public abstract class Status implements IExtendedEntityProperties
 		registerDataWatcher(player, 20);
 	}
 
-	public void consume(int value)
+	public void consume(float multip)
 	{
 		int current = this.getCurrent();
+		int comsumption = (int) (this.speedOfConsume * multip);
+		System.out.println("try to consume " + comsumption);
+		this.setCurrent(comsumption < current ? current - comsumption : 0);
+	}
 
-		this.setCurrent(value < current ? current - value : 0);
+	public void consume()
+	{
+		consume(1);
 	}
 
 	public void replenish()
 	{
 		setCurrent(this.max);
 	}
-	
 
 	public void recover(int value)
 	{
@@ -134,10 +127,14 @@ public abstract class Status implements IExtendedEntityProperties
 		this.max = max;
 		replenish();
 	}
-	
-	public void setSpeed(int speed)
+
+	public void setConSpeed(int speed)
 	{
 		this.speedOfConsume = speed;
 	}
 
+	public void setRegSpeed(int speed)
+	{
+		this.speedOfRegeneration = speed;
+	}
 }
