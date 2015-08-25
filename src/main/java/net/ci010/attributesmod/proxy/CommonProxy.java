@@ -1,14 +1,16 @@
 package net.ci010.attributesmod.proxy;
 
-import net.ci010.attributesmod.AttributesMod;
 import net.ci010.attributesmod.handler.*;
 import net.ci010.attributesmod.network.OpenGuiMessage;
 import net.ci010.attributesmod.network.PlayerSitMessage;
 import net.ci010.attributesmod.network.SyncPlayerDataMessage;
-import net.ci010.attributesmod.properties.Attributes;
+import net.ci010.attributesmod.properties.AttributesMap;
+import net.ci010.attributesmod.properties.StatusMap;
 import net.ci010.attributesmod.properties.basic.Agility;
 import net.ci010.attributesmod.properties.basic.Endurance;
 import net.ci010.attributesmod.properties.basic.Power;
+import net.ci010.attributesmod.properties.dynamic.Sleepness;
+import net.ci010.attributesmod.properties.dynamic.Strength;
 import net.ci010.minecraftUtil.network.PacketDispatcher;
 import net.ci010.minecraftUtil.network.Proxy;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,29 +24,32 @@ public class CommonProxy implements Proxy
 	{
 		registerPackets();
 		MinecraftForge.EVENT_BUS.register(new CommonHandler());
+		MinecraftForge.EVENT_BUS.register(new StatusMap.EventHandler());
 		MinecraftForge.EVENT_BUS.register(new DebugHandler());
 		FMLCommonHandler.instance().bus().register(new InitHandler());
 		FMLCommonHandler.instance().bus().register(new PlayerTickHandler());
-		Attributes.registerAttributes(new Agility("agility"));
-		Attributes.registerAttributes(new Power("power"));
-		Attributes.registerAttributes(new Endurance("endurance"));
+		AttributesMap.registerAttributes(new Power());
+		AttributesMap.registerAttributes(new Agility());
+		AttributesMap.registerAttributes(new Endurance());
+		StatusMap.register(Sleepness.class);
+		StatusMap.register(Strength.class);
 	}
 
 	private final void registerPackets()
 	{
 		PacketDispatcher.instance.registerMessage(	SyncPlayerDataMessage.Handler.class,
-											SyncPlayerDataMessage.class);
+													SyncPlayerDataMessage.class);
 		PacketDispatcher.instance.registerMessage(	OpenGuiMessage.Handler.class,
-											OpenGuiMessage.class);
+													OpenGuiMessage.class);
 		PacketDispatcher.instance.registerMessage(	PlayerSitMessage.Handler.class,
-		                                 	PlayerSitMessage.class);
+													PlayerSitMessage.class);
 	}
-	
+
 	public boolean isClient()
 	{
 		return false;
 	}
-	
+
 	public boolean isOpenToLAN()
 	{
 		return false;
@@ -55,6 +60,5 @@ public class CommonProxy implements Proxy
 	{
 		return ctx.getServerHandler().playerEntity;
 	}
-	
 
 }
