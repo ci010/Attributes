@@ -1,9 +1,7 @@
 package net.ci010.attributesmod.network;
 
 import io.netty.buffer.ByteBuf;
-import net.ci010.attributesmod.Resource;
-import net.ci010.attributesmod.handler.InitHandler;
-import net.ci010.attributesmod.properties.Attributes;
+import net.ci010.attributesmod.properties.AttributesMap;
 import net.ci010.minecraftUtil.DataBuffer;
 import net.ci010.minecraftUtil.network.AbstractClientMessageHandler;
 import net.minecraft.client.Minecraft;
@@ -66,16 +64,16 @@ public class SyncPlayerDataMessage implements IMessage
 						}
 						else
 						{
-							Attributes.loadFromNBT(	player,
-													message.data.getCompoundTag(Resource.ATTRIBUTES));
+							AttributesMap.loadFromNBT(	player,
+													message.data.getCompoundTag(AttributesMap.ATTRIBUTES));
 						}
 					}
 				}).start();
 				return null;
 			}
 
-			Attributes.loadFromNBT(	player,
-									message.data.getCompoundTag(Resource.ATTRIBUTES));
+			AttributesMap.loadFromNBT(	player,
+									message.data.getCompoundTag(AttributesMap.ATTRIBUTES));
 			return null;
 		}
 	}

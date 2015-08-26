@@ -24,9 +24,9 @@ public class CommonProxy implements Proxy
 	{
 		registerPackets();
 		MinecraftForge.EVENT_BUS.register(new CommonHandler());
-		MinecraftForge.EVENT_BUS.register(new StatusMap.EventHandler());
+		MinecraftForge.EVENT_BUS.register(new StatusMap.Handler());
 		MinecraftForge.EVENT_BUS.register(new DebugHandler());
-		FMLCommonHandler.instance().bus().register(new InitHandler());
+		FMLCommonHandler.instance().bus().register(new AttributesMap.Handler());
 		FMLCommonHandler.instance().bus().register(new PlayerTickHandler());
 		AttributesMap.registerAttributes(new Power());
 		AttributesMap.registerAttributes(new Agility());
