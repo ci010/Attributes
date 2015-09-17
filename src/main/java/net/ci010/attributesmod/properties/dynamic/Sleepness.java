@@ -12,6 +12,8 @@ public class Sleepness extends Status implements IExtendedEntityProperties
 		super(player);
 		this.id = "sleepness";
 		this.max = Resource.maxOfSl;
+		this.speedOfConsume = Resource.speedOfSlCos;
+		this.speedOfRegeneration = Resource.speedOfSlReg;
 	}
 
 	public static final Sleepness get(EntityPlayer player)

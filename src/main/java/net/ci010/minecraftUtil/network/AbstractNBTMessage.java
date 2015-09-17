@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public abstract class AbstractNBTMessage implements IMessage
 {
-	protected NBTTagCompound data;
+	public NBTTagCompound data = new NBTTagCompound();
 	
 	public AbstractNBTMessage()
 	{}

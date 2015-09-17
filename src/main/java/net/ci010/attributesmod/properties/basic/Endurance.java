@@ -2,7 +2,6 @@ package net.ci010.attributesmod.properties.basic;
 
 import net.ci010.attributesmod.Resource;
 import net.ci010.attributesmod.properties.Attributes;
-import net.ci010.attributesmod.properties.dynamic.Sleepness;
 import net.ci010.attributesmod.properties.dynamic.Strength;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

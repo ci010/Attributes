@@ -23,7 +23,7 @@ public class StatusCommand extends CommandBase
 	{
 		return "status.command.usage";
 	}
-	
+
 	@Override
 	public int getRequiredPermissionLevel()
 	{
@@ -34,6 +34,7 @@ public class StatusCommand extends CommandBase
 	public void execute(ICommandSender sender, String[] args)
 			throws CommandException
 	{
+		//TODO handle the exceptions
 		EntityPlayer player;
 
 		if (args[0].equals("set"))
@@ -48,34 +49,45 @@ public class StatusCommand extends CommandBase
 				{
 					throw new CommandException("status.command.exception.noname", args[1]);
 				}
-				
-				if(args[2].equals("sleepness"))
+
+				if (args[2].equals("sleepness"))
 				{
 					Sleepness slp = Sleepness.get(player);
-					slp.consume(slp.getMax()-Integer.valueOf(args[3]));
-					
+					slp.setCurrent(Integer.valueOf(args[3]));
+
 					notifyOperators(sender,
 									this,
 									"status.command.set.sleepness",
 									new Object[]
-									{ args[1], Integer.valueOf(args[3]) });
+					{ args[1], Integer.valueOf(args[3]) });
 				}
-				
-				if(args[2].equals("strength"))
+
+				if (args[2].equals("strength"))
 				{
 					Strength str = Strength.get(player);
-					str.consume(str.getMax()-Integer.valueOf(args[3]));
-					
+					str.setCurrent(Integer.valueOf(args[3]));
+
 					notifyOperators(sender,
 									this,
 									"status.command.set.strength",
 									new Object[]
-									{ args[1], Integer.valueOf(args[3]) });
+					{ args[1], Integer.valueOf(args[3]) });
 				}
 			}
 			else
 			{
 				throw new CommandException("status.command.exception.value");
+			}
+		}
+		else if (args[0].equals("check"))
+		{
+			try
+			{
+				player = getPlayer(sender, args[1]);
+			}
+			catch (PlayerNotFoundException e)
+			{
+				throw new CommandException("status.command.exception.noname", args[1]);
 			}
 		}
 

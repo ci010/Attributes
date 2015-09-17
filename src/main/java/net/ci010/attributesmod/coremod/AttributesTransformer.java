@@ -25,7 +25,7 @@ public class AttributesTransformer implements IClassTransformer
 
 	private byte[] handle(int index, byte[] classDataByte)
 	{
-		try
+//		try
 		{
 			ClassReader reader = new ClassReader(classDataByte);
 			ClassVisitor visitor = null;
@@ -36,7 +36,6 @@ public class AttributesTransformer implements IClassTransformer
 			switch (index)
 			{
 				case 0:
-					// visitor = new PatchDepMethod(writer);
 					visitor = new PatchTrySleep(writer);
 					break;
 				case 1:
@@ -56,10 +55,10 @@ public class AttributesTransformer implements IClassTransformer
 			reader.accept(visitor, 0);
 			return writer.toByteArray();
 		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		return classDataByte;
+//		catch (Exception e)
+//		{
+////			e.printStackTrace();
+//		}
+//		return classDataByte;
 	}
 }

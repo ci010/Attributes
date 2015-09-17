@@ -52,13 +52,24 @@ public class AttribueCommand extends CommandBase
 						throw new CommandException("attri.command.exception.noname", args[1]);
 					}
 
+					notifyOperators(sender,
+									this,
+									"attri.command.check.player",
+									new Object[]
+					{ args[1] });
 					for (Attributes attri : AttributesMap.iterate())
 					{
 						notifyOperators(sender,
 										this,
+										"-----------------------------",
+										new Object[]
+						{});
+
+						notifyOperators(sender,
+										this,
 										"attri.command.check.talent." + attri.id,
 										new Object[]
-						{ getTalent(player).getInteger(attri.id) });
+						{ getTalent(player).getFloat(attri.id) });
 
 						notifyOperators(sender,
 										this,
@@ -72,6 +83,12 @@ public class AttribueCommand extends CommandBase
 										new Object[]
 						{ String.valueOf(attri.getMultiplier(player)) });
 					}
+
+					notifyOperators(sender,
+									this,
+									"-----------------------------",
+									new Object[]
+					{});
 				}
 				else
 					throw new CommandException("attri.command.exception.check");
@@ -92,7 +109,7 @@ public class AttribueCommand extends CommandBase
 					throw new CommandException("attri.command.exception.noname", args[1]);
 				}
 
-				if(AttributesMap.containe(args[2]))
+				if (AttributesMap.containe(args[2]))
 				{
 					Attributes attri = AttributesMap.get(args[2]);
 					attri.setFromValue(player, Integer.valueOf(args[3]));

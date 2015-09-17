@@ -1,8 +1,10 @@
 package net.ci010.attributesmod.network;
 
 import io.netty.buffer.ByteBuf;
+import net.ci010.attributesmod.AttributesMod;
 import net.ci010.attributesmod.properties.AttributesMap;
 import net.ci010.minecraftUtil.DataBuffer;
+import net.ci010.minecraftUtil.network.AbstractBiMessageHandler;
 import net.ci010.minecraftUtil.network.AbstractClientMessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,8 +23,7 @@ public class SyncPlayerDataMessage implements IMessage
 
 	public SyncPlayerDataMessage(EntityPlayer player)
 	{
-		data = player.getEntityData();
-		System.out.println("send syn packet to client");
+		data = AttributesMap.getNBTAttributes(player);
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class SyncPlayerDataMessage implements IMessage
 		{
 			if (player == null)
 			{
-				System.out.println("play is null when handle");
+				AttributesMod.LOG.error("play is null when handle");
 				new Thread(new DataBuffer()
 				{
 					@Override
@@ -60,20 +61,20 @@ public class SyncPlayerDataMessage implements IMessage
 						if (player == null)
 						{
 							super.waitTime();
-							this.wait(player);
+							this.wait(Minecraft.getMinecraft().thePlayer);
 						}
 						else
-						{
-							AttributesMap.loadFromNBT(	player,
-													message.data.getCompoundTag(AttributesMap.ATTRIBUTES));
-						}
+							AttributesMap.loadFromNBT(message.data);
 					}
 				}).start();
 				return null;
 			}
+			
+			AttributesMod.LOG.info("try to load tag; checking this tag: ");
+			for (Object o : message.data.getKeySet())
+				AttributesMod.LOG.info((String) o + " ");
 
-			AttributesMap.loadFromNBT(	player,
-									message.data.getCompoundTag(AttributesMap.ATTRIBUTES));
+			AttributesMap.loadFromNBT(message.data);
 			return null;
 		}
 	}

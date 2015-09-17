@@ -1,16 +1,12 @@
 package net.ci010.attributesmod.gui;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import net.ci010.attributesmod.Resource;
 import net.ci010.attributesmod.properties.Attributes;
 import net.ci010.attributesmod.properties.AttributesMap;
 import net.ci010.minecraftUtil.gui.BackGroundHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -26,8 +22,10 @@ public class AttributeInventory extends GuiInventory
 	int length;
 	int height;
 	int center;
+	int[] t;
 	int size = AttributesMap.size();
-	AttributeGuiIcon[] iconArr;
+	AttributesInfo[] info;
+	int column;
 
 	public AttributeInventory(EntityPlayer player)
 	{
@@ -35,28 +33,42 @@ public class AttributeInventory extends GuiInventory
 		this.player = player;
 	}
 
+	// TODO Consider the situation that the icon length greater than the
+	// inventory's height
+
 	public void initGui()
 	{
 		super.initGui();
+		
+		float standardLength = this.width * 0.1f;
+
 		left = this.guiLeft + this.xSize + 10;
-		length = (int) (this.width * 0.1);
-		height = (int) (super.height * 0.5) - this.guiTop;
+
+		height = 17 + 22 * size;
+
+		column = height / super.height + 1;
+
+		length = (int) (standardLength * column);
+
+		t = new int[column];
+
+		for (int i = 0; i < column; i++)
+		{
+			t[i] = (int) (left + standardLength * 0.5 + i * standardLength);
+		}
+
 		center = left + length / 2;
-		iconArr = new AttributeGuiIcon[size];
+
+		info = new AttributesInfo[size];
+		
 		int i = 0;
-		int x, y, iconU, iconV;
-		iconV = 18;
-		iconU = 0;
-		x = center - 16;
-		y = this.guiTop + 10;
+		int x = center - 16, y = this.guiTop + 10, iconU = 0, iconV = 18;
+
 		for (Attributes attri : AttributesMap.iterate())
 			if (attri.phenotype)
-				iconArr[i] = new AttributeGuiIcon(x, y + (22 * i), iconU + 16 * i++, iconV, attri);
-			else
-			{
-
-			}
-
+				info[i] = new AttributesInfo(new AttributeGuiIcon(x, y + (22 * i), iconU + 16 * i++, iconV, attri), attri.getAttribute(player));
+		// iconArr[i] = new AttributeGuiIcon(x, y + (22 * i), iconU + 16 * i++,
+		// iconV, attri);
 	}
 
 	@Override
@@ -65,8 +77,8 @@ public class AttributeInventory extends GuiInventory
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		for (int i = 0; i < size; i++)
-			if (iconArr[i].isHovered())
-				this.drawHoveringText(	iconArr[i].getTextLine(),
+			if (info[i].icon.isHovered())
+				this.drawHoveringText(	info[i].icon.getTextLine(),
 										mouseX,
 										mouseY,
 										0xCD5C5C);
@@ -79,27 +91,16 @@ public class AttributeInventory extends GuiInventory
 		mc.renderEngine.bindTexture(invTexture);
 
 		BackGroundHelper.draw(this, left, this.guiTop, length, height);
-	
 
 		for (int i = 0; i < size; i++)
-			iconArr[i].drawIcon(mouseX, mouseY);
-
-		drawString(	fontRendererObj,
-					String.valueOf(Attributes.power.getAttribute(player)),
-					center + 4,
-					this.guiTop + 10 + 4,
-					0xFFFFFF);
-		drawString(	fontRendererObj,
-					String.valueOf(Attributes.agility.getAttribute(player)),
-					center + 4,
-					this.guiTop + 26 + 6 + 4,
-					0xFFFFFF);
-		drawString(	fontRendererObj,
-					String.valueOf(Attributes.endurance.getAttribute(player)),
-					center + 4,
-					this.guiTop + 42 + 12 + 4,
-					0xFFFFFF);
-
+		{
+			drawString(	fontRendererObj,
+						info[i].value,
+						center + 4,
+						this.guiTop + 14 + 22 * i,
+						0xFFFFFF);
+			info[i].icon.drawIcon(mouseX, mouseY);
+		}
 	}
 
 	protected void drawHoveringText(List<String> textLines, int x, int y, int headColor)
@@ -215,6 +216,19 @@ public class AttributeInventory extends GuiInventory
 			RenderHelper.enableStandardItemLighting();
 			GlStateManager.enableRescaleNormal();
 		}
+	}
+
+	class AttributesInfo
+	{
+		AttributeGuiIcon icon;
+		String value;
+
+		public AttributesInfo(AttributeGuiIcon attributeGuiIcon, int attribute)
+		{
+			this.icon = attributeGuiIcon;
+			this.value = String.valueOf(attribute);
+		}
+
 	}
 
 }

@@ -14,14 +14,13 @@ public class AttributesCore implements IFMLLoadingPlugin
 	public String[] getASMTransformerClass()
 	{
 		return new String[]
-		{ "net.ci010.attributesmod.coremod.AttributesTransformer" };
+		{ AttributesTransformer.class.getName() };
 	}
 
 	@Override
 	public String getModContainerClass()
 	{
-		return //"net.ci010.attributesmod.coremod.AttributesCoreContainer";
-				AttributesCoreContainer.class.getName();
+		return AttributesCoreContainer.class.getName();
 	}
 
 	@Override

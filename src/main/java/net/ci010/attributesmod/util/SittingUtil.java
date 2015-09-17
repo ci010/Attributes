@@ -34,15 +34,13 @@ public class SittingUtil
 					public void go()
 					{
 						if (player.isRiding())
-						{
 							PacketDispatcher.instance.sendTo(	new PlayerSitMessage((int) x, (int) y, (int) z),
-																(EntityPlayerMP) player);
-						}
+																player);
 					}
 				}).start();
 			}
-			
-			EnumFacing face = ((EnumFacing) player.worldObj.getBlockState(new BlockPos(x, y,z)).getValue(BlockStairs.FACING));
+
+			EnumFacing face = ((EnumFacing) player.worldObj.getBlockState(new BlockPos(x, y, z)).getValue(BlockStairs.FACING));
 
 			switch (face)
 			{

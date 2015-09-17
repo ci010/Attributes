@@ -15,45 +15,36 @@ public class PacketDispatcher
 {
 	public static PacketDispatcher instance = null;
 
-	final NetworkMod mod;
-
 	private byte packetId = 0;
 
-	private final SimpleNetworkWrapper dispatcher;
-
-	private PacketDispatcher(String modid, NetworkMod mod)
-	{
-		dispatcher = NetworkRegistry.INSTANCE.newSimpleChannel(modid);
-		this.mod = mod;
-	}
-
-	public static final void initInstance(String modid, NetworkMod mod)
-	{
-		if (instance == null)
-			instance = new PacketDispatcher(modid, mod);
-	}
-
-	public static final PacketDispatcher getInstance(String modid, NetworkMod mod)
-	{
-		return new PacketDispatcher(modid, mod);
-	}
 	/**
 	 * The SimpleNetworkWrapper instance is used both to register and send
 	 * packets. Since I will be adding wrapper methods, this field is private,
 	 * but you should make it public if you plan on using it directly.
 	 */
+	private final SimpleNetworkWrapper dispatcher;
+
+	private PacketDispatcher(String modid)
+	{
+		dispatcher = NetworkRegistry.INSTANCE.newSimpleChannel(modid);
+	}
 
 	/**
-	 * Call this during pre-init or loading and register all of your packets
-	 * (messages) here
+	 * Call this during pre-init or loading
 	 */
+	public static final void initInstance(String modid)
+	{
+		if (instance == null)
+			instance = new PacketDispatcher(modid);
+	}
 
 	/**
-	 * Registers a message and message handler
+	 * Register the message you want to send and its Handler class
+	 * 
+	 * @param handlerClass
+	 * @param messageClass
 	 */
-	@SuppressWarnings(
-	{ "rawtypes", "unchecked" })
-	public final void registerMessage(Class handlerClass, Class<? extends IMessage> messageClass)
+	public final <REQ extends IMessage> void registerMessage(Class<? extends AbstractMessageHandler<REQ>> handlerClass, Class<REQ> messageClass)
 	{
 		if (AbstractClientMessageHandler.class.isAssignableFrom(handlerClass))
 			dispatcher.registerMessage(	handlerClass,
@@ -80,34 +71,15 @@ public class PacketDispatcher
 			throw new IllegalArgumentException("Cannot register " + handlerClass.getName() + ". Not Support type Handler maybe?");
 	}
 
-	@SuppressWarnings(
-	{ "rawtypes", "unchecked" })
-	public final void registerMessage(Class handlerClass, Class<? extends IMessage> messageClass, Side side)
-	{
-		if (AbstractBiMessageHandler.class.isAssignableFrom(handlerClass))
-		{
-			dispatcher.registerMessage(	handlerClass,
-										messageClass,
-										packetId++,
-										side);
-			dispatcher.registerMessage(	handlerClass,
-										messageClass,
-										packetId++,
-										side);
-		}
-		dispatcher.registerMessage(	handlerClass,
-									messageClass,
-									packetId++,
-									side);
-	}
-
 	/**
 	 * Send this message to the specified player. See
 	 * {@link SimpleNetworkWrapper#sendTo(IMessage, EntityPlayerMP)}
 	 */
-	public final void sendTo(IMessage message, EntityPlayerMP player)
+	public final void sendTo(IMessage message, EntityPlayer player)
 	{
-		dispatcher.sendTo(message, player);
+		if (!(player instanceof EntityPlayerMP))
+			throw new IllegalArgumentException("The EntityPlayer target must be a EntityPlayerMP");
+		dispatcher.sendTo(message, (EntityPlayerMP) player);
 	}
 
 	/**
@@ -163,5 +135,14 @@ public class PacketDispatcher
 	public final void sendToServer(IMessage message)
 	{
 		dispatcher.sendToServer(message);
+	}
+
+	/**
+	 * Send this message to the server. See
+	 * {@link SimpleNetworkWrapper#sendToServer(IMessage)}
+	 */
+	public final void sendTo(IMessage message)
+	{
+		sendToServer(message);
 	}
 }

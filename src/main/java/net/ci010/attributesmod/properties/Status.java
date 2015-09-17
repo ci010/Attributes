@@ -36,10 +36,7 @@ public abstract class Status implements IExtendedEntityProperties
 		catch (IllegalArgumentException e)
 		{
 			if (e.getMessage().equals("Duplicate id value for " + temp + "!"))
-			{
-				temp++;
-				registerDataWatcher(player, temp);
-			}
+				registerDataWatcher(player, ++temp);
 		}
 		this.dataId = temp;
 	}
@@ -63,7 +60,7 @@ public abstract class Status implements IExtendedEntityProperties
 	/**
 	 * set current value of this status to data watcher
 	 */
-	protected void setCurrent(int value)
+	public void setCurrent(int value)
 	{
 		this.player.getDataWatcher().updateObject(this.dataId, value);
 	}
@@ -84,7 +81,6 @@ public abstract class Status implements IExtendedEntityProperties
 	public void loadNBTData(NBTTagCompound compound)
 	{
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(this.id);
-		// TODO check this
 
 		this.setCurrent(properties.getInteger("current"));
 		this.setConSpeed(properties.getInteger("consumption"));
@@ -102,7 +98,14 @@ public abstract class Status implements IExtendedEntityProperties
 	{
 		int current = this.getCurrent();
 		int comsumption = (int) (this.speedOfConsume * multip);
-		System.out.println("try to consume " + comsumption);
+		this.setCurrent(comsumption < current ? current - comsumption : 0);
+	}
+
+	public void consume(Consumption cost)
+	{
+		int current = this.getCurrent();
+		int comsumption = cost.getCost(this.speedOfConsume);
+		// System.out.println("try to consume " + comsumption);
 		this.setCurrent(comsumption < current ? current - comsumption : 0);
 	}
 
@@ -116,9 +119,15 @@ public abstract class Status implements IExtendedEntityProperties
 		setCurrent(this.max);
 	}
 
-	public void recover(int value)
+	public void recover(float multip)
 	{
-		int amount = value + this.getCurrent();
+		int amount = (int) (multip * this.speedOfRegeneration) + this.getCurrent();
+		this.setCurrent(amount < max ? amount : this.max);
+	}
+
+	public void recover()
+	{
+		int amount = this.speedOfConsume + this.getCurrent();
 		this.setCurrent(amount < max ? amount : this.max);
 	}
 
@@ -131,6 +140,11 @@ public abstract class Status implements IExtendedEntityProperties
 	public void setConSpeed(int speed)
 	{
 		this.speedOfConsume = speed;
+	}
+
+	public int getConSpeed()
+	{
+		return this.speedOfConsume;
 	}
 
 	public void setRegSpeed(int speed)

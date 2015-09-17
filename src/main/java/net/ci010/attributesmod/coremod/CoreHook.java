@@ -3,8 +3,10 @@ package net.ci010.attributesmod.coremod;
 import net.ci010.attributesmod.Resource;
 import net.ci010.attributesmod.properties.dynamic.Strength;
 import net.minecraft.block.BlockStairs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
+import net.minecraftforge.common.util.FakePlayer;
 
 public class CoreHook
 {
@@ -28,13 +30,26 @@ public class CoreHook
 
 	public static float getWalkSpeed(EntityPlayer player)
 	{
-		return player.capabilities.getWalkSpeed()/5;
+		return player.capabilities.getWalkSpeed() / 5;
 	}
-	
+
 	public static void test()
 	{
-		BlockPos p = new BlockPos(0,0,0);
+		BlockPos p = new BlockPos(0, 0, 0);
 		p.getX();
 	}
-	
+
+	public static boolean isFakePlayer(Entity entity)
+	{
+		return entity instanceof FakePlayer;
+	}
+
+	public void testa(Entity entity)
+	{
+		if (isFakePlayer(entity))
+			return;
+		BlockPos p = new BlockPos(0, 0, 0);
+		p.getX();
+	}
+
 }

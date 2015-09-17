@@ -1,9 +1,14 @@
 package net.ci010.attributesmod;
 
+import java.lang.annotation.Inherited;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.ci010.attributesmod.command.AttribueCommand;
+import net.ci010.attributesmod.command.DebugCommand;
 import net.ci010.attributesmod.command.StatusCommand;
 import net.ci010.attributesmod.proxy.CommonProxy;
-import net.ci010.minecraftUtil.network.NetworkMod;
 import net.ci010.minecraftUtil.network.PacketDispatcher;
 import net.ci010.minecraftUtil.network.Proxy;
 import net.minecraft.command.ServerCommandManager;
@@ -17,17 +22,18 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-@Mod(name = AttributesMod.NAME, modid = AttributesMod.MODID, version = AttributesMod.VERSION)
-public class AttributesMod implements NetworkMod
+@Mod(name = AttributesMod.NAME, modid = AttributesMod.MODID, version = AttributesMod.VERSION, guiFactory = "net.ci010.attributesmod.gui.GuiConfigFactory")
+public class AttributesMod
 {
 	public static final String MODID = "attributes";
 	public static final String NAME = "Attributes";
 	public static final String VERSION = "1.0";
+	public static final Logger LOG = LogManager.getLogger(NAME);
 
 	@SidedProxy(serverSide = "net.ci010.attributesmod.proxy.CommonProxy", clientSide = "net.ci010.attributesmod.proxy.ClientProxy")
 	public static CommonProxy proxy;
 
-	@Instance("attributes")
+	@Instance(MODID)
 	public static AttributesMod instance;
 
 	@EventHandler
@@ -40,7 +46,7 @@ public class AttributesMod implements NetworkMod
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		PacketDispatcher.initInstance(MODID,this);
+		PacketDispatcher.initInstance(MODID);
 		proxy.iniHandler();
 	}
 
@@ -56,11 +62,6 @@ public class AttributesMod implements NetworkMod
 		ServerCommandManager serverCommandManager = (ServerCommandManager) event.getServer().getCommandManager();
 		serverCommandManager.registerCommand(new AttribueCommand());
 		serverCommandManager.registerCommand(new StatusCommand());
-	}
-
-	@Override
-	public Proxy getProxy()
-	{
-		return proxy;
+		serverCommandManager.registerCommand(new DebugCommand());
 	}
 }

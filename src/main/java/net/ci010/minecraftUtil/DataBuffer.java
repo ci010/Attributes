@@ -29,8 +29,7 @@ public abstract class DataBuffer implements Runnable
 		waitTime();
 		go();
 	}
-	
-	
+
 	/**
 	 * wait for the time this DataBuffer created
 	 */
@@ -45,6 +44,6 @@ public abstract class DataBuffer implements Runnable
 			e.printStackTrace();
 		}
 	}
-	
+
 	public abstract void go();
 }

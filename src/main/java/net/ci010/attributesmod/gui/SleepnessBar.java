@@ -8,7 +8,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.Post;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -27,8 +26,8 @@ public class SleepnessBar extends Gui
 		this.mc = mc;
 	}
 
-	@SubscribeEvent(priority = EventPriority.NORMAL)
-	public void onRenderSleepnessBar(Post event)
+	@SubscribeEvent
+	public void onRenderSleepnessBar(net.minecraftforge.client.event.RenderGameOverlayEvent.Post event)
 	{
 		if (event.type != ElementType.HEALTH)
 			return;

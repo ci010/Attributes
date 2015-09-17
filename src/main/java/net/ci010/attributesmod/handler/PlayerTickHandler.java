@@ -17,7 +17,6 @@ import net.minecraftforge.fml.relauncher.Side;
 public class PlayerTickHandler
 {
 	static Set<EntityPlayer> attackTracker = Collections.synchronizedSet(new HashSet<EntityPlayer>());
-	private final int sleepValue = Resource.speedOfSlCos;
 
 	@SubscribeEvent
 	public void tick(PlayerTickEvent event)
@@ -26,8 +25,8 @@ public class PlayerTickHandler
 		{
 			if (event.player.isPlayerSleeping())
 			{
-				Strength.get(event.player).recover((int) (Resource.speedOfStReg * 1.5));
-				Sleepness.get(event.player).recover(sleepValue);
+				Strength.get(event.player).recover();
+				Sleepness.get(event.player).recover();
 				return;
 			}
 
@@ -35,16 +34,17 @@ public class PlayerTickHandler
 			{
 				if (event.player.ridingEntity instanceof EntitySittableBlock)
 				{
-					Sleepness.get(event.player).recover(sleepValue / 8);
-					Strength.get(event.player).recover((int) (sleepValue));
+					Sleepness.get(event.player).recover();
+					Strength.get(event.player).recover();
 				}
 				else if (isSwing(event.player))
 					return;
 
-				Strength.get(event.player).recover(Resource.speedOfStReg);
+				Strength.get(event.player).recover();
 			}
 			if (event.player.isSprinting())
 			{
+				Sleepness.get(event.player).consume();
 				Strength playerSt = Strength.get(event.player);
 				playerSt.consume();
 
@@ -57,7 +57,7 @@ public class PlayerTickHandler
 					return;
 
 				Strength playerSt = Strength.get(event.player);
-				
+				Sleepness.get(event.player).consume();
 				if (event.player.motionX == 0 && event.player.motionZ == 0 && event.player.motionY == 0)
 					playerSt.recover(Resource.speedOfStReg);
 				else

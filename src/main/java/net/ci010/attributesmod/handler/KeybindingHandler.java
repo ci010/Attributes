@@ -26,8 +26,8 @@ public class KeybindingHandler
 		{
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			// this works...... yet I want a better solution...
-			if (Attributes.power.getAttribute(player) == 0)
-				PacketDispatcher.instance.sendToServer(new OpenGuiMessage(0));
+//			if (Attributes.power.getAttribute(player) == 0)
+//				PacketDispatcher.instance.sendToServer(new OpenGuiMessage(0));
 			
 			Minecraft.getMinecraft().getNetHandler().addToSendQueue(new C16PacketClientStatus(
 					C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT));

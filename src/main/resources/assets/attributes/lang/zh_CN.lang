@@ -22,6 +22,16 @@ attri.command.check.multiply.agility=敏捷乘数为%s
 attri.command.check.multiply.power=力量乘数为%s
 attri.command.check.multiply.endurance=耐力乘数为%s
 
+attri.command.check.player=%s的详细属性
+
+attri.agility.name=敏捷
+attri.power.name=力量
+attri.endurance.name=耐力
+
+attri.agility.desc=提升玩家%s的移动速度
+attri.power.desc=提升玩家%s的攻击力
+attri.endurance.desc=提升玩家%s的体力和生命
+
 status.command.usage=/status set [player] [type] [value], type 可以是sleepness/strength
 
 status.command.exception.noname=没有找到 %s 玩家

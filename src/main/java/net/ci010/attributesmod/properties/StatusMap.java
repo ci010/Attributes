@@ -5,14 +5,25 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.ci010.attributesmod.AttributesMod;
+import net.ci010.attributesmod.network.SyncPlayerDataMessage;
+import net.ci010.minecraftUtil.network.PacketDispatcher;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class StatusMap
 {
 	static Set<Constructor<? extends Status>> constructorSet = new HashSet<Constructor<? extends Status>>();
 
+	/**
+	 * The method to register a new Status
+	 * 
+	 * @param clazz
+	 */
 	public static void register(Class<? extends Status> clazz)
 	{
 		try
@@ -30,10 +41,10 @@ public class StatusMap
 		}
 	}
 
-	public static class EventHandler
+	public static class Handler
 	{
 		@SubscribeEvent
-		public void onEntityConstructing(EntityConstructing event)
+		public void onPlayerConstructing(EntityConstructing event)
 		{
 			if (event.entity instanceof EntityPlayer)
 				for (Constructor<? extends Status> constructor : constructorSet)
@@ -43,7 +54,9 @@ public class StatusMap
 					{
 						Status status = constructor.newInstance(player);
 						player.registerExtendedProperties(status.id, status);
-						System.out.println("try to register " + status.id);
+						AttributesMod.LOG.info(	"try to register {}",
+												new Object[]
+						{ status.id });
 					}
 					catch (InstantiationException e)
 					{

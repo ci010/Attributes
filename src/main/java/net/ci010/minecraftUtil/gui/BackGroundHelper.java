@@ -1,6 +1,7 @@
 package net.ci010.minecraftUtil.gui;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -147,11 +148,6 @@ public class BackGroundHelper
 
 	}
 
-	public static void draw(GuiBlock block ,int x,int y)
-	{
-		block.list();
-	
-	}
 	/**
 	 * draw the default background sampled from inventory.png
 	 * @param gui the GuiContainer which is going to draw something on
@@ -180,7 +176,7 @@ public class BackGroundHelper
 	 * @param v the v position on the sample 
 	 * @param sample the sample resource used to draw slots
 	 */
-	public static void drawSlot(GuiContainer gui, int xPos, int yPos, int u, int v, ResourceLocation sample)
+	public static void drawSlot(Gui gui, int xPos, int yPos, int u, int v, ResourceLocation sample)
 	{
 		Minecraft.getMinecraft().renderEngine.bindTexture(sample);
 		gui.drawTexturedModalRect(xPos, yPos, u, v, 18, 18);
@@ -193,7 +189,7 @@ public class BackGroundHelper
 	 * @param xPos x Position on the Minecraft screen will start to draw a slot
 	 * @param yPos y Position on the Minecraft screen will start to draw a slot
 	 */
-	public static void drawSlot(GuiContainer gui, int xPos, int yPos)
+	public static void drawSlot(Gui gui, int xPos, int yPos)
 	{
 		drawSlot(	gui,
 					xPos,

@@ -1,6 +1,5 @@
 package net.ci010.attributesmod.entity;
 
-
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
@@ -11,7 +10,6 @@ public class EntitySittableBlock extends Entity
 	public int blockPosX;
 	public int blockPosY;
 	public int blockPosZ;
-	
 
 	public EntitySittableBlock(World world)
 	{
@@ -36,25 +34,29 @@ public class EntitySittableBlock extends Entity
 		this.blockPosX = (int) x;
 		this.blockPosY = (int) y;
 		this.blockPosZ = (int) z;
-		setPostionConsideringRotation(x + 0.5D, y + y0ffset, z + 0.5D, rotation, rotationOffset);
+		setPostionConsideringRotation(	x + 0.5D,
+										y + y0ffset,
+										z + 0.5D,
+										rotation,
+										rotationOffset);
 	}
 
 	public void setPostionConsideringRotation(double x, double y, double z, int rotation, double rotationOffset)
 	{
 		switch (rotation)
 		{
-		case 2:
-			z += rotationOffset;
-			break;
-		case 0:
-			z -= rotationOffset;
-			break;
-		case 3:
-			x -= rotationOffset;
-			break;
-		case 1:
-			x += rotationOffset;
-			break;
+			case 2:
+				z += rotationOffset;
+				break;
+			case 0:
+				z -= rotationOffset;
+				break;
+			case 3:
+				x -= rotationOffset;
+				break;
+			case 1:
+				x += rotationOffset;
+				break;
 		}
 		setPosition(x, y, z);
 	}
@@ -74,11 +76,20 @@ public class EntitySittableBlock extends Entity
 	@Override
 	public void onEntityUpdate()
 	{
+		// super.onEntityUpdate();
 		if (!this.worldObj.isRemote)
 		{
 			if (this.riddenByEntity == null | this.worldObj.isAirBlock(new BlockPos(blockPosX, blockPosY, blockPosZ)))
 			{
 				this.setDead();
+			}
+		}
+		else
+		{
+//			System.out.println("client has");
+			if(this.riddenByEntity !=null)
+			{
+//				System.out.println("not null");
 			}
 		}
 	}

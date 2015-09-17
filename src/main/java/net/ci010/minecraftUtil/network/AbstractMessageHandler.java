@@ -1,5 +1,6 @@
 package net.ci010.minecraftUtil.network;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -18,12 +19,14 @@ public abstract class AbstractMessageHandler <T extends IMessage> implements IMe
 	public IMessage onMessage(T message, MessageContext ctx)
 	{
 		if (ctx.side.isClient())
-		{
-			return handleClientMessage(PacketDispatcher.instance.mod.getProxy().getPlayer(ctx), message, ctx);
-		}
-		else 
-		{
+			return handleClientMessage(getClientPlayer(), message, ctx);
+		else
 			return handleServerMessage(ctx.getServerHandler().playerEntity, message, ctx);
-		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	private EntityPlayer getClientPlayer()
+	{
+		return Minecraft.getMinecraft().thePlayer;
 	}
 }

@@ -1,17 +1,14 @@
 package net.ci010.attributesmod.handler;
 
-import net.ci010.attributesmod.Resource;
-import net.ci010.attributesmod.properties.Attributes;
 import net.ci010.attributesmod.properties.AttributesMap;
+import net.ci010.attributesmod.properties.PowerConsumption;
 import net.ci010.attributesmod.properties.dynamic.Sleepness;
 import net.ci010.attributesmod.properties.dynamic.Strength;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.PlayerCapabilities;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -41,131 +38,80 @@ public class CommonHandler
 	{
 		if (event.entityLiving instanceof EntityPlayerMP)
 		{
+			//TODO this is toooooo easy... I will make it more complicated. 
 			Strength playerSt = Strength.get(event.entityPlayer);
 			Sleepness playerSl = Sleepness.get(event.entityPlayer);
 
-			if (playerSt.getCurrent() < 10 || playerSl.getCurrent() < 10)
-			{
+			if (playerSt.getCurrent() < playerSt.getConSpeed() || playerSl.getCurrent() < playerSl.getConSpeed())
 				event.newSpeed = event.originalSpeed / 2;
-			}
 		}
 	}
 
-	// SIDE server
 	@SubscribeEvent
 	public void entityHurt(LivingHurtEvent event)
 	{
-		// if (event.entityLiving instanceof EntityPlayerMP)
-
-		DamageSource source = event.source;
-
 		Entity victim = event.entity;
-		Entity inflictor = source.getEntity();
+		Entity inflictor = event.source.getEntity();
+
+		if (inflictor instanceof EntityPlayerMP)
+			event.ammount *= AttributesMap.get(AttributesMap.BaseMap.power).getMultiplier((EntityPlayer) inflictor);
+
+		// TODO maybe future i will add skill to make different items with
+		// different damages
 
 		if (victim instanceof EntityPlayerMP)
-		{
-
-			EntityPlayer player = (EntityPlayer) victim;
-			event.ammount *= (1 - Attributes.endurance.getMultiplier(player));
-			// do something to reduce the dmg
-			// and add up the level of endurance here
-			// by do something with event.ammount
-		}
-
-		else if (inflictor instanceof EntityPlayerMP)
-		{
-
-			EntityPlayer player = (EntityPlayer) inflictor;
-			ItemStack heldItem = player.getHeldItem();
-
-			float multiply = Attributes.power.getMultiplier(player);
-
-			PlayerTickHandler.attackTracker.add(player);
-
-			if (player.isSneaking())
-			{
-				event.ammount *= multiply * 1.5;
-			}
-			if (heldItem != null)
-			{
-				// if(Helper.ifItemSupported(heldItem));
-				event.ammount *= multiply;
-				// else
-				//
-			}
-			else
-			{
-				event.ammount *= multiply;
-			}
-			// add up the level of power here
-
-		}
-
+			event.ammount *= (1 - AttributesMap.get(AttributesMap.BaseMap.endurance).getMultiplier((EntityPlayer) victim));
 	}
 
-	// SIDE server
 	@SubscribeEvent
 	public void attackEvent(LivingAttackEvent event)
 	{
 		Entity inflictor = event.source.getEntity();
-		if (inflictor instanceof EntityPlayer)
+		if (inflictor instanceof EntityPlayerMP)
 		{
-
 			EntityPlayer player = (EntityPlayer) inflictor;
-			player.getHeldItem();
 			Strength playerSt = Strength.get(player);
 			Sleepness playerSl = Sleepness.get(player);
+			PlayerTickHandler.attackTracker.add(player);
 
-			if (inflictor instanceof EntityPlayerMP)
-				System.out.println("catch attack event. mp fires this event. Now mp strength is " + playerSt.getCurrent());
-			if (inflictor instanceof EntityPlayerMP)
-				System.out.println("catch attack event. sp fires this event. Now sp strength is " + playerSt.getCurrent());
+			if (playerSl.getCurrent() < playerSl.getConSpeed())
+				event.setCanceled(true);
 
-			if (player.getHeldItem() != null)
-			{
-				if (playerSt.getCurrent() < Resource.speedOfStCos * 1.5)
-				{
-					playerSl.consume(3);
-					System.out.println("canceled lower than 20 (" + playerSt.getCurrent());
-					event.setCanceled(true);
-				}
-				else
-					playerSt.consume(1.5f);
+			playerSl.consume(1.5f);
 
-			}
-			else
-			{
-				if (playerSt.getCurrent() < Resource.speedOfStCos)
-				{
-					playerSl.consume(3);
-					System.out.println("canceled lower than " + Resource.speedOfStCos + " now:" + playerSt.getCurrent());
-					event.setCanceled(true);
-				}
-				else
-					playerSt.consume();
-
-			}
-
-			if (playerSl.getCurrent() <= 0)
-			{
-
-			}
+			if (playerSt.getCurrent() < playerSt.getConSpeed())
+				event.setCanceled(true);
+			
+			playerSt.consume(new PowerConsumption(player.getHeldItem()));
 		}
 	}
 
 	@SubscribeEvent
 	public void wakeEvent(PlayerWakeUpEvent event)
 	{
-//		if (event.entityPlayer instanceof EntityPlayerMP)
-//			togglespSpeed(	event.entityPlayer,
-//							Attributes.agility.getMultiplier(event.entityPlayer));
+		// if (event.entityPlayer instanceof EntityPlayerMP)
+		// togglespSpeed( event.entityPlayer,
+		// Attributes.agility.getMultiplier(event.entityPlayer));
 	}
 
 	@SubscribeEvent
 	public void sleepEvent(PlayerSleepInBedEvent event)
 	{
-		if (event.entityPlayer instanceof EntityPlayerMP)
-			AttributesMap.updatePlayer((EntityPlayer) event.entityPlayer);
+//		if (event.entityPlayer instanceof EntityPlayerMP)
+//			AttributesMap.updatePlayer((EntityPlayer) event.entityPlayer);
+	}
+
+	public static void togglespSpeed(EntityPlayer player, float modifier)
+	{
+		float value = 0.1f * modifier;
+		ReflectionHelper.setPrivateValue(	PlayerCapabilities.class,
+											player.capabilities,
+											value,
+											"walkSpeed");
+		ReflectionHelper.setPrivateValue(	EntityPlayer.class,
+											player,
+											value,
+											"speedInAir");
 	}
 
 	@SuppressWarnings("deprecation")
@@ -178,27 +124,6 @@ public class CommonHandler
 		player.capabilities.readCapabilitiesFromNBT(tag);
 
 		player.getToolDigEfficiency(null);
-	}
-
-	public static void togglespSpeed(EntityPlayer player, float modifier)
-	{
-		float value = 0.1f * modifier;
-		ReflectionHelper.setPrivateValue(	PlayerCapabilities.class,
-											player.capabilities,
-											value,
-											"walkSpeed");
-		ReflectionHelper.setPrivateValue(	EntityPlayer.class,
-											player,
-											value / 5,
-											"speedInAir");
-	}
-
-	@SubscribeEvent
-	public void onLivingUpdate(LivingUpdateEvent event)
-	{
-		// if (event.entityLiving instanceof EntityPlayer)
-		// ((EntityPlayer) event.entityLiving).jumpMovementFactor =
-		// ((EntityPlayer) event.entityLiving).capabilities.getWalkSpeed();
 	}
 
 	// @SubscribeEvent

@@ -23,7 +23,7 @@ public class StrengthBar extends Gui
 		this.mc = mc;
 	}
 
-	@SubscribeEvent(priority = EventPriority.NORMAL)
+	@SubscribeEvent
 	public void onRenderStrengthBar(Post event)
 	{
 		if (event.type != ElementType.FOOD)

@@ -21,9 +21,8 @@ public class Agility extends Attributes
 		int runDistance = player.getStatFile().readStat(StatList.distanceSprintedStat);
 		int walkDistance = player.getStatFile().readStat(StatList.distanceWalkedStat);
 		float agility = (runDistance * 10 + walkDistance / 2 + 1) * upgradeTalent;
-		
-		
-		return 280 - (int)(280 / agility) + init;
+
+		return 280 - (int) (280 / agility) + init;
 	}
 
 	@Override
@@ -35,8 +34,7 @@ public class Agility extends Attributes
 	@Override
 	protected void applyOnStatus(EntityPlayer player, int value)
 	{
-		CommonHandler.togglespSpeed(	player,
-						this.getMultiplier(player));
+		CommonHandler.togglespSpeed(player, this.getMultiplier(player));
 		Strength.get(player).setConSpeed((int) (Resource.speedOfStCos * ((float) value / 100f) + 1));
 	}
 }

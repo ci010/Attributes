@@ -6,11 +6,18 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import net.ci010.attributesmod.AttributesMod;
+import net.ci010.attributesmod.network.SimpleAttributesMessage;
 import net.ci010.attributesmod.network.SyncPlayerDataMessage;
 import net.ci010.minecraftUtil.network.PacketDispatcher;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -25,7 +32,12 @@ public final class AttributesMap
 	public static final String PERFORMANCE = "performance";
 	public static final String INIT = "init";
 	public static final String LIMIT = "limit";
-	
+
+	/**
+	 * Register a new attribute
+	 * 
+	 * @param attri
+	 */
 	public static void registerAttributes(Attributes attri)
 	{
 		if (containe(attri.id))
@@ -72,12 +84,14 @@ public final class AttributesMap
 	}
 
 	/**
-	 * Update all the attributes of the player
+	 * Update all the attributes of the player; look
+	 * {@link Attributes#upgrade(EntityPlayerMP)}
+	 * 
 	 * 
 	 * @param player
 	 *            The player needed to be updated attributes
 	 */
-	@SideOnly(Side.SERVER)
+	// @SideOnly(Side.SERVER)
 	public static void updatePlayer(EntityPlayer player)
 	{
 		if (player instanceof EntityPlayerMP)
@@ -86,10 +100,15 @@ public final class AttributesMap
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void loadFromNBT(EntityPlayer player, NBTTagCompound attri)
+	public static void loadFromNBT(NBTTagCompound attri)
 	{
+		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+
 		if (player == null)
+		{
+			AttributesMod.LOG.error("player is null when load from nbt");
 			return;
+		}
 
 		NBTTagCompound per = new NBTTagCompound();
 
@@ -97,23 +116,24 @@ public final class AttributesMap
 			per.setFloat(	temp.id,
 							temp.transformToPerformance(attri.getInteger(temp.id)));
 
-		player.getEntityData().setTag(PERFORMANCE, per);
-		player.getEntityData().setTag(ATTRIBUTES, attri);
+		NBTTagCompound persisted = getPersistedTag(player);
+		persisted.setTag(PERFORMANCE, per);
+		persisted.setTag(ATTRIBUTES, attri);
 	}
 
 	public static NBTTagCompound getLimit(EntityPlayer player)
 	{
-		return player.getEntityData().getCompoundTag(LIMIT);
+		return getPersistedTag(player).getCompoundTag(LIMIT);
 	}
 
 	public static NBTTagCompound getInit(EntityPlayer player)
 	{
-		return player.getEntityData().getCompoundTag(INIT);
+		return getPersistedTag(player).getCompoundTag(INIT);
 	}
 
 	public static NBTTagCompound getTalent(EntityPlayer player)
 	{
-		return player.getEntityData().getCompoundTag(TALENTS);
+		return getPersistedTag(player).getCompoundTag(TALENTS);
 	}
 
 	/**
@@ -124,7 +144,7 @@ public final class AttributesMap
 	 */
 	public static NBTTagCompound getPerformance(EntityPlayer player)
 	{
-		return player.getEntityData().getCompoundTag(PERFORMANCE);
+		return getPersistedTag(player).getCompoundTag(PERFORMANCE);
 	}
 
 	/**
@@ -135,7 +155,90 @@ public final class AttributesMap
 	 */
 	public static NBTTagCompound getNBTAttributes(EntityPlayer player)
 	{
-		return player.getEntityData().getCompoundTag(ATTRIBUTES);
+		return getPersistedTag(player).getCompoundTag(ATTRIBUTES);
+	}
+
+	public static NBTTagCompound getPersistedTag(EntityPlayer player)
+	{
+		NBTTagCompound nbt = player.getEntityData();
+		if (nbt.hasKey(EntityPlayer.PERSISTED_NBT_TAG))
+			return nbt.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+		else
+		{
+			NBTTagCompound pre = new NBTTagCompound();
+			player.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, pre);
+			return pre;
+		}
+	}
+
+	public static class Handler
+	{
+		@SubscribeEvent
+		public void onPlayerRespwn(EntityConstructing event)
+		{
+			if (event.entity instanceof EntityPlayer && event.entity.worldObj.isRemote)
+				PacketDispatcher.instance.sendToServer(new SimpleAttributesMessage());
+		}
+
+		@SubscribeEvent // (priority = EventPriority.LOW)
+		public void onPlayerLogin(PlayerLoggedInEvent event)
+		{
+			NBTTagCompound playerData = getPersistedTag(event.player);
+
+			AttributesMod.LOG.info("login fire");
+			int size = AttributesMap.size();
+			
+			if (!playerData.hasKey(TALENTS))
+			{
+				NBTTagCompound talent = new NBTTagCompound();
+
+				float[] value = generateTalent(size);
+
+				int i = 0;
+				for (Attributes attr : AttributesMap.iterate())
+					talent.setFloat(attr.id, value[i++]);
+
+				playerData.setTag(TALENTS, talent);
+			}
+
+			if (!playerData.hasKey(LIMIT))
+			{
+				NBTTagCompound limit = new NBTTagCompound();
+
+				int[] value = generateLimitValue(size);
+
+				int i = 0;
+				for (Attributes attr : AttributesMap.iterate())
+					limit.setInteger(attr.id, value[i++]);
+
+				playerData.setTag(LIMIT, limit);
+			}
+
+			if (!playerData.hasKey(ATTRIBUTES))
+			{
+				AttributesMod.LOG.info("init generate");
+
+				NBTTagCompound attr = new NBTTagCompound();
+				NBTTagCompound per = new NBTTagCompound();
+
+				int[] sum = generateInitValue(size);
+
+				int i = 0;
+				for (Attributes temp : AttributesMap.iterate())
+				{
+					int value = sum[i++];
+					attr.setInteger(temp.id, value);
+					per.setFloat(temp.id, temp.transformToPerformance(value));
+				}
+
+				playerData.setTag(INIT, attr);
+				playerData.setTag(ATTRIBUTES, attr);
+				playerData.setTag(PERFORMANCE, per);
+			}
+
+			PacketDispatcher.instance.sendTo(	new SyncPlayerDataMessage(event.player),
+												event.player);
+		}
 	}
 
 	public enum BaseMap
@@ -209,70 +312,15 @@ public final class AttributesMap
 	private static int generateInRange(int num)
 	{
 		int temp = r.nextInt(num);
+		if (temp < num / 4)
+			return generateInRange(num);
+		else if (temp > (num / 3) * 2)
+			return generateInRange(num);
+		else
+			return temp;
 
-		return temp < num / 4 ? generateInRange(num) : temp > (num / 3) * 2 ? generateInRange(num) : temp;
-	}
-
-	public static class Handler
-	{
-		@SubscribeEvent
-		public void onPlayerLogin(PlayerLoggedInEvent event)
-		{
-			NBTTagCompound playerData = event.player.getEntityData();
-
-			int size = AttributesMap.size();
-
-			if (!playerData.hasKey(TALENTS))
-			{
-				NBTTagCompound talent = new NBTTagCompound();
-
-				float[] value = generateTalent(size);
-
-				int i = 0;
-				for (Attributes attr : AttributesMap.iterate())
-					talent.setFloat(attr.id, value[i++]);
-
-				playerData.setTag(TALENTS, talent);
-			}
-
-			if (!playerData.hasKey(LIMIT))
-			{
-				NBTTagCompound limit = new NBTTagCompound();
-
-				int[] value = generateLimitValue(size);
-
-				int i = 0;
-				for (Attributes attr : AttributesMap.iterate())
-					limit.setInteger(attr.id, value[i++]);
-
-				playerData.setTag(LIMIT, limit);
-			}
-
-			if (!playerData.hasKey(ATTRIBUTES))
-			{
-				System.out.println("init generate");
-
-				NBTTagCompound attr = new NBTTagCompound();
-				NBTTagCompound per = new NBTTagCompound();
-
-				int[] sum = generateInitValue(size);
-
-				int i = 0;
-				for (Attributes temp : AttributesMap.iterate())
-				{
-					int value = sum[i++];
-					attr.setInteger(temp.id, value);
-					per.setFloat(temp.id, temp.transformToPerformance(value));
-				}
-
-				playerData.setTag(INIT, attr);
-				playerData.setTag(ATTRIBUTES, attr);
-				playerData.setTag(PERFORMANCE, per);
-			}
-
-			PacketDispatcher.instance.sendTo(	new SyncPlayerDataMessage((EntityPlayer) event.player),
-												event.player);
-		}
+		// return temp < num / 4 ? generateInRange(num) : temp > (num / 3) * 2 ?
+		// generateInRange(num) : temp;
 	}
 
 }
